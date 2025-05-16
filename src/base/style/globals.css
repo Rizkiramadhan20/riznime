@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Shimmer animation */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+  }
+
+  /* Updated custom scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f3f4f6; /* gray-100 */
+    border-radius: 9999px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db; /* gray-300 */
+    border-radius: 9999px;
+    transition: all 0.2s ease;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af; /* gray-400 */
+  }
+
+  /* For Firefox */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db #f3f4f6;
+  }
+}
+
+/* Rest of your existing CSS */
+:root {
+  --background: #ffffff;
+  --text: #1f2937;
+  --text-secondary: #4b5563;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary: #059669;
+  --secondary-hover: #047857;
+  --accent: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --font-noto-sans-jp: var(--font-noto-sans-jp);
+  --border-color: #e5e7eb;
+  --hover-bg: #f3f4f6;
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --header-border: rgba(229, 231, 235, 0.5);
+  --header-shadow: rgba(0, 0, 0, 0.05);
+  --header-menu-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --card-shadow: rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+  --background: #111827;
+  --text: #f9fafb;
+  --text-secondary: #d1d5db;
+  --primary: #60a5fa;
+  --primary-hover: #3b82f6;
+  --secondary: #34d399;
+  --secondary-hover: #10b981;
+  --accent: #a78bfa;
+  --accent-hover: #8b5cf6;
+  --border-color: #374151;
+  --hover-bg: #1f2937;
+  --header-bg: rgba(17, 24, 39, 0.8);
+  --header-border: rgba(55, 65, 81, 0.5);
+  --header-shadow: rgba(0, 0, 0, 0.2);
+  --header-menu-bg: rgba(17, 24, 39, 0.95);
+  --card-bg: #1f2937;
+  --card-border: #374151;
+  --card-shadow: rgba(0, 0, 0, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
+
+body {
+  color: var(--text);
+  background: var(--background);
+  font-family: var(--font-noto-sans-jp);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 100%;
+
+  @media only screen and (max-width: 1366px) {
+    font-size: 85%;
+  }
+}
+
+.container {
+  max-width: 100vw;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--hover-bg);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text);
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-secondary) var(--hover-bg);
+}
