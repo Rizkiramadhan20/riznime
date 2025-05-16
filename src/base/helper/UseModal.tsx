@@ -35,11 +35,11 @@ export default function Modal({ isOpen, onClose, children, className = '' }: Mod
 
     return (
         <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all duration-300 ease-in-out"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 transition-all duration-300 ease-in-out"
             onClick={onClose}
         >
             <div
-                className={`bg-background border border-base-300 max-w-7xl w-full rounded-xl shadow-2xl transform transition-all duration-300 ease-in-out ${className}`}
+                className={`bg-white/80 dark:bg-black/80 border border-base-300 max-w-7xl w-full rounded-xl shadow-2xl transform transition-all duration-300 ease-in-out ${className}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex gap-1.5 sm:gap-2.5 p-3 border-b border-base-300">

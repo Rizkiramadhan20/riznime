@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FetchBannerData } from '@/lib/api';
+import { FetchBannerData } from '@/lib/FetchAnime';
 
 import BannerContent from './BannerContent';
 

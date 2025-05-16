@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Geist, Geist_Mono } from "next/font/google";
+import { Noto_Sans_JP } from "next/font/google";
 
 import "@/base/style/globals.css";
 
@@ -22,9 +23,41 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const notoSansJP = Noto_Sans_JP({
+  variable: "--font-noto-sans-jp",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+});
+
 export const metadata: Metadata = {
-  title: "Anime App",
+  title: "RizNime",
   description: "Your favorite anime streaming platform",
+  manifest: "/manifest.json",
+  openGraph: {
+    title: "RizNime",
+    description: "Your favorite anime streaming platform",
+    type: "website",
+    locale: "id_ID",
+    siteName: "RizNime",
+    images: [
+      {
+        url: "/og-image.jpg", // You should add this image to your public folder
+        width: 1200,
+        height: 630,
+        alt: "RizNime Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RizNime",
+    description: "Your favorite anime streaming platform",
+    images: ["/og-image.jpg"], // Same image as OpenGraph
+  },
+  metadataBase: new URL("https://riznime.vercel.app"), // Replace with your actual domain
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
@@ -56,7 +89,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200`}>
         <ThemeProvider>
           <Providers>
             <Pathname>

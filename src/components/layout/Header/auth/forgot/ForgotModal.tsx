@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-
 import { useAuth } from '@/utils/context/AuthContext';
-
 import Image from 'next/image';
-
 import imgSignin from "@/base/assets/forgot/forgot.webp"
+import { TextInput } from 'flowbite-react';
 
 interface ForgotPasswordModalProps {
     onClose: () => void;
@@ -61,25 +59,22 @@ export default function ForgotPasswordModal({ onClose, initialEmail = '' }: Forg
                         <label className="label py-1">
                             <span className="label-text font-semibold text-base">Email</span>
                         </label>
-                        <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg className="w-5 h-5 text-gray-600 group-focus-within:text-primary transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <TextInput
+                            type="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            icon={() => (
+                                <svg className="w-5 h-5 text-[var(--text-secondary)]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                                     <polyline points="22,6 12,13 2,6"></polyline>
                                 </svg>
-                            </div>
-                            <input
-                                type="email"
-                                className="input input-bordered w-full pl-10 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                                placeholder="Enter your email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
+                            )}
+                        />
                     </div>
 
-                    <div className="flex gap-2 mt-2">
+                    <div className="flex gap-2 mt-4">
                         <button
                             type="button"
                             onClick={onClose}
@@ -89,19 +84,19 @@ export default function ForgotPasswordModal({ onClose, initialEmail = '' }: Forg
                         </button>
                         <button
                             type="submit"
-                            className={`btn btn-primary flex-1 hover:bg-primary-focus transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl ${isLoading ? 'loading' : ''}`}
+                            className={`btn btn-primary flex-1 hover:bg-primary-focus transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl bg-primary py-3 rounded-md ${isLoading ? 'loading' : ''}`}
                             disabled={isLoading || !email}
                         >
                             {isLoading ? (
-                                <span className="flex items-center justify-center gap-2">
-                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <span className="flex items-center justify-center gap-2 text-white">
+                                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
                                     <span>Sending...</span>
                                 </span>
                             ) : (
-                                <span className="flex items-center justify-center gap-2">
+                                <span className="flex items-center justify-center gap-2 text-white">
                                     <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M22 2L11 13"></path>
                                         <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>

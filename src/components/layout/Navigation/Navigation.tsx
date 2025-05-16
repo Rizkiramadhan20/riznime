@@ -25,7 +25,7 @@ export default function Sidebar() {
     };
 
     return (
-        <nav className="fixed bottom-2 left-0 right-0 z-[100]">
+        <nav className="fixed bottom-2 left-0 right-0 z-[99]">
             <div className="relative max-w-2xl mx-auto px-2">
                 <div className="absolute inset-0 bg-white/30 dark:bg-black/30 rounded-xl blur-xl"></div>
                 <div className="relative bg-white/80 dark:bg-black/80 backdrop-blur-xl border-t border-x border-white/20 dark:border-white/10 rounded-xl p-4 shadow-lg">

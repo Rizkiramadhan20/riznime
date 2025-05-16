@@ -27,7 +27,7 @@ export default function ProfileMenu({ isOpen, onClose, isMobile = false }: Profi
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.2, type: "spring", stiffness: 300, damping: 25 }}
-                    className={`absolute ${isMobile ? 'right-0 mt-6' : 'right-0 mt-5'} w-72 bg-[var(--card-bg)] rounded-xl shadow-lg border border-[var(--border-color)] py-2 overflow-hidden`}
+                    className={`absolute ${isMobile ? 'right-0 mt-6' : 'right-0 mt-5'} w-72 bg-background rounded-xl shadow-lg border border-[var(--border-color)] py-2 overflow-hidden`}
                 >
                     <motion.div
                         className="px-4 py-3 border-b border-[var(--border-color)]"

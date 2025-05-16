@@ -26,7 +26,7 @@ export function ThemeToggle() {
                                 animate={{ y: 0, opacity: 1, scale: 1 }}
                                 exit={{ y: -20, opacity: 0, scale: 0.8 }}
                                 transition={{ duration: 0.3, ease: "easeOut" }}
-                                className="absolute inset-0 flex items-center justify-center text-gray-700 dark:text-gray-200"
+                                className="absolute inset-0 flex items-center justify-center text-[var(--text-secondary)]"
                             >
                                 {theme === 'dark' ? (
                                     <Moon className="h-6 w-6" />
@@ -48,7 +48,7 @@ export function ThemeToggle() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg ring-1 ring-black/5 dark:ring-white/10 focus:outline-none"
+                        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-lg ring-1 ring-black/5 dark:ring-white/10 focus:outline-none"
                         role="menu"
                         aria-orientation="vertical"
                         aria-labelledby="theme-menu"
@@ -63,14 +63,14 @@ export function ThemeToggle() {
                                     setIsOpen(false);
                                 }}
                                 className={`w-full text-left px-4 py-2.5 text-sm rounded-lg transition-colors duration-200 ${theme === 'light'
-                                    ? 'bg-gray-100/80 dark:bg-gray-700/80 text-gray-900 dark:text-white'
-                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-700/50'
+                                    ? 'bg-gray-100/80 dark:bg-gray-700/80 text-[var(--text-secondary)]'
+                                    : 'text-[var(--text-secondary)] hover:bg-gray-100/50 dark:hover:bg-gray-700/50'
                                     }`}
                                 role="menuitem"
                                 tabIndex={-1}
                             >
                                 <div className="flex items-center">
-                                    <Sun className="h-5 w-5 mr-3 text-gray-700 dark:text-gray-200" />
+                                    <Sun className="h-5 w-5 mr-3 text-[var(--text-secondary)]" />
                                     Light
                                 </div>
                             </motion.button>
@@ -82,14 +82,14 @@ export function ThemeToggle() {
                                     setIsOpen(false);
                                 }}
                                 className={`w-full text-left px-4 py-2.5 text-sm rounded-lg transition-colors duration-200 ${theme === 'dark'
-                                    ? 'bg-gray-100/80 dark:bg-gray-700/80 text-gray-900 dark:text-white'
-                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-700/50'
+                                    ? 'bg-gray-100/80 dark:bg-gray-700/80 text-[var(--text-secondary)]'
+                                    : 'text-[var(--text-secondary)] hover:bg-gray-100/50 dark:hover:bg-gray-700/50'
                                     }`}
                                 role="menuitem"
                                 tabIndex={-1}
                             >
                                 <div className="flex items-center">
-                                    <Moon className="h-5 w-5 mr-3 text-gray-700 dark:text-gray-200" />
+                                    <Moon className="h-5 w-5 mr-3 text-[var(--text-secondary)]" />
                                     Dark
                                 </div>
                             </motion.button>
@@ -101,14 +101,14 @@ export function ThemeToggle() {
                                     setIsOpen(false);
                                 }}
                                 className={`w-full text-left px-4 py-2.5 text-sm rounded-lg transition-colors duration-200 ${theme === 'system'
-                                    ? 'bg-gray-100/80 dark:bg-gray-700/80 text-gray-900 dark:text-white'
-                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-700/50'
+                                    ? 'bg-gray-100/80 dark:bg-gray-700/80 text-[var(--text-secondary)]'
+                                    : 'text-[var(--text-secondary)] hover:bg-gray-100/50 dark:hover:bg-gray-700/50'
                                     }`}
                                 role="menuitem"
                                 tabIndex={-1}
                             >
                                 <div className="flex items-center">
-                                    <Monitor className="h-5 w-5 mr-3 text-gray-700 dark:text-gray-200" />
+                                    <Monitor className="h-5 w-5 mr-3 text-[var(--text-secondary)]" />
                                     System
                                 </div>
                             </motion.button>

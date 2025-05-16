@@ -125,6 +125,11 @@ html {
 
 .container {
   max-width: 100vw;
+
+  @media only screen and (min-width: 1366px) {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
 }
 
 /* Custom scrollbar styling */

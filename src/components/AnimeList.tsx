@@ -1,4 +1,4 @@
-import { fetchAnimeData } from '@/lib/api';
+import { fetchAnimeData } from '@/lib/FetchAnime';
 
 export default async function AnimeList() {
     const animeData = await fetchAnimeData();

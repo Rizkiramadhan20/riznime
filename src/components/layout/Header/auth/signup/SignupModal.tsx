@@ -12,6 +12,8 @@ import { signupSchema, SignupFormData } from '@/components/layout/Header/auth/sc
 
 import { useAuth } from '@/utils/context/AuthContext';
 
+import { TextInput, Checkbox, Button } from 'flowbite-react';
+
 interface SignupModalProps {
     onSwitchToLogin: () => void;
 }
@@ -131,15 +133,19 @@ export default function SignupModal({ onSwitchToLogin }: SignupModalProps) {
                 </div>
 
                 <div className="flex gap-4 mb-6">
-                    <button
+                    <Button
                         onClick={onSwitchToLogin}
-                        className='btn btn-ghost flex-1 hover:bg-base-200 transition-all duration-300 shadow-md hover:shadow-lg'
+                        color="gray"
+                        className='flex-1 transition-all duration-300'
                     >
                         Sign in
-                    </button>
-                    <button className='btn btn-primary flex-1 hover:bg-primary-focus transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl'>
+                    </Button>
+                    <Button
+                        color="blue"
+                        className='flex-1 transition-all duration-300'
+                    >
                         Sign up
-                    </button>
+                    </Button>
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
@@ -147,20 +153,18 @@ export default function SignupModal({ onSwitchToLogin }: SignupModalProps) {
                         <label className="label py-1">
                             <span className="label-text font-semibold text-base">Username</span>
                         </label>
-                        <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg className="w-5 h-5 text-gray-600 group-focus-within:text-primary transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <TextInput
+                            type="text"
+                            placeholder="Enter your username"
+                            className={`${errors.username ? 'border-error' : ''}`}
+                            {...register('username')}
+                            icon={() => (
+                                <svg className="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                            </div>
-                            <input
-                                type="text"
-                                className={`input input-bordered w-full pl-10 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 ${errors.username ? 'border-error' : ''}`}
-                                placeholder="Enter your username"
-                                {...register('username')}
-                            />
-                        </div>
+                            )}
+                        />
                         {errors.username && (
                             <span className="text-error text-sm mt-1">{errors.username.message}</span>
                         )}
@@ -170,20 +174,18 @@ export default function SignupModal({ onSwitchToLogin }: SignupModalProps) {
                         <label className="label py-1">
                             <span className="label-text font-semibold text-base">Email</span>
                         </label>
-                        <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg className="w-5 h-5 text-gray-600 group-focus-within:text-primary transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <TextInput
+                            type="email"
+                            placeholder="Enter your email"
+                            className={`${errors.email ? 'border-error' : ''}`}
+                            {...register('email')}
+                            icon={() => (
+                                <svg className="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                                     <polyline points="22,6 12,13 2,6"></polyline>
                                 </svg>
-                            </div>
-                            <input
-                                type="email"
-                                className={`input input-bordered w-full pl-10 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 ${errors.email ? 'border-error' : ''}`}
-                                placeholder="Enter your email"
-                                {...register('email')}
-                            />
-                        </div>
+                            )}
+                        />
                         {errors.email && (
                             <span className="text-error text-sm mt-1">{errors.email.message}</span>
                         )}
@@ -193,37 +195,37 @@ export default function SignupModal({ onSwitchToLogin }: SignupModalProps) {
                         <label className="label py-2">
                             <span className="label-text font-semibold text-base">Password</span>
                         </label>
-                        <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg className="w-5 h-5 text-gray-600 group-focus-within:text-primary transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <TextInput
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter your password"
+                            className={`${errors.password ? 'border-error' : ''}`}
+                            {...register('password')}
+                            icon={() => (
+                                <svg className="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
-                            </div>
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                className={`input input-bordered w-full pl-10 pr-10 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 ${errors.password ? 'border-error' : ''}`}
-                                placeholder="Enter your password"
-                                {...register('password')}
-                            />
-                            <button
-                                type="button"
-                                onClick={togglePasswordVisibility}
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 hover:text-primary transition-colors"
-                            >
-                                {showPassword ? (
-                                    <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                ) : (
-                                    <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                                    </svg>
-                                )}
-                            </button>
-                        </div>
+                            )}
+                            rightIcon={() => (
+                                <button
+                                    type="button"
+                                    onClick={togglePasswordVisibility}
+                                    className="text-gray-600 hover:text-primary transition-colors"
+                                >
+                                    {showPassword ? (
+                                        <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                    ) : (
+                                        <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                                        </svg>
+                                    )}
+                                </button>
+                            )}
+                        />
                         {errors.password && (
                             <span className="text-error text-sm mt-1">{errors.password.message}</span>
                         )}
@@ -233,69 +235,60 @@ export default function SignupModal({ onSwitchToLogin }: SignupModalProps) {
                         <label className="label py-2">
                             <span className="label-text font-semibold text-base">Confirm Password</span>
                         </label>
-                        <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg className="w-5 h-5 text-gray-600 group-focus-within:text-primary transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <TextInput
+                            type={showConfirmPassword ? "text" : "password"}
+                            placeholder="Confirm your password"
+                            className={`${errors.confirmPassword ? 'border-error' : ''}`}
+                            {...register('confirmPassword')}
+                            icon={() => (
+                                <svg className="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
-                            </div>
-                            <input
-                                type={showConfirmPassword ? "text" : "password"}
-                                className={`input input-bordered w-full pl-10 pr-10 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 ${errors.confirmPassword ? 'border-error' : ''}`}
-                                placeholder="Confirm your password"
-                                {...register('confirmPassword')}
-                            />
-                            <button
-                                type="button"
-                                onClick={toggleConfirmPasswordVisibility}
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 hover:text-primary transition-colors"
-                            >
-                                {showConfirmPassword ? (
-                                    <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                ) : (
-                                    <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                                    </svg>
-                                )}
-                            </button>
-                        </div>
+                            )}
+                            rightIcon={() => (
+                                <button
+                                    type="button"
+                                    onClick={toggleConfirmPasswordVisibility}
+                                    className="text-gray-600 hover:text-primary transition-colors"
+                                >
+                                    {showConfirmPassword ? (
+                                        <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                    ) : (
+                                        <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                                        </svg>
+                                    )}
+                                </button>
+                            )}
+                        />
                         {errors.confirmPassword && (
                             <span className="text-error text-sm mt-1">{errors.confirmPassword.message}</span>
                         )}
                     </div>
 
-                    <div className="flex items-center justify-between mt-2">
-                        <label className="label cursor-pointer gap-3">
-                            <div className="relative">
-                                <input
-                                    type="checkbox"
-                                    className="checkbox checkbox-primary checkbox-sm opacity-0 absolute"
-                                    {...register('agreeTerms')}
-                                />
-                                <div className={`w-5 h-5 border-2 rounded transition-all duration-200 flex items-center justify-center
-                                    ${watch('agreeTerms') ? 'border-primary bg-primary' : 'border-gray-300'}`}>
-                                    {watch('agreeTerms') && (
-                                        <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                    )}
-                                </div>
-                            </div>
-                            <span className="label-text font-medium">I agree to the terms and conditions</span>
+                    <div className="flex items-center gap-2 mt-1">
+                        <Checkbox
+                            id="agreeTerms"
+                            {...register('agreeTerms')}
+                            className='checkbox checkbox-primary text-primary'
+                        />
+                        <label htmlFor="agreeTerms" className="text-sm text-[(var--text)]">
+                            I agree to the <a href="#" className="text-primary hover:underline">Terms of Service</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>
                         </label>
                     </div>
                     {errors.agreeTerms && (
                         <span className="text-error text-sm mt-1">{errors.agreeTerms.message}</span>
                     )}
 
-                    <button
+                    <Button
                         type="submit"
-                        className={`btn btn-primary w-full hover:bg-primary-focus transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl mt-2 ${isEmailLoading ? 'loading' : ''}`}
+                        color="blue"
+                        className={`w-full transition-all duration-300 ${isEmailLoading ? 'opacity-70' : ''}`}
                         disabled={!watch('agreeTerms') || isEmailLoading || isGoogleLoading || isGithubLoading}
                     >
                         {isEmailLoading ? (
@@ -317,16 +310,17 @@ export default function SignupModal({ onSwitchToLogin }: SignupModalProps) {
                                 <span>Create Account</span>
                             </span>
                         )}
-                    </button>
+                    </Button>
 
-                    <div className="divider">OR</div>
+                    <div className="divider text-center">OR</div>
 
                     <div className="flex w-full gap-2">
                         <div className="card border rounded-box grid place-items-center w-full">
-                            <button
+                            <Button
                                 type="button"
                                 onClick={handleGoogleSignup}
-                                className={`btn btn-ghost hover:bg-base-200 transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-lg ${isGoogleLoading ? 'loading' : ''}`}
+                                color="gray"
+                                className={`w-full transition-all duration-300 ${isGoogleLoading ? 'opacity-70' : ''}`}
                                 disabled={isEmailLoading || isGoogleLoading || isGithubLoading}
                             >
                                 {isGoogleLoading ? (
@@ -345,14 +339,15 @@ export default function SignupModal({ onSwitchToLogin }: SignupModalProps) {
                                         <span>Google</span>
                                     </span>
                                 )}
-                            </button>
+                            </Button>
                         </div>
 
                         <div className="card border rounded-box grid place-items-center w-full">
-                            <button
+                            <Button
                                 type="button"
                                 onClick={handleGithubSignup}
-                                className={`btn btn-ghost hover:bg-base-200 transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-lg ${isGithubLoading ? 'loading' : ''}`}
+                                color="gray"
+                                className={`w-full transition-all duration-300 ${isGithubLoading ? 'opacity-70' : ''}`}
                                 disabled={isEmailLoading || isGoogleLoading || isGithubLoading}
                             >
                                 {isGithubLoading ? (
@@ -371,7 +366,7 @@ export default function SignupModal({ onSwitchToLogin }: SignupModalProps) {
                                         <span>Github</span>
                                     </span>
                                 )}
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </form>
