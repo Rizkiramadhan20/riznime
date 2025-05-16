@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BannerData } from '@/lib/api';
+import { FetchBannerData } from '@/lib/api';
 
 import BannerContent from './BannerContent';
 
@@ -8,7 +8,7 @@ import BannerSkeleton from './BannerSkelaton';
 
 export default async function Banner() {
     try {
-        const animeData = await BannerData();
+        const animeData = await FetchBannerData();
         return <BannerContent animeData={animeData} />;
     } catch (error) {
         console.error('Error fetching banner data:', error);
