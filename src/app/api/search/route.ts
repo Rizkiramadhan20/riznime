@@ -23,9 +23,9 @@ export async function GET(request: Request) {
       );
     }
 
-    const apiUrl = `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/search?q=${encodeURIComponent(query)}`;
+    const apiUrl = `https://api-anime-navy.vercel.app/otakudesu/search?q=${encodeURIComponent(
+      query
+    )}`;
 
     const { data } = await axios.get(apiUrl);
 

@@ -12,7 +12,9 @@ export async function GET(request: Request) {
       );
     }
 
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/home`);
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/home`
+    );
 
     // Transform data: hapus '/otakudesu/' di href
     const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {

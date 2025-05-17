@@ -1,14 +1,13 @@
 export interface Anime {
   title: string;
   poster: string;
-  episodes: number;
+  animeId: string;
+  episodes?: number | string;
   releaseDay?: string;
   latestReleaseDate?: string;
   score?: string;
-  lastReleaseDate?: string;
-  animeId: string;
   href: string;
-  otakudesuUrl: string;
+  otakudesuUrl?: string;
 }
 
 export interface AnimeList {
@@ -17,13 +16,50 @@ export interface AnimeList {
   animeList: Anime[];
 }
 
-export interface AnimeData {
-  ongoing: AnimeList;
-  completed: AnimeList;
+export interface Genre {
+  title: string;
+  genreId: string;
+  href: string;
+  otakudesuUrl: string;
 }
 
-// Search
+export interface Episode {
+  title: number | string;
+  episodeId: string;
+  href: string;
+  otakudesuUrl: string;
+}
 
+export interface RecommendedAnime {
+  title: string;
+  poster: string;
+  animeId: string;
+  href: string;
+  otakudesuUrl: string;
+}
+
+export interface AnimeData {
+  title: string;
+  poster: string;
+  japanese?: string;
+  score?: string;
+  producers?: string;
+  status?: string;
+  episodes?: number | string;
+  duration?: string;
+  aired?: string;
+  studios?: string;
+  batch?: string | null;
+  synopsis?: {
+    paragraphs: string[];
+    connections: unknown[];
+  };
+  genreList?: Genre[];
+  episodeList?: Episode[];
+  recommendedAnimeList?: RecommendedAnime[];
+}
+
+// Search types
 export interface AnimeGenre {
   title: string;
   genreId: string;

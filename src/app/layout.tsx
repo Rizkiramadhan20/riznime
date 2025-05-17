@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
-import { Geist, Geist_Mono } from "next/font/google";
-import { Noto_Sans_JP } from "next/font/google";
+import { Poppins } from "next/font/google";
 
 import "@/base/style/globals.css";
 
@@ -13,18 +12,8 @@ import Pathname from "@/base/router/Pathname";
 
 import Providers from "@/base/router/Provider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const notoSansJP = Noto_Sans_JP({
-  variable: "--font-noto-sans-jp",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
 });
@@ -89,7 +78,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200`}>
+      <body className={`${poppins.variable} bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200`}>
         <ThemeProvider>
           <Providers>
             <Pathname>

@@ -40,7 +40,7 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
                     {
                         animeData.ongoing.animeList.map((Item, idx) => {
                             return (
-                                <Link href={`/anime/${formatSlug(Item.title)}`} key={idx} rel=''>
+                                <Link href={`/anime/${formatSlug(Item.href)}`} key={idx} rel=''>
                                     <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 cursor-pointer p-0">
                                         <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">
                                             <Image

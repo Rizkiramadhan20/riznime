@@ -66,7 +66,7 @@
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
-  --font-noto-sans-jp: var(--font-noto-sans-jp);
+  --font-poppins: var(--font-poppins);
   --border-color: #e5e7eb;
   --hover-bg: #f3f4f6;
   --header-bg: rgba(255, 255, 255, 0.8);
@@ -110,7 +110,7 @@
 body {
   color: var(--text);
   background: var(--background);
-  font-family: var(--font-noto-sans-jp);
+  font-family: var(--font-poppins);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 

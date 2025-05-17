@@ -79,7 +79,7 @@ export default function BannerContent({ animeData }: BannerContentProps) {
                         <div className="flex gap-2 sm:gap-3 md:gap-4 pb-4 md:pb-0">
                             {displayedAnime.map((anime: Anime, index: number) => (
                                 <div
-                                    key={anime.animeId}
+                                    key={`anime-${index}`}
                                     className={`flex-shrink-0 w-24 sm:w-28 md:w-32 lg:w-40 aspect-[2/3] rounded-xl overflow-hidden shadow-lg transition-all duration-300 cursor-pointer
                                         ${currentIndex === index
                                             ? 'ring-2 ring-primary scale-105'
