@@ -96,3 +96,46 @@ export interface SearchResponse {
     totalPages: number;
   };
 }
+
+export interface OngoingAnimeList {
+  href: string;
+  otakudesuUrl: string;
+  animeList: {
+    title: string;
+    poster: string;
+    episodes: number;
+    releaseDay: string;
+    latestReleaseDate: string;
+    score: string;
+    animeId: string;
+    href: string;
+    otakudesuUrl: string;
+  }[];
+}
+
+export interface CompletedAnimeList {
+  href: string;
+  otakudesuUrl: string;
+  animeList: {
+    title: string;
+    poster: string;
+    episodes: number;
+    score: string;
+    lastReleaseDate: string;
+    animeId: string;
+    href: string;
+    otakudesuUrl: string;
+  }[];
+}
+
+export interface AnimeListResponse {
+  statusCode: number;
+  statusMessage: string;
+  message: string;
+  ok: boolean;
+  data: {
+    ongoing: OngoingAnimeList;
+    completed: CompletedAnimeList;
+  };
+  pagination: null;
+}

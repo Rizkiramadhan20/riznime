@@ -1,6 +1,6 @@
 import React from 'react'
 
-import DetailsAnime from "@/components/ui/home/ui/anime/pages/anime/DetailsAnime"
+import DetailsAnime from "@/hooks/pages/anime/DetailsAnime"
 
 import { Metadata, ResolvingMetadata } from "next"
 
