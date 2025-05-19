@@ -25,6 +25,7 @@ export default function Header() {
     const [isLoading, setIsLoading] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
     const router = useRouter();
     const { user } = useAuth();
@@ -79,10 +80,15 @@ export default function Header() {
         router.push(href);
     };
 
+    const handleSearchClick = () => {
+        setIsMobileMenuOpen(false);
+        setIsSearchModalOpen(true);
+    };
+
     return (
         <>
             {/* Hamburger Menu */}
-            <header className="fixed top-2 left-0 right-0 z-50 px-2">
+            <header className="fixed top-2 right-2 z-50">
                 <div className='bg-white/80 dark:bg-black/80 backdrop-blur-xl border-t border-x border-white/20 dark:border-white/10 rounded-xl p-4 shadow-lg z-50 w-20'>
                     <div className="flex items-center justify-center h-full">
                         {/* Hamburger Menu Button - Now visible on all screens */}
@@ -101,86 +107,16 @@ export default function Header() {
 
                 {/* Mobile Menu - Now used for all screen sizes */}
                 {isMobileMenuOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--header-bg)] border border-[var(--header-border)] rounded-lg shadow-lg z-50 max-w-7xl">
+                    <div className="absolute top-full right-0 mt-2 bg-[var(--header-bg)] border border-[var(--header-border)] rounded-lg shadow-lg z-50 max-w-7xl">
                         <div className="p-4 space-y-4">
-                            {/* Search Bar */}
-                            <div className="relative group w-full">
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={handleSearchChange}
-                                    onFocus={() => setShowResults(true)}
-                                    placeholder="Search anime..."
-                                    className="w-full h-10 pl-10 pr-4 bg-transparent text-[var(--text)] placeholder-[var(--text-secondary)] border-b border-[var(--header-border)] focus:border-primary transition-all duration-300 outline-none text-sm"
-                                />
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-secondary)]" />
-
-                                {/* Search Results Dropdown */}
-                                {showResults && (searchQuery.trim() !== '' || isLoading) && (
-                                    <div className="absolute top-full left-0 right-0 w-full mt-2 bg-[var(--header-bg)] border border-[var(--header-border)] rounded-lg shadow-lg z-50 max-h-[70vh] overflow-y-auto">
-                                        {isLoading ? (
-                                            <div className="p-4 text-center text-[var(--text-secondary)]">
-                                                Loading...
-                                            </div>
-                                        ) : searchResults.length === 0 ? (
-                                            <div className="p-4 text-center text-[var(--text-secondary)]">
-                                                No results found
-                                            </div>
-                                        ) : (
-                                            <div className="py-2">
-                                                {searchResults.map((result, index) => (
-                                                    <div
-                                                        key={index}
-                                                        onClick={() => handleResultClick(result.href)}
-                                                        className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--hover-bg)] cursor-pointer transition-colors duration-200"
-                                                    >
-                                                        <div className="relative w-12 h-16 flex-shrink-0">
-                                                            <Image
-                                                                src={result.poster || '/images/no-image.png'}
-                                                                alt={result.title}
-                                                                fill
-                                                                className="object-cover rounded"
-                                                                unoptimized
-                                                            />
-                                                        </div>
-                                                        <div className="flex-1">
-                                                            <h4 className="text-sm font-medium text-[var(--text)] line-clamp-1">
-                                                                {result.title}
-                                                            </h4>
-                                                            <div className="flex items-center gap-2 mt-1">
-                                                                <span className="text-xs px-1.5 py-0.5 bg-primary/10 text-primary rounded">
-                                                                    {result.type}
-                                                                </span>
-                                                                <span className="text-xs text-[var(--text-secondary)]">
-                                                                    Score: {result.score}
-                                                                </span>
-                                                                <span className="text-xs text-[var(--text-secondary)]">
-                                                                    {result.status}
-                                                                </span>
-                                                            </div>
-                                                            <div className="flex flex-wrap gap-1 mt-1">
-                                                                {result.genreList.slice(0, 3).map((genre, idx) => (
-                                                                    <span
-                                                                        key={idx}
-                                                                        className="text-xs text-[var(--text-secondary)] px-1.5 py-0.5 bg-[var(--hover-bg)] rounded"
-                                                                    >
-                                                                        {genre.title}
-                                                                    </span>
-                                                                ))}
-                                                                {result.genreList.length > 3 && (
-                                                                    <span className="text-xs text-[var(--text-secondary)]">
-                                                                        +{result.genreList.length - 3}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
+                            {/* Search Button */}
+                            <button
+                                onClick={handleSearchClick}
+                                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[var(--hover-bg)] rounded-lg transition-all duration-300"
+                            >
+                                <Search className="w-4 h-4 text-[var(--text-secondary)]" />
+                                <span className="text-[var(--text)]">Search</span>
+                            </button>
 
                             {/* History */}
                             <div className="flex items-center gap-2 px-3 py-2 hover:bg-[var(--hover-bg)] rounded-lg transition-all duration-300 cursor-pointer">
@@ -241,6 +177,102 @@ export default function Header() {
                     </div>
                 )}
             </header>
+
+            {/* Search Modal */}
+            {isSearchModalOpen && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-start justify-center pt-20">
+                    <div className="bg-[var(--header-bg)] border border-[var(--header-border)] rounded-lg shadow-lg w-full max-w-2xl mx-4">
+                        <div className="p-4">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-lg font-medium text-[var(--text)]">Search Anime</h2>
+                                <button
+                                    onClick={() => setIsSearchModalOpen(false)}
+                                    className="p-2 hover:bg-[var(--hover-bg)] rounded-lg transition-all duration-300"
+                                >
+                                    <X className="w-5 h-5 text-[var(--text)]" />
+                                </button>
+                            </div>
+                            <div className="relative group w-full">
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                    onFocus={() => setShowResults(true)}
+                                    placeholder="Search anime..."
+                                    className="w-full h-12 pl-10 pr-4 bg-transparent text-[var(--text)] placeholder-[var(--text-secondary)] border-b border-[var(--header-border)] focus:border-primary transition-all duration-300 outline-none text-sm"
+                                />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-secondary)]" />
+                            </div>
+
+                            {/* Search Results */}
+                            {showResults && (searchQuery.trim() !== '' || isLoading) && (
+                                <div className="mt-2 max-h-[60vh] overflow-y-auto">
+                                    {isLoading ? (
+                                        <div className="p-4 text-center text-[var(--text-secondary)]">
+                                            Loading...
+                                        </div>
+                                    ) : searchResults.length === 0 ? (
+                                        <div className="p-4 text-center text-[var(--text-secondary)]">
+                                            No results found
+                                        </div>
+                                    ) : (
+                                        <div className="py-2">
+                                            {searchResults.map((result, index) => (
+                                                <div
+                                                    key={index}
+                                                    onClick={() => handleResultClick(result.href)}
+                                                    className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--hover-bg)] cursor-pointer transition-colors duration-200"
+                                                >
+                                                    <div className="relative w-12 h-16 flex-shrink-0">
+                                                        <Image
+                                                            src={result.poster || '/images/no-image.png'}
+                                                            alt={result.title}
+                                                            fill
+                                                            className="object-cover rounded"
+                                                            unoptimized
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <h4 className="text-sm font-medium text-[var(--text)] line-clamp-1">
+                                                            {result.title}
+                                                        </h4>
+                                                        <div className="flex items-center gap-2 mt-1">
+                                                            <span className="text-xs px-1.5 py-0.5 bg-primary/10 text-primary rounded">
+                                                                {result.type}
+                                                            </span>
+                                                            <span className="text-xs text-[var(--text-secondary)]">
+                                                                Score: {result.score}
+                                                            </span>
+                                                            <span className="text-xs text-[var(--text-secondary)]">
+                                                                {result.status}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex flex-wrap gap-1 mt-1">
+                                                            {result.genreList.slice(0, 3).map((genre, idx) => (
+                                                                <span
+                                                                    key={idx}
+                                                                    className="text-xs text-[var(--text-secondary)] px-1.5 py-0.5 bg-[var(--hover-bg)] rounded"
+                                                                >
+                                                                    {genre.title}
+                                                                </span>
+                                                            ))}
+                                                            {result.genreList.length > 3 && (
+                                                                <span className="text-xs text-[var(--text-secondary)]">
+                                                                    +{result.genreList.length - 3}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Click outside handler for search results and mobile menu */}
             {(showResults || isMobileMenuOpen) && (
