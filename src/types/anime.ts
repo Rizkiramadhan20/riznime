@@ -139,3 +139,16 @@ export interface AnimeListResponse {
   };
   pagination: null;
 }
+
+export interface GenresData {
+  title: string;
+  genreId: string;
+  href: string;
+  otakudesuUrl: string;
+}
+
+export interface GenresList {
+  href: string;
+  otakudesuUrl: string;
+  genreList: GenresData[];
+}

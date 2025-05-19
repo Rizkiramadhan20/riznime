@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
     isOpen: boolean;
@@ -7,40 +8,41 @@ interface ModalProps {
     className?: string;
 }
 
+let lastScrollY = 0;
+
 export default function Modal({ isOpen, onClose, children, className = '' }: ModalProps) {
     useEffect(() => {
         if (isOpen) {
-            const scrollY = window.scrollY;
+            lastScrollY = window.scrollY;
             document.body.style.position = 'fixed';
-            document.body.style.top = `-${scrollY}px`;
+            document.body.style.top = `-${lastScrollY}px`;
             document.body.style.width = '100%';
         } else {
-            const scrollY = document.body.style.top;
             document.body.style.position = '';
             document.body.style.top = '';
             document.body.style.width = '';
-            window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+            window.scrollTo(0, lastScrollY);
         }
 
         return () => {
-            const scrollY = document.body.style.top;
             document.body.style.position = '';
             document.body.style.top = '';
             document.body.style.width = '';
-            window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+            window.scrollTo(0, lastScrollY);
         };
     }, [isOpen]);
 
     if (!isOpen) return null;
 
-    return (
+    const modalContent = (
         <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 transition-all duration-300 ease-in-out"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-4 transition-all duration-300 ease-in-out"
             onClick={onClose}
         >
             <div
                 className={`bg-white/80 dark:bg-black/80 border border-base-300 max-w-7xl w-full rounded-xl shadow-2xl transform transition-all duration-300 ease-in-out ${className}`}
                 onClick={(e) => e.stopPropagation()}
+                style={{ transform: 'translateY(0)' }}
             >
                 <div className="flex gap-1.5 sm:gap-2.5 p-3 border-b border-base-300">
                     <div className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-red-500/90 hover:bg-red-500 transition-colors cursor-pointer"></div>
@@ -61,4 +63,6 @@ export default function Modal({ isOpen, onClose, children, className = '' }: Mod
             </div>
         </div>
     );
-} 
+
+    return typeof window !== 'undefined' ? createPortal(modalContent, document.body) : null;
+}

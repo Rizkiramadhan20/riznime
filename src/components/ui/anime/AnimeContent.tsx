@@ -41,7 +41,7 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
 
     return (
         <section className='py-16 bg-gray-50 dark:bg-gray-900'>
-            <div className='container px-4 mx-auto max-w-7xl'>
+            <div className='container px-4'>
                 <div className='flex justify-between sm:items-center mb-12 flex-col sm:flex-row items-start gap-6'>
                     <div>
                         <h3 className='text-4xl font-bold text-gray-900 dark:text-white tracking-tight'>Anime Terbaru</h3>

@@ -34,7 +34,7 @@ export default function BannerContent({ animeData }: BannerContentProps) {
     };
 
     return (
-        <div className="relative w-full min-h-screen flex items-end sm:items-center overflow-hidden bg-gradient-to-b from-black/90 to-black/50">
+        <div className="relative w-full min-h-screen flex items-end sm:items-center overflow-hidden bg-gradient-to-b from-black/90 to-black/50 z-0">
             {/* Background image with parallax effect */}
             <div className='w-full h-full'>
                 <Image

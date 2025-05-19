@@ -4,7 +4,7 @@ import { fetchAnimeData } from '@/lib/FetchAnime';
 
 import AnimeContent from '@/components/ui/anime/AnimeContent';
 
-import BannerSkeleton from '@/components/ui/anime/AnimeSkelaton';
+import AnimeContentSkeleton from '@/components/ui/anime/AnimeContentSkeleton';
 
 export default async function Anime() {
     try {
@@ -13,7 +13,7 @@ export default async function Anime() {
     } catch (error) {
         console.error('Error fetching banner data:', error);
         return (
-            <BannerSkeleton />
+            <AnimeContentSkeleton />
         );
     }
 }

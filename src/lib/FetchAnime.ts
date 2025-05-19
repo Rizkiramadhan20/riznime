@@ -39,3 +39,22 @@ export async function FetchBannerData() {
     throw error;
   }
 }
+
+export async function fetchGenresData() {
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/genres`, {
+      cache: "no-store", // 🔥 agar tidak cache
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching genres data:", error);
+    throw error;
+  }
+}
