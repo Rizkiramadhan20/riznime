@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { motion } from 'framer-motion';
 
 interface ModalProps {
     isOpen: boolean;
@@ -8,27 +9,16 @@ interface ModalProps {
     className?: string;
 }
 
-let lastScrollY = 0;
-
 export default function Modal({ isOpen, onClose, children, className = '' }: ModalProps) {
     useEffect(() => {
         if (isOpen) {
-            lastScrollY = window.scrollY;
-            document.body.style.position = 'fixed';
-            document.body.style.top = `-${lastScrollY}px`;
-            document.body.style.width = '100%';
+            document.body.style.overflow = 'hidden';
         } else {
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            window.scrollTo(0, lastScrollY);
+            document.body.style.overflow = 'unset';
         }
 
         return () => {
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            window.scrollTo(0, lastScrollY);
+            document.body.style.overflow = 'unset';
         };
     }, [isOpen]);
 
@@ -36,31 +26,34 @@ export default function Modal({ isOpen, onClose, children, className = '' }: Mod
 
     const modalContent = (
         <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-4 transition-all duration-300 ease-in-out"
+            className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all duration-300 ease-in-out"
             onClick={onClose}
         >
-            <div
-                className={`bg-white/80 dark:bg-black/80 border border-base-300 max-w-7xl w-full rounded-xl shadow-2xl transform transition-all duration-300 ease-in-out ${className}`}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                    duration: 0.3,
+                    exit: { duration: 0.4 }
+                }}
+                className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 max-w-7xl w-full rounded-lg shadow-xl transform transition-all duration-300 ease-in-out ${className}`}
                 onClick={(e) => e.stopPropagation()}
-                style={{ transform: 'translateY(0)' }}
             >
-                <div className="flex gap-1.5 sm:gap-2.5 p-3 border-b border-base-300">
-                    <div className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-red-500/90 hover:bg-red-500 transition-colors cursor-pointer"></div>
-                    <div className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-yellow-500/90 hover:bg-yellow-500 transition-colors cursor-pointer"></div>
-                    <div className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-green-500/90 hover:bg-green-500 transition-colors cursor-pointer"></div>
-                </div>
-                <div className="relative p-6">
+                <div className="flex items-center justify-end p-4 md:p-5 border-b border-gray-200 dark:border-gray-700">
                     <button
                         onClick={onClose}
-                        className="absolute top-3 right-3 btn btn-circle btn-ghost btn-sm hover:bg-base-200 transition-colors"
+                        className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                         </svg>
                     </button>
+                </div>
+                <div className="p-4 md:p-5 space-y-4">
                     {children}
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 
