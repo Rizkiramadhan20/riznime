@@ -6,13 +6,8 @@ export async function fetchAnimeBySlug(slug: string) {
   try {
     // Correct the slug if it starts with "anime"
     if (slug.startsWith("anime")) {
-      const originalSlug = slug;
       slug = slug.replace(/^anime/, "");
-      console.log(`Correcting slug from ${originalSlug} to ${slug}`);
     }
-
-    console.log(`Fetching anime data for slug: ${slug}`);
-    console.log(`API URL: ${NEXT_PUBLIC_URL}/api/anime/${slug}`);
 
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime/${slug}`, {
       cache: "no-store",
@@ -25,8 +20,6 @@ export async function fetchAnimeBySlug(slug: string) {
     });
 
     if (!res.ok) {
-      const errorText = await res.text().catch(() => "No error text available");
-      console.error(`API Error (${res.status}): ${errorText}`);
       throw new Error(
         `Failed to fetch anime data: ${res.status} ${res.statusText}`
       );
@@ -35,7 +28,6 @@ export async function fetchAnimeBySlug(slug: string) {
     const data = await res.json();
     return data;
   } catch (error) {
-    console.error(`Error fetching anime data for slug ${slug}:`, error);
     throw error;
   }
 }

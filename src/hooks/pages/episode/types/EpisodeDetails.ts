@@ -61,6 +61,7 @@ export interface EpisodeData {
   };
   info: AnimeInfo;
   poster: string;
+  recommendedAnimeList?: RecommendedAnime[];
 }
 
 export interface ApiResponse {

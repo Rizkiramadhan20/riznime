@@ -53,7 +53,7 @@ export async function GET(
 
       const animeData = animeResponse.data.data;
 
-      // Add poster to episode data
+      // Add poster and recommendedAnimeList to episode data
       const transformedData = {
         statusCode: 200,
         statusMessage: "OK",
@@ -71,6 +71,7 @@ export async function GET(
             return value;
           }),
           poster: animeData.poster,
+          recommendedAnimeList: animeData.recommendedAnimeList,
         },
         pagination: null,
       };

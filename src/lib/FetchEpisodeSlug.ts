@@ -6,13 +6,8 @@ export async function fetchEpisodeBySlug(slug: string) {
   try {
     // Correct the slug if it starts with "anime"
     if (slug.startsWith("episode")) {
-      const originalSlug = slug;
       slug = slug.replace(/^episode/, "");
-      console.log(`Correcting slug from ${originalSlug} to ${slug}`);
     }
-
-    console.log(`Fetching episode data for slug: ${slug}`);
-    console.log(`API URL: ${NEXT_PUBLIC_URL}/api/episode/${slug}`);
 
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/episode/${slug}`, {
       cache: "no-store",
@@ -25,8 +20,6 @@ export async function fetchEpisodeBySlug(slug: string) {
     });
 
     if (!res.ok) {
-      const errorText = await res.text().catch(() => "No error text available");
-      console.error(`API Error (${res.status}): ${errorText}`);
       throw new Error(
         `Failed to fetch episode data: ${res.status} ${res.statusText}`
       );
@@ -35,7 +28,6 @@ export async function fetchEpisodeBySlug(slug: string) {
     const data = await res.json();
     return data;
   } catch (error) {
-    console.error(`Error fetching episode data for slug ${slug}:`, error);
     throw error;
   }
 }
