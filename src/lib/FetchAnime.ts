@@ -2,7 +2,6 @@ const NEXT_PUBLIC_API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
 
 // ✅ Ambil hanya data untuk Anime Data
-
 export async function fetchAnimeData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime`, {
@@ -23,7 +22,6 @@ export async function fetchAnimeData() {
 }
 
 // ✅ Ambil hanya data untuk Banner
-
 export async function FetchBannerData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime`, {
@@ -44,7 +42,6 @@ export async function FetchBannerData() {
 }
 
 // ✅ Ambil hanya data untuk Genres
-
 export async function fetchGenresData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/genres`, {
@@ -64,8 +61,30 @@ export async function fetchGenresData() {
   }
 }
 
-// ✅ Ambil hanya data untuk Schedule
+// ✅ Ambil genres berdasarkan [genreId]
+export async function fetchAnimeGenresId(genreId: string, page: number = 1) {
+  try {
+    const res = await fetch(
+      `${NEXT_PUBLIC_URL}/api/genres/${genreId}?page=${page}`,
+      {
+        cache: "no-store",
+        headers: {
+          "x-api-key": NEXT_PUBLIC_API_KEY!,
+        },
+      }
+    );
 
+    if (!res.ok) throw new Error("Failed to fetch anime data");
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching anime data:", error);
+    return null;
+  }
+}
+
+// ✅ Ambil hanya data untuk Schedule
 export async function fetchScheduleData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/schedule`, {

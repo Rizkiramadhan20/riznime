@@ -124,6 +124,7 @@ export default function Sidebar() {
                     </div>
                 </div>
             </nav>
+
             {/* Search Modal */}
             {isSearchModalOpen && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-start justify-center pt-20">

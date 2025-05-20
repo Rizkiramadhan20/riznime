@@ -10,6 +10,17 @@ export interface Anime {
   score?: string;
   href: string;
   otakudesuUrl?: string;
+  studios?: string;
+  season?: string;
+  synopsis?: {
+    paragraphs: string[];
+    connections?: unknown[];
+  };
+  genreList?: {
+    title: string;
+    genreId: string;
+    href: string;
+  }[];
 }
 
 export interface AnimeList {
@@ -190,3 +201,50 @@ export interface ScheduleResponse {
   };
   pagination: null;
 }
+
+// ✅ Interface hanya data untuk Daftar Anime
+export interface DaftarAnime {
+  title: string;
+  poster: string;
+  animeId: string;
+  href: string;
+}
+
+// ✅ Interface hanya data untuk Genres Id
+export type Props = {
+  genreId: string;
+  searchParams: { page?: string };
+};
+
+export type AnimeId = {
+  title: string;
+  poster: string;
+  studios?: string;
+  score?: string;
+  episodes?: number | string;
+  season?: string;
+  animeId: string;
+  href: string;
+  synopsis?: {
+    paragraphs: string[];
+  };
+  genreList?: {
+    title: string;
+    genreId: string;
+    href: string;
+  }[];
+};
+
+export type AnimeResponse = {
+  data: {
+    animeList: Anime[];
+  };
+  pagination: {
+    currentPage: number;
+    hasPrevPage: boolean;
+    prevPage: number | null;
+    hasNextPage: boolean;
+    nextPage: number | null;
+    totalPages: number;
+  };
+};
