@@ -1,23 +1,24 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-
 import Link from 'next/link'
-
 import Image from 'next/image'
-
 import { Search, Play, Download } from 'lucide-react'
-
+import { usePathname } from 'next/navigation'
 import { DetailsEpisodeContentProps, Episode, Genre, Quality, Server, DownloadQuality, DownloadUrl } from "@/hooks/pages/episode/types/EpisodeDetails"
-
 import { fetchServerUrl } from '@/lib/FetchServerUrl'
 
 export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeContentProps) {
+    const pathname = usePathname();
     const [search, setSearch] = useState('');
     const [selectedQuality, setSelectedQuality] = useState<Quality>(episodeData.server.qualities[0]);
     const [selectedServer, setSelectedServer] = useState<Server>(episodeData.server.qualities[0].serverList[0]);
     const [currentStreamingUrl, setCurrentStreamingUrl] = useState(episodeData.defaultStreamingUrl);
     const [isLoading, setIsLoading] = useState(false);
+
+    const isEpisodeActive = (episodeHref: string) => {
+        return pathname === episodeHref;
+    };
 
     useEffect(() => {
         // Selalu fetch dari server default saat mount
@@ -76,10 +77,16 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                             ))}
                         </div>
                         <div className="flex items-center gap-4">
-                            <a href={episodeData.defaultStreamingUrl} target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-6 md:px-8 py-3 rounded-full font-semibold shadow-lg hover:from-blue-700 hover:to-blue-500 transition-all duration-300 text-base md:text-lg flex items-center gap-2 hover:scale-105">
+                            <button
+                                onClick={() => {
+                                    const iframeSection = document.querySelector('.aspect-video');
+                                    iframeSection?.scrollIntoView({ behavior: 'smooth' });
+                                }}
+                                className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-6 md:px-8 py-3 rounded-full font-semibold shadow-lg hover:from-blue-700 hover:to-blue-500 transition-all duration-300 text-base md:text-lg flex items-center gap-2 hover:scale-105"
+                            >
                                 <Play className="w-5 h-5" />
                                 Watch Now
-                            </a>
+                            </button>
                             <button className="bg-gray-800/80 p-3 rounded-full text-white hover:bg-gray-700/90 transition-all duration-300 hover:scale-105">
                                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
                             </button>
@@ -122,6 +129,7 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                                 ) : (
                                     <iframe
                                         src={currentStreamingUrl}
+                                        id='frame'
                                         className="absolute inset-0 w-full h-full"
                                         allowFullScreen
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -199,29 +207,51 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                                     <Link
                                         href={ep.href}
                                         key={ep.episodeId}
-                                        className={`flex items-center rounded-xl p-4 shadow-md transition-all duration-300 group ${ep.episodeId === episodeData.episodeId
-                                            ? 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 border-4 border-blue-300 dark:border-blue-400'
+                                        className={`flex items-center gap-4 rounded-xl p-4 shadow-md transition-all duration-300 group relative ${isEpisodeActive(ep.href)
+                                            ? 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 border-4 border-blue-300 dark:border-blue-400'
                                             : 'bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800/70 border border-transparent'
                                             }`}
                                     >
-                                        <Image src={episodeData.poster} alt={episodeData.title} width={56} height={56} className="rounded-lg mr-4 w-14 h-14 md:w-16 md:h-16" />
+                                        {isEpisodeActive(ep.href) && (
+                                            <>
+                                                <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-blue-400 rounded-full"></div>
+                                                <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-blue-400 rounded-full"></div>
+                                            </>
+                                        )}
+                                        <div className={`relative ${isEpisodeActive(ep.href) ? 'ring-2 ring-blue-300 dark:ring-blue-400' : ''}`}>
+                                            <Image
+                                                src={episodeData.poster}
+                                                alt={episodeData.title}
+                                                width={56}
+                                                height={56}
+                                                className="rounded-lg mr-4 w-14 h-14 md:w-full md:h-16 object-cover"
+                                            />
+                                            {isEpisodeActive(ep.href) && (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-blue-500/20 rounded-lg">
+                                                    <Play className="w-6 h-6 text-white" />
+                                                </div>
+                                            )}
+                                        </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-3">
-                                                <span className={`font-semibold text-base md:text-lg ${ep.episodeId === episodeData.episodeId
+                                                {isEpisodeActive(ep.href) && (
+                                                    <span className="bg-blue-400 text-white text-xs px-2 py-0.5 rounded-full font-medium">Current</span>
+                                                )}
+                                                <span className={`font-semibold text-base md:text-lg ${isEpisodeActive(ep.href)
                                                     ? 'text-white'
                                                     : 'text-gray-900 dark:text-white'
                                                     }`}>E{ep.title}</span>
-                                                <span className={`text-sm ${ep.episodeId === episodeData.episodeId
+                                                <span className={`text-sm ${isEpisodeActive(ep.href)
                                                     ? 'text-blue-100'
                                                     : 'text-gray-500 dark:text-gray-400'
                                                     }`}>{episodeData.info.duration}</span>
                                             </div>
-                                            <div className={`text-sm md:text-base truncate ${ep.episodeId === episodeData.episodeId
+                                            <div className={`text-sm md:text-base truncate ${isEpisodeActive(ep.href)
                                                 ? 'text-blue-100'
                                                 : 'text-gray-600 dark:text-gray-300'
                                                 }`}>Episode {ep.title}</div>
                                         </div>
-                                        <div className={`ml-4 text-xl md:text-2xl transition-colors ${ep.episodeId === episodeData.episodeId
+                                        <div className={`ml-4 text-xl md:text-2xl transition-colors ${isEpisodeActive(ep.href)
                                             ? 'text-white'
                                             : 'text-blue-500 group-hover:text-blue-400'
                                             }`}>▶</div>
@@ -314,7 +344,7 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
                                 {episodeData.recommendedAnimeList.map((anime) => (
                                     <Link
-                                        href={anime.href}
+                                        href={`${process.env.NEXT_PUBLIC_URL}/${anime.href.replace('otakudesu', '').replace(/^\/+/, '')}`}
                                         key={anime.animeId}
                                         className="group relative aspect-[2/3] rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                                     >

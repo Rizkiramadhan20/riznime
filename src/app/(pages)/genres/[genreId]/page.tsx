@@ -73,10 +73,10 @@ export async function generateMetadata(
     const previousImages = (await parent).openGraph?.images || [];
 
     return {
-        title: `${genreTitle} Anime | Riznime`,
+        title: `${genreTitle} | Riznime`,
         description: `Watch ${genreTitle} anime online. Browse our collection of ${genreTitle} anime series and movies.`,
         openGraph: {
-            title: `${genreTitle} Anime | Riznime`,
+            title: `${genreTitle} | Riznime`,
             description: `Watch ${genreTitle} anime online. Browse our collection of ${genreTitle} anime series and movies.`,
             images: [...previousImages],
         },

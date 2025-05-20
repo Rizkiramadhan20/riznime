@@ -43,17 +43,17 @@ export default function Header() {
                     {/* Close Button */}
                     <button
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="absolute top-4 right-4 sm:top-6 sm:right-8 p-2 sm:p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                        className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
                         aria-label="Close menu"
                     >
-                        <X className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                        <X className="w-5 h-5 text-white" />
                     </button>
 
                     {/* Main Content */}
-                    <div className="flex-1 flex flex-col sm:flex-row w-full">
-                        {/* Left: Menu & Address */}
-                        <div className="flex flex-col justify-between w-full sm:max-w-[520px] px-6 sm:pl-16 sm:pr-8 py-8 sm:py-12">
-                            <nav className="flex flex-col gap-6 sm:gap-8 justify-center flex-1">
+                    <div className="flex-1 flex flex-col w-full">
+                        {/* Menu Items */}
+                        <div className="flex-1 flex flex-col justify-center px-4 py-8">
+                            <nav className="flex flex-col gap-4">
                                 {[
                                     { name: 'Daftar Anime', href: '/daftar-anime' },
                                     { name: 'Daftar Manga', href: '/daftar-manga' },
@@ -68,12 +68,12 @@ export default function Header() {
                                             className="block relative overflow-hidden group"
                                         >
                                             <motion.span
-                                                className="flex items-center text-2xl sm:text-3xl font-light py-2 transition-all duration-300 ease-in-out transform group-hover:-translate-y-full text-white"
+                                                className="flex items-center text-xl font-light py-1.5 transition-all duration-300 ease-in-out transform group-hover:-translate-y-full text-white"
                                             >
                                                 {item.name}
                                             </motion.span>
                                             <motion.span
-                                                className="absolute top-full left-0 flex items-center text-2xl sm:text-3xl font-semibold py-2 transition-all duration-300 ease-in-out transform group-hover:-translate-y-full text-primary"
+                                                className="absolute top-full left-0 flex items-center text-xl font-semibold py-1.5 transition-all duration-300 ease-in-out transform group-hover:-translate-y-full text-primary"
                                             >
                                                 {item.name}
                                             </motion.span>
@@ -82,20 +82,21 @@ export default function Header() {
                                 ))}
                             </nav>
                         </div>
-                        {/* Right: Social Media */}
-                        <div className="flex-1 flex flex-col justify-center items-center sm:items-end px-6 sm:px-0 sm:pr-24 py-8 sm:py-0">
-                            <div className="flex flex-row sm:flex-col gap-4 sm:gap-5">
-                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-colors"><Facebook className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-colors"><Instagram className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-colors"><Twitter className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-colors"><Linkedin className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-colors"><Youtube className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+
+                        {/* Social Media */}
+                        <div className="flex justify-center items-center px-4 py-6">
+                            <div className="flex gap-3">
+                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors"><Facebook className="w-4 h-4" /></a>
+                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors"><Instagram className="w-4 h-4" /></a>
+                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors"><Twitter className="w-4 h-4" /></a>
+                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors"><Linkedin className="w-4 h-4" /></a>
+                                <a href="#" className="bg-white/10 hover:bg-white/20 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors"><Youtube className="w-4 h-4" /></a>
                             </div>
                         </div>
                     </div>
+
                     {/* Footer */}
-                    <div className="flex justify-between items-center w-full px-6 sm:px-16 pb-6 text-xs text-white/50">
-                        <span></span>
+                    <div className="flex justify-center items-center w-full px-4 py-4 text-xs text-white/50">
                         <span>&copy; 2025 Space Digitalia</span>
                     </div>
                 </div>
