@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-type ThemeMode = 'system' | 'dark' | 'light';
+type ThemeMode = 'dark' | 'light';
 
 type ThemeContextType = {
     theme: ThemeMode;
@@ -12,7 +12,7 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setTheme] = useState<ThemeMode>('system');
+    const [theme, setTheme] = useState<ThemeMode>('light');
 
     useEffect(() => {
         // Check localStorage for saved theme
@@ -28,18 +28,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         // Remove existing classes
         root.classList.remove('dark', 'light');
 
-        if (theme === 'system') {
-            // Check system preference
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (systemDark) {
-                root.classList.add('dark');
-            } else {
-                root.classList.add('light');
-            }
-        } else {
-            // Apply selected theme
-            root.classList.add(theme);
-        }
+        // Apply selected theme
+        root.classList.add(theme);
 
         // Save to localStorage
         localStorage.setItem('theme', theme);

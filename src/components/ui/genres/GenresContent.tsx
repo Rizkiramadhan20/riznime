@@ -1,8 +1,6 @@
 "use client"
-import React, { useState } from 'react';
-
+import React, { useState, useRef, MouseEvent, TouchEvent } from 'react';
 import { GenresList } from '@/types/anime';
-
 import Link from 'next/link';
 import {
     Sword,
@@ -87,51 +85,96 @@ const genreIcons: { [key: string]: React.ReactElement } = {
 };
 
 export default function GenresContent({ genresData }: GenresContentProps) {
-    const [showAll, setShowAll] = useState(false);
-    const initialGenres = genresData.genreList.slice(0, 12);
-    const displayedGenres = showAll ? genresData.genreList : initialGenres;
+    const [isDragging, setIsDragging] = useState(false);
+    const [startX, setStartX] = useState(0);
+    const [scrollLeft, setScrollLeft] = useState(0);
+    const sliderRef = useRef<HTMLDivElement>(null);
+    const [startTouchX, setStartTouchX] = useState(0);
+    const [isTouching, setIsTouching] = useState(false);
+
+    const handleMouseDown = (e: MouseEvent) => {
+        if (!sliderRef.current) return;
+        setIsDragging(true);
+        setStartX(e.pageX - sliderRef.current.offsetLeft);
+        setScrollLeft(sliderRef.current.scrollLeft);
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+        if (!isDragging || !sliderRef.current) return;
+        e.preventDefault();
+        const x = e.pageX - sliderRef.current.offsetLeft;
+        const walk = (x - startX) * 2;
+        sliderRef.current.scrollLeft = scrollLeft - walk;
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+        if (!sliderRef.current) return;
+        setIsTouching(true);
+        setStartTouchX(e.touches[0].pageX - sliderRef.current.offsetLeft);
+        setScrollLeft(sliderRef.current.scrollLeft);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+        if (!isTouching || !sliderRef.current) return;
+        e.preventDefault();
+        const x = e.touches[0].pageX - sliderRef.current.offsetLeft;
+        const walk = (x - startTouchX) * 2;
+        sliderRef.current.scrollLeft = scrollLeft - walk;
+    };
+
+    const handleTouchEnd = () => {
+        setIsTouching(false);
+    };
 
     return (
-        <section className='py-16 bg-gray-50 dark:bg-gray-900'>
+        <section className='pt-14 bg-gray-50 dark:bg-gray-900'>
             <div className="container px-4">
-                <h1 className="text-3xl font-bold mb-8 text-center">All Genres</h1>
-                <div className="flex flex-col gap-4 xl:flex xl:flex-wrap xl:justify-center xl:overflow-visible">
-                    <div className="flex flex-row gap-4 overflow-x-auto pb-4 scrollbar-hide xl:flex-wrap xl:overflow-visible xl:pb-0 xl:justify-center xl:w-full">
-                        {displayedGenres.slice(0, Math.ceil(displayedGenres.length / 2)).map((genre) => (
-                            <Link
-                                key={genre.genreId}
-                                href={genre.href}
-                                className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow text-center flex flex-col items-center justify-center w-[170px] flex-shrink-0 xl:flex-shrink"
-                            >
-                                {genreIcons[genre.genreId]}
-                                <span className="text-lg font-medium">{genre.title}</span>
-                            </Link>
-                        ))}
-                    </div>
-                    <div className="flex flex-row-reverse gap-4 overflow-x-auto pb-4 scrollbar-hide xl:flex-wrap xl:overflow-visible xl:pb-0 xl:justify-center xl:w-full">
-                        {displayedGenres.slice(Math.ceil(displayedGenres.length / 2)).map((genre) => (
-                            <Link
-                                key={genre.genreId}
-                                href={genre.href}
-                                className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow text-center flex flex-col items-center justify-center w-[160px] flex-shrink-0 xl:flex-shrink"
-                            >
-                                {genreIcons[genre.genreId]}
-                                <span className="text-lg font-medium">{genre.title}</span>
-                            </Link>
+                <div className="relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-gray-50 dark:from-gray-900 to-transparent z-10 pointer-events-none" />
+                    <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-gray-50 dark:from-gray-900 to-transparent z-10 pointer-events-none" />
+                    <div
+                        ref={sliderRef}
+                        className="flex overflow-x-auto gap-4 pb-4 cursor-grab active:cursor-grabbing select-none scrollbar-hide"
+                        onMouseDown={handleMouseDown}
+                        onMouseUp={handleMouseUp}
+                        onMouseLeave={handleMouseUp}
+                        onMouseMove={handleMouseMove}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                        style={{
+                            WebkitOverflowScrolling: 'touch',
+                            overscrollBehaviorX: 'contain',
+                            msOverflowStyle: 'none',
+                            scrollbarWidth: 'none'
+                        } as React.CSSProperties}
+                    >
+                        {genresData.genreList.map((genre) => (
+                            <div key={genre.genreId} className="flex-none w-[170px]">
+                                <Link
+                                    href={genre.href}
+                                    className='block p-4 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow text-center'
+                                    draggable="false"
+                                    onClick={(e) => {
+                                        if (isDragging || isTouching) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                >
+                                    <div className="flex flex-col items-center justify-center pointer-events-none">
+                                        {genreIcons[genre.genreId]}
+                                        <span className="text-lg font-medium">{genre.title}</span>
+                                    </div>
+                                </Link>
+                            </div>
                         ))}
                     </div>
                 </div>
-                {!showAll && genresData.genreList.length > 12 && (
-                    <div className="flex justify-center mt-8">
-                        <button
-                            onClick={() => setShowAll(true)}
-                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            Show More
-                        </button>
-                    </div>
-                )}
             </div>
         </section>
-    )
+    );
 }

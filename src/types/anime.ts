@@ -1,3 +1,5 @@
+// ✅ Interface hanya data untuk Anime Data
+
 export interface Anime {
   title: string;
   poster: string;
@@ -16,12 +18,16 @@ export interface AnimeList {
   animeList: Anime[];
 }
 
+// ✅ Interface hanya data untuk Genre
+
 export interface Genre {
   title: string;
   genreId: string;
   href: string;
   otakudesuUrl: string;
 }
+
+// ✅ Interface hanya data untuk Episode
 
 export interface Episode {
   title: number | string;
@@ -97,6 +103,8 @@ export interface SearchResponse {
   };
 }
 
+// ✅ Interface hanya data untuk Ongoing
+
 export interface OngoingAnimeList {
   href: string;
   otakudesuUrl: string;
@@ -112,6 +120,8 @@ export interface OngoingAnimeList {
     otakudesuUrl: string;
   }[];
 }
+
+// ✅ Interface hanya data untuk Completed
 
 export interface CompletedAnimeList {
   href: string;
@@ -140,6 +150,8 @@ export interface AnimeListResponse {
   pagination: null;
 }
 
+// ✅ Interface hanya data untuk Genres Data
+
 export interface GenresData {
   title: string;
   genreId: string;
@@ -151,4 +163,30 @@ export interface GenresList {
   href: string;
   otakudesuUrl: string;
   genreList: GenresData[];
+}
+
+// ✅ Interface hanya data untuk Schedule
+
+export interface AnimeSchedule {
+  title: string;
+  animeId: string;
+  href: string;
+  otakudesuUrl: string;
+  poster?: string | null;
+}
+
+export interface DaySchedule {
+  day: string;
+  animeList: AnimeSchedule[];
+}
+
+export interface ScheduleResponse {
+  statusCode: number;
+  statusMessage: string;
+  message: string;
+  ok: boolean;
+  data: {
+    days: DaySchedule[];
+  };
+  pagination: null;
 }

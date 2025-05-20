@@ -1,11 +1,30 @@
 'use client';
 
 import { useTheme } from './ThemeProvider';
-
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 export function ThemeToggle() {
     const { theme, setTheme } = useTheme();
+
+    // Listen to system theme changes
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const handleChange = (e: MediaQueryListEvent) => {
+            setTheme(e.matches ? 'dark' : 'light');
+        };
+
+        // Set initial theme based on system preference
+        setTheme(mediaQuery.matches ? 'dark' : 'light');
+
+        // Listen for changes
+        mediaQuery.addEventListener('change', handleChange);
+
+        return () => {
+            mediaQuery.removeEventListener('change', handleChange);
+        };
+    }, [setTheme]);
 
     // Urutan mode
     const modes = ['light', 'dark'];
@@ -30,7 +49,7 @@ export function ThemeToggle() {
                     className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shadow-md"
                     layout
                     animate={{
-                        x: currentIndex * (window.innerWidth < 640 ? 32 : window.innerWidth < 768 ? 40 : 40),
+                        x: currentIndex * (window.innerWidth < 640 ? 32 : window.innerWidth < 768 ? 40 : 36),
                         background: theme === 'dark'
                             ? 'linear-gradient(135deg, #6366f1 0%, #818cf8 100%)'
                             : 'linear-gradient(135deg, #fff 0%, #e0e7ff 100%)',

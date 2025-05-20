@@ -24,7 +24,7 @@ interface AnimeData {
 export default function AsideCard({ animeData }: { animeData: AnimeData }) {
     return (
         <aside className='w-full xl:w-1/4'>
-            <div className='sticky top-24'>
+            <div className='sticky top-5'>
                 <div className='flex flex-col gap-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg min-h-[400px] max-h-[250px] sm:min-h-[500px] sm:max-h-[800px] overflow-y-auto'>
                     <div className='flex justify-between items-center gap-2 border-b border-gray-200 dark:border-gray-700 pb-4'>
                         <h3 className='text-xl font-bold text-gray-900 dark:text-white'>Completed</h3>

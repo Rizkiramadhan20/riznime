@@ -1,7 +1,8 @@
 const NEXT_PUBLIC_API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
 
-// ✅ Ambil hanya data untuk banner
+// ✅ Ambil hanya data untuk Anime Data
+
 export async function fetchAnimeData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime`, {
@@ -20,6 +21,8 @@ export async function fetchAnimeData() {
     throw error;
   }
 }
+
+// ✅ Ambil hanya data untuk Banner
 
 export async function FetchBannerData() {
   try {
@@ -40,6 +43,8 @@ export async function FetchBannerData() {
   }
 }
 
+// ✅ Ambil hanya data untuk Genres
+
 export async function fetchGenresData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/genres`, {
@@ -56,5 +61,46 @@ export async function fetchGenresData() {
   } catch (error) {
     console.error("Error fetching genres data:", error);
     throw error;
+  }
+}
+
+// ✅ Ambil hanya data untuk Schedule
+
+export async function fetchScheduleData() {
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/schedule`, {
+      cache: "no-store", // 🔥 agar tidak cache
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    return data; // Return the full response object
+  } catch (error) {
+    console.error("Error fetching schedule data:", error);
+    throw error;
+  }
+}
+
+// ✅ Ambil poster anime
+export async function fetchAnimePoster(animeId: string) {
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime/${animeId}`, {
+      cache: "no-store",
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch anime poster");
+
+    const data = await res.json();
+    return data.data?.poster || null;
+  } catch (error) {
+    console.error("Error fetching anime poster:", error);
+    return null;
   }
 }
