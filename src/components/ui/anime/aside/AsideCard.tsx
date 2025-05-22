@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import Link from 'next/link'
+
+import { useRouter } from 'next/navigation'
 
 import { formatSlug } from '@/base/helper/FormatSlug'
 
 import Image from 'next/image'
 
 import { Star } from 'lucide-react'
+
+import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
 interface AnimeData {
     completed: {
@@ -22,8 +26,35 @@ interface AnimeData {
 }
 
 export default function AsideCard({ animeData }: { animeData: AnimeData }) {
+    const router = useRouter();
+    const [loadingId, setLoadingId] = useState<string | null>(null);
+    const [loadingProgress, setLoadingProgress] = useState(0);
+
+    const handleAnimeClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        e.preventDefault();
+        setLoadingId(href);
+        setLoadingProgress(0);
+
+        // Simulate progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setLoadingProgress(progress);
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                router.push(`/anime/${formatSlug(href)}`);
+            }
+        }, 100);
+    };
+
     return (
         <aside className='w-full xl:w-1/4'>
+            <LoadingOverlay
+                isLoading={!!loadingId || loadingProgress > 0}
+                message="Loading in progress"
+                progress={loadingProgress}
+            />
             <div className='sticky top-5'>
                 <div className='flex flex-col gap-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg min-h-[400px] max-h-[250px] sm:min-h-[500px] sm:max-h-[800px] overflow-y-auto'>
                     <div className='flex justify-between items-center gap-2 border-b border-gray-200 dark:border-gray-700 pb-4'>
@@ -38,7 +69,13 @@ export default function AsideCard({ animeData }: { animeData: AnimeData }) {
                         {
                             animeData.completed.animeList.map((Item, idx) => {
                                 return (
-                                    <Link href={`/anime/${formatSlug(Item.href)}`} key={idx} rel='' className='w-40 sm:w-44 xl:w-auto min-w-[160px] sm:min-w-[176px] xl:min-w-0 group flex-shrink-0 xl:flex-shrink'>
+                                    <Link
+                                        href={`/anime/${formatSlug(Item.href)}`}
+                                        key={idx}
+                                        rel=''
+                                        className='w-40 sm:w-44 xl:w-auto min-w-[160px] sm:min-w-[176px] xl:min-w-0 group flex-shrink-0 xl:flex-shrink'
+                                        onClick={(e) => handleAnimeClick(e, Item.href)}
+                                    >
                                         <div className='flex flex-col xl:flex-row bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden h-full hover:shadow-lg transition-shadow duration-200'>
                                             <div className='relative w-full aspect-[3/4] xl:w-28 xl:aspect-[3/4] flex-shrink-0'>
                                                 <Image

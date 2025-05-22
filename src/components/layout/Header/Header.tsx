@@ -56,10 +56,7 @@ export default function Header() {
                             <nav className="flex flex-col gap-4">
                                 {[
                                     { name: 'Daftar Anime', href: '/daftar-anime' },
-                                    { name: 'Daftar Manga', href: '/daftar-manga' },
-                                    { name: 'Jadwal Rilis', href: '/jadwal-rilis' },
                                     { name: 'Artikel', href: '/articles' },
-                                    { name: 'History', href: '#' },
                                 ].map((item) => (
                                     <motion.li key={item.href} className="list-none overflow-hidden">
                                         <Link

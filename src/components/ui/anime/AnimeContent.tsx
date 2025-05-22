@@ -1,4 +1,6 @@
-import React from 'react'
+"use client"
+
+import React, { useState } from 'react'
 
 import { Anime } from '@/types/anime';
 
@@ -14,6 +16,10 @@ import { formatSlug } from "@/base/helper/FormatSlug"
 
 import AsideCard from './aside/AsideCard';
 
+import LoadingOverlay from '@/base/helper/LoadingOverlay';
+
+import { useRouter } from 'next/navigation';
+
 interface AnimeContentProps {
     animeData: {
         ongoing: {
@@ -26,6 +32,10 @@ interface AnimeContentProps {
 }
 
 export default function AnimeContent({ animeData }: AnimeContentProps) {
+    const router = useRouter();
+    const [loadingId, setLoadingId] = useState<string | null>(null);
+    const [loadingProgress, setLoadingProgress] = useState(0);
+
     const transformedData = {
         completed: {
             animeList: animeData.completed.animeList.map(anime => ({
@@ -39,8 +49,31 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
         }
     };
 
+    const handleAnimeClick = (e: React.MouseEvent<HTMLAnchorElement>, animeId: string) => {
+        e.preventDefault();
+        setLoadingId(animeId);
+        setLoadingProgress(0);
+
+        // Simulate progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setLoadingProgress(progress);
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                router.push(`/anime/${formatSlug(animeId)}`);
+            }
+        }, 100);
+    };
+
     return (
         <section className='py-16 bg-gray-50 dark:bg-gray-900'>
+            <LoadingOverlay
+                isLoading={!!loadingId || loadingProgress > 0}
+                message="Loading is progress"
+                progress={loadingProgress}
+            />
             <div className='container px-4'>
                 <div className='flex justify-between sm:items-center mb-12 flex-col sm:flex-row items-start gap-6'>
                     <div>
@@ -60,7 +93,11 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
                             {
                                 animeData.ongoing.animeList.map((Item, idx) => {
                                     return (
-                                        <Link href={`/anime/${formatSlug(Item.href)}`} key={idx} rel=''>
+                                        <Link
+                                            href={`/anime/${formatSlug(Item.href)}`}
+                                            key={idx}
+                                            onClick={(e) => handleAnimeClick(e, Item.href)}
+                                        >
                                             <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer p-0 border-0">
                                                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">
                                                     <Image

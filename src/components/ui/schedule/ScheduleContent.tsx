@@ -5,8 +5,14 @@ import { ScheduleResponse } from '@/types/anime';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import LoadingOverlay from '@/base/helper/LoadingOverlay';
+import { formatSlug } from "@/base/helper/FormatSlug";
 
 export default function ScheduleContent({ animeData }: { animeData: ScheduleResponse | null }) {
+    const router = useRouter();
+    const [loadingId, setLoadingId] = useState<string | null>(null);
+    const [loadingProgress, setLoadingProgress] = useState(0);
     // Fungsi untuk mendapatkan hari dalam bahasa Indonesia
     const getCurrentDayInIndonesian = () => {
         const days = {
@@ -82,6 +88,26 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
         setIsTouching(false);
     };
 
+    const handleAnimeClick = (e: React.MouseEvent<HTMLAnchorElement>, animeId: string) => {
+        e.preventDefault();
+        if (isDragging || isTouching) return;
+
+        setLoadingId(animeId);
+        setLoadingProgress(0);
+
+        // Simulate progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setLoadingProgress(progress);
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                router.push(`/anime/${formatSlug(animeId)}`);
+            }
+        }, 100);
+    };
+
     if (!animeData || !animeData.data || !animeData.data.days) {
         return (
             <section className='py-8 sm:py-12 lg:py-16 bg-gray-50 dark:bg-gray-900 min-h-[50vh]'>
@@ -102,6 +128,11 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
 
     return (
         <section className='py-6 sm:py-8 lg:py-12 bg-gray-50 dark:bg-gray-900'>
+            <LoadingOverlay
+                isLoading={!!loadingId || loadingProgress > 0}
+                message="Loading is progress"
+                progress={loadingProgress}
+            />
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-6 sm:mb-8">
                     <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">Jadwal Rilis</h2>
@@ -172,11 +203,7 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
                                     <Link
                                         href={anime.href}
                                         className="block w-[140px] sm:w-[160px] lg:w-[180px]"
-                                        onClick={(e) => {
-                                            if (isDragging || isTouching) {
-                                                e.preventDefault();
-                                            }
-                                        }}
+                                        onClick={(e) => handleAnimeClick(e, anime.href)}
                                     >
                                         {/* Poster */}
                                         <div className="relative w-full aspect-[3/4] rounded-lg sm:rounded-xl overflow-hidden mb-2 sm:mb-3 ring-1 ring-black/5 dark:ring-white/5 group-hover:ring-2 group-hover:ring-blue-500/50 transition-all duration-300">

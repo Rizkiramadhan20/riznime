@@ -10,12 +10,9 @@ export async function fetchEpisodeBySlug(slug: string) {
     }
 
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/episode/${slug}`, {
-      cache: "no-store",
+      cache: "no-store", // Always fetch fresh data
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
-      },
-      next: {
-        revalidate: 60, // Revalidate every 60 seconds
       },
     });
 

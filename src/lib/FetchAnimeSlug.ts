@@ -14,9 +14,6 @@ export async function fetchAnimeBySlug(slug: string) {
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
-      next: {
-        revalidate: 60, // Revalidate every 60 seconds
-      },
     });
 
     if (!res.ok) {

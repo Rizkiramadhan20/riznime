@@ -24,6 +24,21 @@ export async function GET(
 
     try {
       const { serverId } = await params;
+
+      if (!serverId) {
+        return NextResponse.json(
+          {
+            statusCode: 400,
+            statusMessage: "Error",
+            message: "Server ID is required",
+            ok: false,
+            data: null,
+            pagination: null,
+          },
+          { status: 400 }
+        );
+      }
+
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/server/${serverId}`
       );

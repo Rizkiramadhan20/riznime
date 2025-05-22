@@ -1,7 +1,17 @@
 "use client"
+
 import React, { useState, useRef, MouseEvent, TouchEvent } from 'react';
+
 import { GenresList } from '@/types/anime';
+
 import Link from 'next/link';
+
+import { useRouter } from 'next/navigation';
+
+import LoadingOverlay from '@/base/helper/LoadingOverlay';
+
+import { formatSlug } from "@/base/helper/FormatSlug";
+
 import {
     Sword,
     Compass,
@@ -85,6 +95,9 @@ const genreIcons: { [key: string]: React.ReactElement } = {
 };
 
 export default function GenresContent({ genresData }: GenresContentProps) {
+    const router = useRouter();
+    const [loadingId, setLoadingId] = useState<string | null>(null);
+    const [loadingProgress, setLoadingProgress] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
@@ -130,8 +143,33 @@ export default function GenresContent({ genresData }: GenresContentProps) {
         setIsTouching(false);
     };
 
+    const handleGenreClick = (e: React.MouseEvent<HTMLAnchorElement>, genreId: string) => {
+        e.preventDefault();
+        if (isDragging || isTouching) return;
+
+        setLoadingId(genreId);
+        setLoadingProgress(0);
+
+        // Simulate progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setLoadingProgress(progress);
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                router.push(`/genres/${formatSlug(genreId)}`);
+            }
+        }, 100);
+    };
+
     return (
         <section className='pt-14 bg-gray-50 dark:bg-gray-900'>
+            <LoadingOverlay
+                isLoading={!!loadingId || loadingProgress > 0}
+                message="Loading is progress"
+                progress={loadingProgress}
+            />
             <div className="container px-4">
                 <div className="relative">
                     <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-gray-50 dark:from-gray-900 to-transparent z-10 pointer-events-none" />
@@ -159,11 +197,7 @@ export default function GenresContent({ genresData }: GenresContentProps) {
                                     href={genre.href}
                                     className='block p-4 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow text-center'
                                     draggable="false"
-                                    onClick={(e) => {
-                                        if (isDragging || isTouching) {
-                                            e.preventDefault();
-                                        }
-                                    }}
+                                    onClick={(e) => handleGenreClick(e, genre.genreId)}
                                 >
                                     <div className="flex flex-col items-center justify-center pointer-events-none">
                                         {genreIcons[genre.genreId]}

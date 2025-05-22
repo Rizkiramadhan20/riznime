@@ -4,17 +4,27 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Search, Play, Download } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { DetailsEpisodeContentProps, Episode, Genre, Quality, Server, DownloadQuality, DownloadUrl } from "@/hooks/pages/episode/types/EpisodeDetails"
 import { fetchServerUrl } from '@/lib/FetchServerUrl'
+import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
 export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeContentProps) {
     const pathname = usePathname();
+    const router = useRouter();
     const [search, setSearch] = useState('');
-    const [selectedQuality, setSelectedQuality] = useState<Quality>(episodeData.server.qualities[0]);
-    const [selectedServer, setSelectedServer] = useState<Server>(episodeData.server.qualities[0].serverList[0]);
+    const [selectedQuality, setSelectedQuality] = useState<Quality>(() => {
+        // Find first quality with non-empty serverList
+        const firstValidQuality = episodeData.server.qualities.find(q => q.serverList && q.serverList.length > 0);
+        return firstValidQuality || episodeData.server.qualities[0];
+    });
+    const [selectedServer, setSelectedServer] = useState<Server>(() => {
+        const firstValidQuality = episodeData.server.qualities.find(q => q.serverList && q.serverList.length > 0);
+        return firstValidQuality?.serverList[0] || episodeData.server.qualities[0].serverList[0];
+    });
     const [currentStreamingUrl, setCurrentStreamingUrl] = useState(episodeData.defaultStreamingUrl);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isEpisodeLoading, setIsEpisodeLoading] = useState(false);
+    const [isRecommendedLoading, setIsRecommendedLoading] = useState(false);
 
     const isEpisodeActive = (episodeHref: string) => {
         return pathname === episodeHref;
@@ -28,7 +38,6 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
 
     const handleServerSelect = async (server: Server) => {
         try {
-            setIsLoading(true);
             const response = await fetchServerUrl(server.serverId);
             if (response.ok) {
                 setSelectedServer(server);
@@ -36,9 +45,18 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
             }
         } catch (error) {
             console.error('Failed to fetch server URL:', error);
-        } finally {
-            setIsLoading(false);
         }
+    };
+
+    const handleEpisodeClick = (href: string) => {
+        if (!href) return;
+        setIsEpisodeLoading(true);
+        router.push(href);
+    };
+
+    const handleRecommendedClick = (href: string) => {
+        setIsRecommendedLoading(true);
+        router.push(href);
     };
 
     const filteredEpisodes = (episodeData.info.episodeList ?? []).filter((ep: Episode) => {
@@ -54,6 +72,8 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
 
     return (
         <section className='py-8 md:py-12'>
+            <LoadingOverlay isLoading={isEpisodeLoading} message="Loading episode..." />
+            <LoadingOverlay isLoading={isRecommendedLoading} message="Loading anime..." />
             <div className="container px-4">
                 <div className="relative w-full h-[280px] sm:h-[340px] md:h-[400px] rounded-3xl overflow-hidden shadow-2xl mb-8 md:mb-12">
                     <Image
@@ -93,20 +113,26 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                         </div>
                         <div className="flex items-center gap-4 mt-6">
                             {episodeData.hasPrevEpisode && episodeData.prevEpisode && (
-                                <Link href={episodeData.prevEpisode.href} className="bg-gray-800/80 text-white px-6 md:px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-700/90 transition-all duration-300 text-base md:text-lg flex items-center gap-2 hover:scale-105">
+                                <button
+                                    onClick={() => episodeData.prevEpisode && handleEpisodeClick(episodeData.prevEpisode.href)}
+                                    className="bg-gray-800/80 text-white px-6 md:px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-700/90 transition-all duration-300 text-base md:text-lg flex items-center gap-2 hover:scale-105"
+                                >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                                     </svg>
-                                    Episode {episodeData.prevEpisode.title}
-                                </Link>
+                                    Episode {episodeData.prevEpisode?.title}
+                                </button>
                             )}
                             {episodeData.hasNextEpisode && episodeData.nextEpisode && (
-                                <Link href={episodeData.nextEpisode.href} className="bg-gray-800/80 text-white px-6 md:px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-700/90 transition-all duration-300 text-base md:text-lg flex items-center gap-2 hover:scale-105">
-                                    Episode {episodeData.nextEpisode.title}
+                                <button
+                                    onClick={() => episodeData.nextEpisode && handleEpisodeClick(episodeData.nextEpisode.href)}
+                                    className="bg-gray-800/80 text-white px-6 md:px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-700/90 transition-all duration-300 text-base md:text-lg flex items-center gap-2 hover:scale-105"
+                                >
+                                    Episode {episodeData.nextEpisode?.title}
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
-                                </Link>
+                                </button>
                             )}
                         </div>
                     </div>
@@ -122,19 +148,13 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                         </h2>
                         <div className="space-y-6">
                             <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black shadow-lg">
-                                {isLoading ? (
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="animate-spin rounded-full h-14 w-14 border-t-2 border-b-2 border-blue-500"></div>
-                                    </div>
-                                ) : (
-                                    <iframe
-                                        src={currentStreamingUrl}
-                                        id='frame'
-                                        className="absolute inset-0 w-full h-full"
-                                        allowFullScreen
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    />
-                                )}
+                                <iframe
+                                    src={currentStreamingUrl}
+                                    id='frame'
+                                    className="absolute inset-0 w-full h-full"
+                                    allowFullScreen
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                />
                             </div>
                             <div className='flex gap-4'>
                                 <div className="flex flex-wrap gap-3">
@@ -163,18 +183,20 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                                         onChange={(e) => {
                                             e.preventDefault();
                                             const quality = episodeData.server.qualities.find(q => q.title === e.target.value);
-                                            if (quality) {
+                                            if (quality && quality.serverList && quality.serverList.length > 0) {
                                                 setSelectedQuality(quality);
                                                 handleServerSelect(quality.serverList[0]);
                                             }
                                         }}
                                         className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     >
-                                        {episodeData.server.qualities.map((quality: Quality) => (
-                                            <option key={quality.title} value={quality.title}>
-                                                {quality.title}
-                                            </option>
-                                        ))}
+                                        {episodeData.server.qualities
+                                            .filter(quality => quality.serverList && quality.serverList.length > 0)
+                                            .map((quality: Quality) => (
+                                                <option key={quality.title} value={quality.title}>
+                                                    {quality.title}
+                                                </option>
+                                            ))}
                                     </select>
                                 </div>
                             </div>
@@ -343,8 +365,8 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                             </h2>
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
                                 {episodeData.recommendedAnimeList.map((anime) => (
-                                    <Link
-                                        href={`${process.env.NEXT_PUBLIC_URL}/${anime.href.replace('otakudesu', '').replace(/^\/+/, '')}`}
+                                    <button
+                                        onClick={() => handleRecommendedClick(`${process.env.NEXT_PUBLIC_URL}/${anime.href.replace('otakudesu', '').replace(/^\/+/, '')}`)}
                                         key={anime.animeId}
                                         className="group relative aspect-[2/3] rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                                     >
@@ -359,7 +381,7 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                                         <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
                                             <h3 className="text-white text-sm md:text-base font-medium line-clamp-2">{anime.title}</h3>
                                         </div>
-                                    </Link>
+                                    </button>
                                 ))}
                             </div>
                         </div>

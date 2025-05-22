@@ -19,7 +19,7 @@ export default async function DetailsEpisode({ params }: DetailsEpisodeProps) {
         error = err instanceof Error ? err.message : "Failed to load episode data";
     }
 
-    if (error || !episodeResponse || !episodeResponse.ok) {
+    if (error || !episodeResponse || !episodeResponse.ok || !episodeResponse.data || !episodeResponse.data.server) {
         return (
             <DetailsEpisodeSkeleton />
         );

@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { usePathname } from 'next/navigation';
 
-import { House, Search, LogIn } from "lucide-react"
+import { House, Search, LogIn, BookOpen } from "lucide-react"
 
 import Image from 'next/image';
 
@@ -18,6 +18,7 @@ import LoginModal from '@/components/layout/Header/auth/signin/SignModal';
 
 const menuItems = [
     { href: '/', label: 'Home', icon: House },
+    { href: '/manga', label: 'Manga', icon: BookOpen },
 ];
 
 export default function Sidebar() {

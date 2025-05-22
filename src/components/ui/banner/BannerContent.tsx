@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { Anime } from '@/types/anime';
@@ -11,6 +12,12 @@ import Image from 'next/image';
 
 import Link from 'next/link';
 
+import { useRouter } from 'next/navigation';
+
+import LoadingOverlay from '@/base/helper/LoadingOverlay';
+
+import { formatSlug } from "@/base/helper/FormatSlug";
+
 interface BannerContentProps {
     animeData: {
         ongoing: {
@@ -20,8 +27,11 @@ interface BannerContentProps {
 }
 
 export default function BannerContent({ animeData }: BannerContentProps) {
+    const router = useRouter();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAutoplay, setIsAutoplay] = useState(true);
+    const [loadingId, setLoadingId] = useState<string | null>(null);
+    const [loadingProgress, setLoadingProgress] = useState(0);
 
     const displayedAnime = animeData.ongoing.animeList.slice(0, 4);
 
@@ -56,8 +66,31 @@ export default function BannerContent({ animeData }: BannerContentProps) {
         setCurrentIndex(index);
     };
 
+    const handleAnimeClick = (e: React.MouseEvent<HTMLAnchorElement>, animeId: string) => {
+        e.preventDefault();
+        setLoadingId(animeId);
+        setLoadingProgress(0);
+
+        // Simulate progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setLoadingProgress(progress);
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                router.push(`/anime/${formatSlug(animeId)}`);
+            }
+        }, 100);
+    };
+
     return (
         <div className="relative w-full min-h-screen flex items-end sm:items-center overflow-hidden bg-gradient-to-b from-black/90 to-black/50 z-0">
+            <LoadingOverlay
+                isLoading={!!loadingId || loadingProgress > 0}
+                message="Loading is progress"
+                progress={loadingProgress}
+            />
             {/* Background image with parallax effect */}
             <div className="absolute inset-0 w-full h-full min-h-screen -z-10">
                 <div className="relative w-full h-full min-h-screen">
@@ -114,7 +147,7 @@ export default function BannerContent({ animeData }: BannerContentProps) {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.7, delay: 0.3 }}
-                        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent"
+                        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent line-clamp-3"
                     >
                         {displayedAnime[currentIndex].title}
                     </motion.h1>
@@ -156,6 +189,7 @@ export default function BannerContent({ animeData }: BannerContentProps) {
                     >
                         <Link
                             href={displayedAnime[currentIndex].href}
+                            onClick={(e) => handleAnimeClick(e, displayedAnime[currentIndex].href)}
                             className="group relative inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-lg shadow-lg overflow-hidden"
                         >
                             <motion.span

@@ -4,10 +4,33 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Search } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { DetailsAnimeContentProps } from "@/hooks/pages/anime/types/AnimeDetails"
+import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
 export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentProps) {
+    const router = useRouter();
     const [search, setSearch] = useState('');
+    const [loadingId, setLoadingId] = useState<string | null>(null);
+    const [loadingProgress, setLoadingProgress] = useState(0);
+
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        e.preventDefault();
+        setLoadingId(href);
+        setLoadingProgress(0);
+
+        // Simulate progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setLoadingProgress(progress);
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                router.push(href);
+            }
+        }, 100);
+    };
 
     const filteredEpisodes = (animeData.episodeList ?? []).filter((ep) => {
         if (!ep || ep.title === undefined || ep.title === null) return false;
@@ -22,6 +45,11 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
 
     return (
         <section className='py-6 md:py-10'>
+            <LoadingOverlay
+                isLoading={!!loadingId || loadingProgress > 0}
+                message="Loading in progress"
+                progress={loadingProgress}
+            />
             <div className="container px-4">
                 <div className="relative w-full h-[240px] sm:h-[300px] md:h-[340px] rounded-2xl overflow-hidden shadow-lg mb-6 md:mb-8">
                     <Image
@@ -41,7 +69,15 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                         <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{animeData.title}</h1>
                         <div className="flex flex-wrap gap-2 mb-4">
                             {animeData.genreList.map((genre) => (
-                                <Link href={genre.href} rel='noopener noreferrer' key={genre.genreId} className="text-xs text-gray-200 bg-gray-700/60 px-2 py-1 rounded">{genre.title}</Link>
+                                <Link
+                                    href={genre.href}
+                                    rel='noopener noreferrer'
+                                    key={genre.genreId}
+                                    className="text-xs text-gray-200 bg-gray-700/60 px-2 py-1 rounded"
+                                    onClick={(e) => handleClick(e, genre.href)}
+                                >
+                                    {genre.title}
+                                </Link>
                             ))}
                         </div>
                         <div className="flex items-center gap-3">
@@ -126,6 +162,7 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                         key={index}
                                         href={genre.href}
                                         className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/70 transition-colors text-sm"
+                                        onClick={(e) => handleClick(e, genre.href)}
                                     >
                                         {genre.title}
                                     </Link>
@@ -156,7 +193,12 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                             <div className="space-y-3 md:space-y-4 max-h-[400px] md:max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
                                 {filteredEpisodes.length > 0 ? (
                                     filteredEpisodes.map((ep) => (
-                                        <Link href={ep.href} key={ep.episodeId} className="flex items-center bg-gray-800/70 rounded-xl p-2 md:p-3 shadow hover:bg-gray-700/80 transition">
+                                        <Link
+                                            href={ep.href}
+                                            key={ep.episodeId}
+                                            className="flex items-center bg-gray-800/70 rounded-xl p-2 md:p-3 shadow hover:bg-gray-700/80 transition"
+                                            onClick={(e) => handleClick(e, ep.href)}
+                                        >
                                             <Image src={animeData.poster} alt={animeData.title} width={48} height={48} className="rounded-lg mr-3 md:mr-4 w-12 h-12 md:w-14 md:h-14" />
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2">
@@ -185,7 +227,12 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                 </h2>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                                     {animeData.recommendedAnimeList.map((anime, index) => (
-                                        <Link key={index} href={anime.href} className="group">
+                                        <Link
+                                            key={index}
+                                            href={anime.href}
+                                            className="group"
+                                            onClick={(e) => handleClick(e, anime.href)}
+                                        >
                                             <div className="relative aspect-[3/4] rounded-lg overflow-hidden mb-2 shadow-md">
                                                 <Image
                                                     src={anime.poster}

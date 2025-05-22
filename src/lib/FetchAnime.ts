@@ -123,3 +123,26 @@ export async function fetchAnimePoster(animeId: string) {
     return null;
   }
 }
+
+// ✅ Ambil hanya data untuk Ongoing
+export async function fetchOngoingData() {
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/ongoing`, {
+      cache: "no-store", // 🔥 agar tidak cache
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    return {
+      animeList: data.data.animeList,
+      pagination: data.pagination,
+    };
+  } catch (error) {
+    console.error("Error fetching banner data:", error);
+    throw error;
+  }
+}
