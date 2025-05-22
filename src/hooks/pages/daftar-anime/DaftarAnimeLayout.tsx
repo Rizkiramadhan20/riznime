@@ -15,8 +15,8 @@ export default async function DaftarAnimeLayout() {
         const animeData = await fetchDaftarAnimeData();
         const genresData = await fetchGenresData();
         return <Fragment>
-            <DaftarAnimeContent animeData={animeData} />
             <GenreContent genresData={genresData} />
+            <DaftarAnimeContent animeData={animeData} />
         </Fragment>;
     } catch (error) {
         console.error('Error fetching banner data:', error);

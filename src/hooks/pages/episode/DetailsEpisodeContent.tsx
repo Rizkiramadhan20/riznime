@@ -27,7 +27,10 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
     const [isRecommendedLoading, setIsRecommendedLoading] = useState(false);
 
     const isEpisodeActive = (episodeHref: string) => {
-        return pathname === episodeHref;
+        // Remove any query parameters and trailing slashes for comparison
+        const cleanPathname = pathname.split('?')[0].replace(/\/$/, '');
+        const cleanHref = episodeHref.split('?')[0].replace(/\/$/, '');
+        return cleanPathname === cleanHref;
     };
 
     useEffect(() => {

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useRef, MouseEvent, TouchEvent } from 'react';
+import React from 'react';
 import { GenresList } from '@/types/anime';
 import Link from 'next/link';
 import {
@@ -85,85 +85,20 @@ const genreIcons: { [key: string]: React.ReactElement } = {
 };
 
 export default function GenresContent({ genresData }: GenresContentProps) {
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [scrollLeft, setScrollLeft] = useState(0);
-    const sliderRef = useRef<HTMLDivElement>(null);
-    const [startTouchX, setStartTouchX] = useState(0);
-    const [isTouching, setIsTouching] = useState(false);
-
-    const handleMouseDown = (e: MouseEvent) => {
-        if (!sliderRef.current) return;
-        setIsDragging(true);
-        setStartX(e.pageX - sliderRef.current.offsetLeft);
-        setScrollLeft(sliderRef.current.scrollLeft);
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-        if (!isDragging || !sliderRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - sliderRef.current.offsetLeft;
-        const walk = (x - startX) * 2;
-        sliderRef.current.scrollLeft = scrollLeft - walk;
-    };
-
-    const handleTouchStart = (e: TouchEvent) => {
-        if (!sliderRef.current) return;
-        setIsTouching(true);
-        setStartTouchX(e.touches[0].pageX - sliderRef.current.offsetLeft);
-        setScrollLeft(sliderRef.current.scrollLeft);
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-        if (!isTouching || !sliderRef.current) return;
-        e.preventDefault();
-        const x = e.touches[0].pageX - sliderRef.current.offsetLeft;
-        const walk = (x - startTouchX) * 2;
-        sliderRef.current.scrollLeft = scrollLeft - walk;
-    };
-
-    const handleTouchEnd = () => {
-        setIsTouching(false);
-    };
-
     return (
-        <section className='pt-14 bg-gray-50 dark:bg-gray-900'>
+        <section className='pt-14 py-10 bg-gray-50 dark:bg-gray-900'>
             <div className="container px-4">
+                <h1 className="text-4xl font-bold mb-6 bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
+                    Daftar Genres
+                </h1>
+
                 <div className="relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-gray-50 dark:from-gray-900 to-transparent z-10 pointer-events-none" />
-                    <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-gray-50 dark:from-gray-900 to-transparent z-10 pointer-events-none" />
-                    <div
-                        ref={sliderRef}
-                        className="flex overflow-x-auto gap-4 pb-4 cursor-grab active:cursor-grabbing select-none scrollbar-hide"
-                        onMouseDown={handleMouseDown}
-                        onMouseUp={handleMouseUp}
-                        onMouseLeave={handleMouseUp}
-                        onMouseMove={handleMouseMove}
-                        onTouchStart={handleTouchStart}
-                        onTouchMove={handleTouchMove}
-                        onTouchEnd={handleTouchEnd}
-                        style={{
-                            WebkitOverflowScrolling: 'touch',
-                            overscrollBehaviorX: 'contain',
-                            msOverflowStyle: 'none',
-                            scrollbarWidth: 'none'
-                        } as React.CSSProperties}
-                    >
+                    <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                         {genresData.genreList.map((genre) => (
-                            <div key={genre.genreId} className="flex-none w-[170px]">
+                            <div key={genre.genreId}>
                                 <Link
                                     href={genre.href}
-                                    className='block p-4 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow text-center'
-                                    draggable="false"
-                                    onClick={(e) => {
-                                        if (isDragging || isTouching) {
-                                            e.preventDefault();
-                                        }
-                                    }}
+                                    className='p-6 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow text-center h-full flex flex-col items-center justify-center'
                                 >
                                     <div className="flex flex-col items-center justify-center pointer-events-none">
                                         {genreIcons[genre.genreId]}

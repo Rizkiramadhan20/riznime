@@ -1,18 +1,32 @@
 "use client"
 
 import React, { useState } from 'react'
+
 import Link from 'next/link'
+
 import Image from 'next/image'
+
 import { Search } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+
+import { useRouter, usePathname } from 'next/navigation'
+
 import { DetailsAnimeContentProps } from "@/hooks/pages/anime/types/AnimeDetails"
+
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
 export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentProps) {
     const router = useRouter();
+    const pathname = usePathname();
     const [search, setSearch] = useState('');
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
+
+    const isEpisodeActive = (episodeHref: string) => {
+        // Remove any query parameters and trailing slashes for comparison
+        const cleanPathname = pathname.split('?')[0].replace(/\/$/, '');
+        const cleanHref = episodeHref.split('?')[0].replace(/\/$/, '');
+        return cleanPathname === cleanHref;
+    };
 
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         e.preventDefault();
@@ -196,23 +210,56 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                         <Link
                                             href={ep.href}
                                             key={ep.episodeId}
-                                            className="flex items-center bg-gray-800/70 rounded-xl p-2 md:p-3 shadow hover:bg-gray-700/80 transition"
+                                            className={`flex items-center rounded-xl p-2 md:p-3 shadow transition-all duration-300 ${isEpisodeActive(ep.href)
+                                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800'
+                                                : 'bg-gray-800/70 hover:bg-gray-700/80'
+                                                }`}
                                             onClick={(e) => handleClick(e, ep.href)}
                                         >
-                                            <Image src={animeData.poster} alt={animeData.title} width={48} height={48} className="rounded-lg mr-3 md:mr-4 w-12 h-12 md:w-14 md:h-14" />
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-white font-semibold text-sm md:text-base">E{ep.title}</span>
-                                                    <span className="text-yellow-400 text-xs font-bold">★ {animeData.score}</span>
-                                                    <span className="text-gray-400 text-xs">{animeData.duration}</span>
-                                                </div>
-                                                <div className="text-gray-300 text-xs md:text-sm truncate">Episode {ep.title}</div>
+                                            <div className={`relative ${isEpisodeActive(ep.href) ? 'ring-2 ring-blue-300 dark:ring-blue-400' : ''}`}>
+                                                <Image
+                                                    src={animeData.poster}
+                                                    alt={animeData.title}
+                                                    width={48}
+                                                    height={48}
+                                                    className="rounded-lg w-12 h-12 object-cover"
+                                                />
+                                                {isEpisodeActive(ep.href) && (
+                                                    <div className="absolute inset-0 flex items-center justify-center bg-blue-500/20 rounded-lg">
+                                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <div className="ml-2 md:ml-4 text-blue-400 hover:text-blue-200 transition text-lg md:text-xl">▶</div>
+                                            <div className="flex-1 min-w-0 ml-3">
+                                                <div className="flex items-center gap-2">
+                                                    {isEpisodeActive(ep.href) && (
+                                                        <span className="bg-blue-400 text-white text-xs px-2 py-0.5 rounded-full font-medium">Current</span>
+                                                    )}
+                                                    <span className={`font-semibold text-sm md:text-base ${isEpisodeActive(ep.href)
+                                                        ? 'text-white'
+                                                        : 'text-gray-100'
+                                                        }`}>E{ep.title}</span>
+                                                    <span className={`text-xs ${isEpisodeActive(ep.href)
+                                                        ? 'text-blue-100'
+                                                        : 'text-gray-400'
+                                                        }`}>{animeData.duration}</span>
+                                                </div>
+                                                <div className={`text-xs md:text-sm truncate ${isEpisodeActive(ep.href)
+                                                    ? 'text-blue-100'
+                                                    : 'text-gray-400'
+                                                    }`}>Episode {ep.title}</div>
+                                            </div>
+                                            <div className={`ml-4 text-lg md:text-xl transition-colors ${isEpisodeActive(ep.href)
+                                                ? 'text-white'
+                                                : 'text-blue-500 group-hover:text-blue-400'
+                                                }`}>▶</div>
                                         </Link>
                                     ))
                                 ) : (
-                                    <div className="text-gray-400 text-center py-6 md:py-8">No episodes found.</div>
+                                    <div className="text-gray-400 text-center py-8">No episodes found.</div>
                                 )}
                             </div>
                         </div>

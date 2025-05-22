@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { usePathname } from 'next/navigation';
 
-import { House, Search, LogIn, BookOpen } from "lucide-react"
+import { House, Search, LogIn, BookOpen, X } from "lucide-react"
 
 import Image from 'next/image';
 
@@ -137,7 +137,7 @@ export default function Sidebar() {
                                     onClick={() => setIsSearchModalOpen(false)}
                                     className="p-2 hover:bg-[var(--hover-bg)] rounded-lg transition-all duration-300"
                                 >
-                                    <Search className="w-5 h-5 text-[var(--text)]" />
+                                    <X className="w-5 h-5 text-[var(--text)]" />
                                 </button>
                             </div>
                             <div className="relative group w-full">

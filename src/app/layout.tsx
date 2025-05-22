@@ -1,5 +1,3 @@
-import type { Metadata } from "next";
-
 import { Poppins } from "next/font/google";
 
 import "@/base/style/globals.css";
@@ -12,42 +10,17 @@ import Pathname from "@/base/router/Pathname";
 
 import Providers from "@/base/router/Provider";
 
+import { metadata } from "@/base/meta/Metadata";
+
+export { metadata };
+
+metadata.manifest = "/manifest.json";
+
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
 });
-
-export const metadata: Metadata = {
-  title: "RizNime",
-  description: "Your favorite anime streaming platform",
-  manifest: "/manifest.json",
-  openGraph: {
-    title: "RizNime",
-    description: "Your favorite anime streaming platform",
-    type: "website",
-    locale: "id_ID",
-    siteName: "RizNime",
-    images: [
-      {
-        url: "/og-image.jpg", // You should add this image to your public folder
-        width: 1200,
-        height: 630,
-        alt: "RizNime Preview",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "RizNime",
-    description: "Your favorite anime streaming platform",
-    images: ["/og-image.jpg"], // Same image as OpenGraph
-  },
-  metadataBase: new URL("https://riznime.vercel.app"), // Replace with your actual domain
-  alternates: {
-    canonical: "/",
-  },
-};
 
 export default function RootLayout({
   children,
