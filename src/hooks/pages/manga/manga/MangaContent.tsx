@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 import Link from 'next/link'
 
-import MangaSidebar from '@/hooks/pages/manga/components/MangaSidebar'
+import MangaSidebar from '@/hooks/pages/manga/manga/components/MangaSidebar'
 
 import Pagination from '@/base/helper/Pagination'
 

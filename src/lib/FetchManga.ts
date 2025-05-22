@@ -20,3 +20,59 @@ export async function fetchMangaData() {
     throw error;
   }
 }
+
+// ✅ Ambil hanya data untuk Manga berdasarkan slug
+export async function fetchMangaBySlug(slug: string) {
+  try {
+    // Correct the slug if it starts with "anime"
+    if (slug.startsWith("manga")) {
+      slug = slug.replace(/^manga/, "");
+    }
+
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/manga/${slug}`, {
+      cache: "no-store",
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(
+        `Failed to fetch manga data: ${res.status} ${res.statusText}`
+      );
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// ✅ Ambil hanya data untuk Manga berdasarkan Chapter
+export async function fetchMangaByChapter(slug: string) {
+  try {
+    // Correct the slug if it starts with "anime"
+    if (slug.startsWith("chapter")) {
+      slug = slug.replace(/^chapter/, "");
+    }
+
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/chapter/${slug}`, {
+      cache: "no-store", // Always fetch fresh data
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(
+        `Failed to fetch chapter data: ${res.status} ${res.statusText}`
+      );
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}

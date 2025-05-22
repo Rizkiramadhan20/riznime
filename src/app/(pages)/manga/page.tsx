@@ -2,9 +2,9 @@ import React from 'react';
 
 import { fetchMangaData } from '@/lib/FetchManga';
 
-import MangaContent from '@/hooks/pages/manga/MangaContent';
+import MangaContent from '@/hooks/pages/manga/manga/MangaContent';
 
-import MangaSkelaton from '@/hooks/pages/manga/MangaSkelaton';
+import MangaSkelaton from '@/hooks/pages/manga/manga/MangaSkelaton';
 
 import { Metadata } from 'next';
 
