@@ -22,7 +22,7 @@ export async function GET(
     }
 
     // Construct the API URL using the format from the example
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/samehadaku/chapter/${slug}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/komiku/chapter/${slug}`;
 
     const { data } = await axios.get(apiUrl, {
       timeout: 10000, // 10 second timeout
@@ -33,9 +33,9 @@ export async function GET(
       if (
         key === "href" &&
         typeof value === "string" &&
-        value.includes("/samehadaku/")
+        value.includes("/komiku/")
       ) {
-        return value.replace("/samehadaku/", "/");
+        return value.replace("/komiku/", "/");
       }
       return value;
     });

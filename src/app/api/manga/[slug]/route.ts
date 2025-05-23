@@ -23,20 +23,20 @@ export async function GET(
     }
 
     // Construct the API URL using the format from the example
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/samehadaku/manga/${slug}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/komiku/manga/${slug}`;
 
     const { data } = await axios.get(apiUrl, {
       timeout: 10000, // 10 second timeout
     });
 
-    // Transform data: hapus '/otakudesu/' di href
+    // Transform data: hapus '/komiku/' di href
     const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {
       if (
         key === "href" &&
         typeof value === "string" &&
-        value.includes("/samehadaku/")
+        value.includes("/komiku/")
       ) {
-        return value.replace("/samehadaku/", "/");
+        return value.replace("/komiku/", "/");
       }
       return value;
     });

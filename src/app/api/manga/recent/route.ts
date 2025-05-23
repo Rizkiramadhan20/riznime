@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import axios from "axios";
 
 export async function GET(request: Request) {
@@ -12,11 +13,15 @@ export async function GET(request: Request) {
       );
     }
 
+    // Get page from URL search params
+    const { searchParams } = new URL(request.url);
+    const page = searchParams.get("page") || "1";
+
     const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/komiku/home`
+      `${process.env.NEXT_PUBLIC_API_URL}/komiku/recent?page=${page}`
     );
 
-    // Transform data: hapus '/komiku/' di href
+    // Transform data: hapus '/otakudesu/' di href
     const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {
       if (
         key === "href" &&
@@ -28,7 +33,14 @@ export async function GET(request: Request) {
       return value;
     });
 
-    return NextResponse.json(transformedData);
+    return NextResponse.json({
+      statusCode: 200,
+      statusMessage: "OK",
+      message: "",
+      ok: true,
+      data: transformedData.data,
+      pagination: transformedData.pagination,
+    });
   } catch (error) {
     console.error("❌ Failed to fetch manga data:", error);
     return NextResponse.json(

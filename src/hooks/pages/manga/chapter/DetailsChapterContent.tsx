@@ -58,8 +58,8 @@ export default function DetailsChapterContent({ mangaData }: DetailsChapterConte
                 </div>
 
                 {/* Chapter Images Section */}
-                <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl p-0 shadow-xl">
+                    <h2 className="text-2xl p-8 font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                         <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
@@ -94,6 +94,44 @@ export default function DetailsChapterContent({ mangaData }: DetailsChapterConte
                                     }}
                                 />
                             </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Rekomdendasi Chapter */}
+                <div className='mt-16'>
+                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
+                        <svg className="w-7 h-7 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        Recommended Chapters
+                    </h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                        {mangaData.recommendedChapters.map((chapter) => (
+                            <a
+                                key={chapter.mangaId}
+                                href={chapter.href}
+                                className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                            >
+                                <div className="relative aspect-[2/3] overflow-hidden">
+                                    <Image
+                                        src={chapter.poster}
+                                        alt={chapter.title}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                    <div className="absolute top-3 right-3 bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium shadow-lg">
+                                        {chapter.updateStatus}
+                                    </div>
+                                </div>
+                                <div className="p-4">
+                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                        {chapter.title}
+                                    </h3>
+                                </div>
+                            </a>
                         ))}
                     </div>
                 </div>

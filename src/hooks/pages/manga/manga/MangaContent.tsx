@@ -132,7 +132,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                         <div className='flex flex-col gap-6 md:gap-8 bg-white dark:bg-gray-800 p-4 md:p-8 rounded-2xl shadow-xl'>
                             <div className='flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700 pb-4 md:pb-6'>
                                 <h3 className='text-xl md:text-2xl font-bold text-gray-900 dark:text-white'>Recent Updates</h3>
-                                <Link href={"/recent"} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
+                                <Link href={"/manga/recent"} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
                                     Lihat Semua
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

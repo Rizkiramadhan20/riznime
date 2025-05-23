@@ -2,14 +2,14 @@ export interface Genre {
   title: string;
   genreId: string;
   href: string;
-  samehadakuUrl: string;
+  komikuUrl: string;
 }
 
 export interface Chapter {
   title: string;
   chapterId: string;
   href: string;
-  samehadakuUrl: string;
+  komikuUrl: string;
   views: number;
   releaseDate: string;
 }
@@ -24,7 +24,7 @@ export interface SimilarManga {
   poster: string;
   mangaId: string;
   href: string;
-  samehadakuUrl: string;
+  komikuUrl: string;
   type: string;
   views: string;
   description: string;

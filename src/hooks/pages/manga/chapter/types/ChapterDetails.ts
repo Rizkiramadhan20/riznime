@@ -19,6 +19,16 @@ interface ChapterData {
   chapterImages: ChapterImage[];
   totalImages: number;
   chapterNumber: string;
+  recommendedChapters: recommendedChapter[];
+}
+
+interface recommendedChapter {
+  title: string;
+  poster: string;
+  mangaId: string;
+  href: string;
+  komikuUrl: string;
+  updateStatus: string;
 }
 
 interface ChapterDetailsResponse {
