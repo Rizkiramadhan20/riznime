@@ -7,6 +7,7 @@ export interface Anime {
   episodes?: number | string;
   releaseDay?: string;
   latestReleaseDate?: string;
+  lastReleaseDate?: string;
   score?: string;
   href: string;
   otakudesuUrl?: string;

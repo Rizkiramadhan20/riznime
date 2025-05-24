@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 import { Card } from 'flowbite-react';
 
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, Star } from 'lucide-react';
 
 import Image from 'next/image';
 
@@ -40,11 +40,10 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
 
     const handlePageChange = useCallback(async (page: number) => {
         try {
-            setLoadingProgress(0);
             // Update URL with new page number
-            router.push(`/ongoing?page=${page}`);
+            router.push(`/completed?page=${page}`);
 
-            const response = await fetch(`/api/ongoing?page=${page}`, {
+            const response = await fetch(`/api/completed?page=${page}`, {
                 headers: {
                     "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
                 },
@@ -52,13 +51,8 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
             const data = await response.json();
             setAnimeList(data.data.animeList);
             setCurrentPage(data.pagination.currentPage);
-            setLoadingProgress(100);
-            setTimeout(() => {
-                setLoadingProgress(0);
-            }, 500);
         } catch (error) {
             console.error('Failed to fetch anime data:', error);
-            setLoadingProgress(0);
         }
     }, [router]);
 
@@ -96,9 +90,9 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
                 progress={loadingProgress}
             />
             <div className='container px-4'>
-                <div className='flex mb-12 flex-col gap-4'>
-                    <h3 className='text-4xl font-bold text-gray-900 dark:text-white tracking-tight'>Anime Terbaru</h3>
-                    <p className='text-gray-600 dark:text-gray-400 mt-3 text-lg'>Jelajahi koleksi anime terbaru yang sedang tayang</p>
+                <div className='flex mb-12 flex-col gap-2'>
+                    <h3 className='text-4xl font-bold text-gray-900 dark:text-white tracking-tight'>Anime Completed</h3>
+                    <p className='text-gray-600 dark:text-gray-400 mt-3 text-lg'>Jelajahi koleksi lengkap anime yang sudah selesai tayang</p>
                 </div>
 
                 <article className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6'>
@@ -122,17 +116,25 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                             <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                <div className="flex items-center gap-3 text-sm text-gray-200">
+                                                <div className="flex justify-between items-center gap-3 text-sm text-gray-200">
                                                     <span className="flex items-center gap-1.5">
                                                         <Clock className="w-4 h-4" />
                                                         {Item.episodes} eps
                                                     </span>
-                                                    {Item.releaseDay && (
-                                                        <span className="flex items-center gap-1.5">
-                                                            <Calendar className="w-4 h-4" />
-                                                            {Item.releaseDay}
-                                                        </span>
-                                                    )}
+
+                                                    <span className="flex items-center gap-1.5">
+                                                        <Calendar className="w-4 h-4" />
+                                                        {Item.lastReleaseDate}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="absolute top-0 left-0 right-0 p-2 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                <div className="flex justify-between items-center gap-3 text-sm text-gray-200">
+                                                    <span className="flex items-center gap-1.5 bg-black/50 px-2 py-1 rounded-full">
+                                                        <Star className="w-4 h-4 text-yellow-400" />
+                                                        {Item.score}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>

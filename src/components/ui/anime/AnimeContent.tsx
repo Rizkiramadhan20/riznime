@@ -68,7 +68,7 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
     };
 
     return (
-        <section className='py-16 bg-gray-50 dark:bg-gray-900'>
+        <section className='py-12 bg-gray-50 dark:bg-gray-900'>
             <LoadingOverlay
                 isLoading={!!loadingId || loadingProgress > 0}
                 message="Loading is progress"

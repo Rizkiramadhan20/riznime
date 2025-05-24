@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Fragment } from "react";
 
 import { usePathname } from "next/navigation";
 
@@ -15,55 +15,53 @@ import { Toaster } from "react-hot-toast";
 const Pathname = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
 
-    const isAdminRoute = pathname?.includes("/signin")
-        || pathname?.includes("/signup")
+    const isAdminRoute =
+        pathname?.includes("/profile")
         || pathname?.includes("/dashboard")
         || false;
 
     return (
-        <div className='relative min-h-screen bg-[var(--background)]'>
+        <Fragment>
             {!isAdminRoute && <Header />}
-            <main>
-                <Toaster
-                    position="top-center"
-                    toastOptions={{
-                        duration: 3000,
-                        className: 'shadow-lg',
+            <Toaster
+                position="top-center"
+                toastOptions={{
+                    duration: 3000,
+                    className: 'shadow-lg',
+                    style: {
+                        background: 'var(--header-bg)',
+                        color: 'var(--text)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid var(--header-border)',
+                    },
+                    success: {
                         style: {
-                            background: 'var(--header-bg)',
-                            color: 'var(--text)',
-                            backdropFilter: 'blur(8px)',
-                            border: '1px solid var(--header-border)',
+                            background: 'var(--success)',
+                            color: '#fff',
+                            border: 'none',
                         },
-                        success: {
-                            style: {
-                                background: 'var(--success)',
-                                color: '#fff',
-                                border: 'none',
-                            },
-                            iconTheme: {
-                                primary: '#fff',
-                                secondary: 'var(--success)',
-                            },
+                        iconTheme: {
+                            primary: '#fff',
+                            secondary: 'var(--success)',
                         },
-                        error: {
-                            style: {
-                                background: 'var(--error)',
-                                color: '#fff',
-                                border: 'none',
-                            },
-                            iconTheme: {
-                                primary: '#fff',
-                                secondary: 'var(--error)',
-                            },
+                    },
+                    error: {
+                        style: {
+                            background: 'var(--error)',
+                            color: '#fff',
+                            border: 'none',
                         },
-                    }}
-                />
-                {children}
-            </main>
+                        iconTheme: {
+                            primary: '#fff',
+                            secondary: 'var(--error)',
+                        },
+                    },
+                }}
+            />
+            {children}
             {!isAdminRoute && <Navigation />}
             {!isAdminRoute && <Footer />}
-        </div>
+        </Fragment>
     );
 };
 

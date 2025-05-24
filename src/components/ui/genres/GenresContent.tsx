@@ -164,7 +164,7 @@ export default function GenresContent({ genresData }: GenresContentProps) {
     };
 
     return (
-        <section className='pt-14 bg-gray-50 dark:bg-gray-900'>
+        <section className='pt-10 sm:pt-14 bg-gray-50 dark:bg-gray-900'>
             <LoadingOverlay
                 isLoading={!!loadingId || loadingProgress > 0}
                 message="Loading is progress"
