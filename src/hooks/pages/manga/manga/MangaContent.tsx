@@ -9,6 +9,8 @@ import MangaSidebar from '@/hooks/pages/manga/manga/components/MangaSidebar'
 
 import Pagination from '@/base/helper/Pagination'
 
+import LoadingOverlay from '@/base/helper/LoadingOverlay'
+
 interface MangaData {
     recent: {
         animeList: Array<{
@@ -45,23 +47,13 @@ interface MangaData {
             latestChapterUrl: string
         }>
     }
-    komiku_recommendation: {
-        mangaList: Array<{
-            title: string
-            poster: string
-            mangaId: string
-            href: string
-            type: string
-            latestChapter: string
-            latestChapterUrl: string
-        }>
-    }
 }
 
 export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
     const banner = mangaData.recent.animeList[0];
     const recentList = mangaData.recent.animeList.slice(1); // Exclude banner
     const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
     const itemsPerPage = 10;
     const totalPages = Math.ceil(mangaData.komiku_popular.mangaList.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -72,8 +64,13 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
         setCurrentPage(page);
     };
 
+    const handleLinkClick = () => {
+        setIsLoading(true);
+    };
+
     return (
         <section className='py-12'>
+            <LoadingOverlay isLoading={isLoading} message="Loading content..." />
             <div className="container px-4 mx-auto">
                 {/* Banner Section */}
                 <div className="bg-header-bg rounded-3xl border border-[var(--card-border)] mb-8 md:mb-16 flex flex-col md:flex-row items-center overflow-hidden relative">
@@ -101,7 +98,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                             <span className="w-1.5 h-1.5 bg-text-secondary rounded-full"></span>
                             <span>{banner.releasedOn}</span>
                         </p>
-                        <Link href={banner.href}>
+                        <Link href={banner.href} onClick={handleLinkClick}>
                             <span className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-semibold px-6 md:px-8 py-3 md:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer">
                                 Baca Sekarang
                                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +129,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                         <div className='flex flex-col gap-6 md:gap-8 bg-white dark:bg-gray-800 p-4 md:p-8 rounded-2xl shadow-xl'>
                             <div className='flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700 pb-4 md:pb-6'>
                                 <h3 className='text-xl md:text-2xl font-bold text-gray-900 dark:text-white'>Recent Updates</h3>
-                                <Link href={"/manga/recent"} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
+                                <Link href={"/manga/recent"} onClick={handleLinkClick} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
                                     Lihat Semua
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -143,7 +140,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                                 {recentList.map((manga) => (
                                     <div key={manga.animeId} className="bg-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
-                                        <Link href={manga.href} className="group">
+                                        <Link href={manga.href} onClick={handleLinkClick} className="group">
                                             <div className="relative w-full aspect-[3/4]">
                                                 <Image
                                                     src={manga.poster}
@@ -178,7 +175,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                 <div className='mb-8 md:mb-12 mt-12 md:mt-16'>
                     <div className='flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700 pb-4 md:pb-6 mb-6 md:mb-8'>
                         <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">RizNime Popular</h2>
-                        <Link href={"/popular"} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
+                        <Link href={"/popular"} onClick={handleLinkClick} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
                             Lihat Semua
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -190,7 +187,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                             currentItems.map((item) => {
                                 return (
                                     <div key={item.mangaId} className="bg-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
-                                        <Link href={item.href} className="group">
+                                        <Link href={item.href} onClick={handleLinkClick} className="group">
                                             <div className="relative w-full aspect-[3/4]">
                                                 <Image
                                                     src={item.poster}
@@ -217,35 +214,6 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                             totalPages={totalPages}
                             onPageChange={handlePageChange}
                         />
-                    </div>
-                </div>
-
-                {/* Recommendations Section */}
-                <div className="mb-8 md:mb-12 mt-12 md:mt-16">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-text">Recommendations</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                        {mangaData.komiku_recommendation.mangaList.map((manga) => (
-                            <div key={manga.mangaId} className="bg-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
-                                <Link href={manga.href}>
-                                    <div className="relative w-full aspect-[3/4]">
-                                        <Image
-                                            src={manga.poster}
-                                            alt={manga.title}
-                                            fill
-                                            className="object-cover hover:scale-105 transition-transform duration-200"
-                                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                                        />
-                                    </div>
-                                    <div className="p-3 md:p-4">
-                                        <h3 className="font-semibold text-sm line-clamp-2 text-text hover:text-primary transition-colors duration-200">{manga.title}</h3>
-                                        <div className="mt-2 flex flex-col gap-1">
-                                            <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full w-fit">{manga.type}</span>
-                                            <p className="text-xs text-text-secondary">{manga.latestChapter}</p>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </div>
