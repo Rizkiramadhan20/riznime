@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 
-import { Menu, X, Facebook, Instagram, Linkedin, Youtube, Twitter } from 'lucide-react'
+import { Menu, X, Facebook, Instagram, Linkedin, Youtube, Twitter, LogIn } from 'lucide-react'
 
 import Link from "next/link"
 
@@ -10,32 +10,93 @@ import { motion } from 'framer-motion'
 
 import { ThemeToggle } from '@/base/theme/ThemeToggle'
 
+import LoginModal from '@/components/layout/Header/auth/signin/SignModal'
+
+import ProfileMenu from '@/components/layout/Header/profile/Profile'
+
+import { useAuth } from '@/utils/context/AuthContext'
+
+import Image from 'next/image'
+
+import { useModalEffect } from '@/base/helper/useModalEffect'
+
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+    const { user } = useAuth();
+
+    useModalEffect(isMobileMenuOpen || isLoginModalOpen);
 
     return (
         <>
-            <div className='fixed flex gap-2 z-50 justify-end items-center w-full px-4 py-4'>
-                <ThemeToggle />
-
+            <div className='fixed flex items-center justify-between w-full px-4 py-4 z-50'>
+                {/* Left side - Menu */}
                 <header className="relative">
-                    {/* Hamburger Menu */}
-                    <div className='w-12 h-12 rounded-full p-1 flex items-center transition-colors duration-500
+                    <div className='flex items-center gap-2 px-3 py-2 rounded-xl transition-colors duration-500
                     bg-gray-200 dark:bg-gray-700 shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-400'>
-                        <div className="flex items-center justify-center h-full w-full">
-                            <button
-                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                className="w-full h-full flex items-center justify-center rounded-full transition-all duration-300"
-                            >
-                                {isMobileMenuOpen ? (
-                                    <X className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--text)]" />
-                                ) : (
+                        <button
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="flex items-center gap-2 transition-all duration-300"
+                        >
+                            {isMobileMenuOpen ? (
+                                <X className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--text)]" />
+                            ) : (
+                                <div className="flex items-center gap-2">
                                     <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--text)]" />
-                                )}
-                            </button>
-                        </div>
+                                    <span className="text-[11px] font-medium text-[var(--text)]">Menu</span>
+                                </div>
+                            )}
+                        </button>
                     </div>
                 </header>
+
+                {/* Right side - Theme and Login/Profile */}
+                <div className="flex items-center gap-2">
+                    <ThemeToggle />
+
+                    {/* Login/Profile Button */}
+                    {user ? (
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                                className="flex items-center gap-1 px-3 py-2 rounded-xl transition-all duration-300 bg-gray-200 dark:bg-gray-700 group relative overflow-hidden"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-blue-400/20 dark:from-blue-400/20 dark:to-blue-300/20 transition-all duration-500 opacity-0 group-hover:opacity-100 scale-95"></div>
+                                {user.photoURL ? (
+                                    <Image
+                                        src={user.photoURL}
+                                        width={500} height={500}
+                                        alt="Profile"
+                                        className="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-400 flex items-center justify-center">
+                                        <span className="text-[10px] font-medium text-white">
+                                            {user.displayName?.charAt(0).toUpperCase()}
+                                        </span>
+                                    </div>
+                                )}
+                                <span className="text-[11px] font-medium text-[var(--text)] group-hover:text-blue-500 dark:group-hover:text-blue-400 group-hover:translate-y-0.5 transition-all duration-500">
+                                    {user.displayName}
+                                </span>
+                            </button>
+                            <ProfileMenu
+                                isOpen={isProfileMenuOpen}
+                                onClose={() => setIsProfileMenuOpen(false)}
+                            />
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => setIsLoginModalOpen(true)}
+                            className="flex items-center gap-1 px-3 py-2 rounded-xl transition-all duration-300 bg-gray-200 dark:bg-gray-700 group relative overflow-hidden"
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-blue-400/20 dark:from-blue-400/20 dark:to-blue-300/20 transition-all duration-500 opacity-0 group-hover:opacity-100 scale-95"></div>
+                            <LogIn className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--text)] group-hover:text-blue-500 dark:group-hover:text-blue-400 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500" />
+                            <span className="text-[11px] font-medium text-[var(--text)] group-hover:text-blue-500 dark:group-hover:text-blue-400 group-hover:translate-y-0.5 transition-all duration-500">Login</span>
+                        </button>
+                    )}
+                </div>
             </div>
             {/* Full Screen Modal Menu */}
             {isMobileMenuOpen && (
@@ -43,7 +104,7 @@ export default function Header() {
                     {/* Close Button */}
                     <button
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                        className="absolute top-10 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
                         aria-label="Close menu"
                     >
                         <X className="w-5 h-5 text-white" />
@@ -97,6 +158,10 @@ export default function Header() {
                         <span>&copy; 2025 Space Digitalia</span>
                     </div>
                 </div>
+            )}
+
+            {isLoginModalOpen && (
+                <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
             )}
         </>
     )
