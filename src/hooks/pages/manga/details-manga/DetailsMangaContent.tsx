@@ -76,7 +76,7 @@ export default function DetailsMangaContent({ mangaData }: DetailsMangaContentPr
         <section className='py-6 md:py-10'>
             <LoadingOverlay
                 isLoading={!!loadingId || loadingProgress > 0}
-                message="Loading in progress"
+                message="Loading Chapter..."
                 progress={loadingProgress}
             />
             <div className="container px-4">

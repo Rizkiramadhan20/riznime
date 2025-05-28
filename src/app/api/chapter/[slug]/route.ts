@@ -22,7 +22,7 @@ export async function GET(
     }
 
     // Construct the API URL using the format from the example
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/komiku/chapter/${slug}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/komiku/manga/chapter/${slug}`;
 
     const { data } = await axios.get(apiUrl, {
       timeout: 10000, // 10 second timeout

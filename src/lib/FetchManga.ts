@@ -176,3 +176,26 @@ export async function fetchMangaCompletedData() {
     throw error;
   }
 }
+
+// ✅ Ambil genres berdasarkan [genreId]
+export async function fetchMangaGenresId(genreId: string, page: number = 1) {
+  try {
+    const res = await fetch(
+      `${NEXT_PUBLIC_URL}/api/manga/genres/${genreId}?page=${page}`,
+      {
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
+        headers: {
+          "x-api-key": NEXT_PUBLIC_API_KEY!,
+        },
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch manga data");
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching manga data:", error);
+    return null;
+  }
+}
