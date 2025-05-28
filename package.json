@@ -2,6 +2,8 @@
   "name": "riznime",
   "version": "0.1.0",
   "private": true,
+  "description": "RizNime - Pusatnya Anime",
+  "author": "Rizki Ramadhan",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -29,6 +31,8 @@
     "react-hook-form": "^7.56.3",
     "react-hot-toast": "^2.5.2",
     "react-paginate": "^8.3.0",
+    "react-quill-new": "^3.4.6",
+    "sharp": "^0.34.2",
     "swiper": "^11.2.6",
     "tailwind-scrollbar-hide": "^2.0.0",
     "zod": "^3.24.4"

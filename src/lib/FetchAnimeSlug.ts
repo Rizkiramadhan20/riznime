@@ -10,7 +10,7 @@ export async function fetchAnimeBySlug(slug: string) {
     }
 
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime/${slug}`, {
-      cache: "no-store",
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },

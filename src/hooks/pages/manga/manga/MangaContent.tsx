@@ -11,6 +11,10 @@ import Pagination from '@/base/helper/Pagination'
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
+import { Card } from 'flowbite-react'
+
+import { BookOpen } from 'lucide-react'
+
 interface MangaData {
     recent: {
         animeList: Array<{
@@ -126,7 +130,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                 <div className='flex flex-col md:flex-row gap-6 md:gap-10'>
                     {/* Main Content */}
                     <article className="flex-1">
-                        <div className='flex flex-col gap-6 md:gap-8 bg-white dark:bg-gray-800 p-4 md:p-8 rounded-2xl shadow-xl'>
+                        <div className='flex flex-col gap-6 md:gap-8'>
                             <div className='flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700 pb-4 md:pb-6'>
                                 <h3 className='text-xl md:text-2xl font-bold text-gray-900 dark:text-white'>Recent Updates</h3>
                                 <Link href={"/manga/recent"} onClick={handleLinkClick} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
@@ -137,29 +141,47 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                                 </Link>
                             </div>
 
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                                 {recentList.map((manga) => (
-                                    <div key={manga.animeId} className="bg-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
-                                        <Link href={manga.href} onClick={handleLinkClick} className="group">
-                                            <div className="relative w-full aspect-[3/4]">
+                                    <Link href={manga.href} key={manga.animeId} onClick={handleLinkClick}>
+                                        <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer border-card-border rounded-lg">
+                                            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">
                                                 <Image
                                                     src={manga.poster}
                                                     alt={manga.title}
                                                     fill
-                                                    className="object-cover group-hover:scale-105 transition-transform duration-200"
+                                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                                                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                                                 />
-                                            </div>
-                                            <div className="flex flex-col gap-2 p-3 md:p-4">
-                                                <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full w-fit">{manga.type}</span>
-                                                <h5 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2 group-hover:text-primary transition-colors duration-200">{manga.title}</h5>
-                                                <div className="flex flex-col gap-1">
-                                                    <span className="text-xs text-text-secondary">{manga.latestChapter}</span>
-                                                    <span className="text-xs text-text-secondary">{manga.releasedOn}</span>
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                                <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                    <div className="flex items-center gap-3 text-sm text-gray-200">
+                                                        <span className="flex items-center gap-1.5">
+                                                            <BookOpen className="w-4 h-4" />
+                                                            {manga.latestChapter}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="absolute top-0 left-0 right-0 p-2 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                    <div className="flex justify-between items-center gap-3 text-sm text-gray-200">
+                                                        <span className="flex items-center gap-1.5 bg-black/50 px-2 py-1 rounded-full">
+                                                            {manga.type}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </Link>
-                                    </div>
+                                            <div className="flex flex-col gap-2 p-4">
+                                                <h5 className="text-base font-bold tracking-tight text-gray-900 dark:text-white line-clamp-2">
+                                                    {manga.title}
+                                                </h5>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {manga.releasedOn}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </Card>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -173,37 +195,47 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
 
                 {/* RizNime Popular */}
                 <div className='mb-8 md:mb-12 mt-12 md:mt-16'>
-                    <div className='flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700 pb-4 md:pb-6 mb-6 md:mb-8'>
+                    <div className='flex border-b border-gray-200 dark:border-gray-700 pb-4 md:pb-6 mb-6 md:mb-8'>
                         <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">RizNime Popular</h2>
-                        <Link href={"/popular"} onClick={handleLinkClick} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
-                            Lihat Semua
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                        </Link>
                     </div>
-                    <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6'>
+                    <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4'>
                         {
                             currentItems.map((item) => {
                                 return (
-                                    <div key={item.mangaId} className="bg-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200">
-                                        <Link href={item.href} onClick={handleLinkClick} className="group">
-                                            <div className="relative w-full aspect-[3/4]">
+                                    <Link href={item.href} key={item.mangaId} onClick={handleLinkClick}>
+                                        <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer border-card-border rounded-lg">
+                                            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">
                                                 <Image
                                                     src={item.poster}
                                                     alt={item.title}
                                                     fill
-                                                    className="object-cover group-hover:scale-105 transition-transform duration-200"
+                                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                                                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                                                 />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                                <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                    <div className="flex items-center gap-3 text-sm text-gray-200">
+                                                        <span className="flex items-center gap-1.5">
+                                                            <BookOpen className="w-4 h-4" />
+                                                            {item.latestChapter}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="absolute top-0 left-0 right-0 p-2 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                    <div className="flex justify-between items-center gap-3 text-sm text-gray-200">
+                                                        <span className="flex items-center gap-1.5 bg-black/50 px-2 py-1 rounded-full">
+                                                            {item.type}
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="flex flex-col gap-2 p-3 md:p-4">
-                                                <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full w-fit">{item.type}</span>
-                                                <h5 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2 group-hover:text-primary transition-colors duration-200">{item.title}</h5>
-                                                <span className="text-xs text-text-secondary">{item.latestChapter}</span>
+                                            <div className="flex flex-col gap-2 p-4">
+                                                <h5 className="text-base font-bold tracking-tight text-gray-900 dark:text-white line-clamp-2">
+                                                    {item.title}
+                                                </h5>
                                             </div>
-                                        </Link>
-                                    </div>
+                                        </Card>
+                                    </Link>
                                 )
                             })
                         }

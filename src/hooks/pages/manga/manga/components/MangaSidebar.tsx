@@ -29,7 +29,7 @@ export default function MangaSidebar({ popularManga }: MangaSidebarProps) {
                 <div className='flex flex-col gap-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg min-h-[400px] max-h-[250px] sm:min-h-[500px] sm:max-h-[95vh] overflow-y-auto'>
                     <div className='flex justify-between items-center gap-2 border-b border-gray-200 dark:border-gray-700 pb-4'>
                         <h3 className='text-xl font-bold text-gray-900 dark:text-white'>Popular Manga</h3>
-                        <Link href={"/popular"} onClick={handleLinkClick} className='text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 font-medium'>
+                        <Link href={"/manga/popular"} onClick={handleLinkClick} className='text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 font-medium'>
                             Lihat Semua
                         </Link>
                     </div>

@@ -6,7 +6,7 @@ export async function searchAnime(query: string) {
     const res = await fetch(
       `${NEXT_PUBLIC_URL}/api/search?q=${encodeURIComponent(query)}`,
       {
-        cache: "no-store",
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
         headers: {
           "x-api-key": NEXT_PUBLIC_API_KEY!,
         },

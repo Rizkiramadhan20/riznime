@@ -34,9 +34,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const getDashboardUrl = (userRole: string) => {
         switch (userRole) {
             case Role.SUPER_ADMIN:
-                return `/dashboard/super-admins`;
+                return `/dashboard`;
             case Role.USER:
-                return `/dashboard/user`;
+                return `/profile`;
             default:
                 return '/';
         }

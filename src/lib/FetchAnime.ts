@@ -5,7 +5,7 @@ const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
 export async function fetchAnimeData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime`, {
-      cache: "no-store", // 🔥 agar tidak cache
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -25,7 +25,7 @@ export async function fetchAnimeData() {
 export async function FetchBannerData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime`, {
-      cache: "no-store", // 🔥 agar tidak cache
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -45,7 +45,7 @@ export async function FetchBannerData() {
 export async function fetchGenresData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/genres`, {
-      cache: "no-store", // 🔥 agar tidak cache
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -67,7 +67,7 @@ export async function fetchAnimeGenresId(genreId: string, page: number = 1) {
     const res = await fetch(
       `${NEXT_PUBLIC_URL}/api/genres/${genreId}?page=${page}`,
       {
-        cache: "no-store",
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
         headers: {
           "x-api-key": NEXT_PUBLIC_API_KEY!,
         },
@@ -88,7 +88,7 @@ export async function fetchAnimeGenresId(genreId: string, page: number = 1) {
 export async function fetchScheduleData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/schedule`, {
-      cache: "no-store", // 🔥 agar tidak cache
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -108,7 +108,7 @@ export async function fetchScheduleData() {
 export async function fetchAnimePoster(animeId: string) {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime/${animeId}`, {
-      cache: "no-store",
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -128,7 +128,7 @@ export async function fetchAnimePoster(animeId: string) {
 export async function fetchOngoingData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/ongoing`, {
-      cache: "no-store", // 🔥 agar tidak cache
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -151,7 +151,7 @@ export async function fetchOngoingData() {
 export async function fetchCompletedData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/completed`, {
-      cache: "no-store", // 🔥 agar tidak cache
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },

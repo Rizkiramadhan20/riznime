@@ -6,7 +6,7 @@ const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
 export async function fetchDaftarAnimeData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/daftar-anime`, {
-      cache: "no-store", // 🔥 agar tidak cache
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },

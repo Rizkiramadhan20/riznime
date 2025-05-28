@@ -5,7 +5,7 @@ const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
 export async function fetchMangaData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/manga`, {
-      cache: "no-store", // 🔥 agar tidak cache
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -30,7 +30,7 @@ export async function fetchMangaBySlug(slug: string) {
     }
 
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/manga/${slug}`, {
-      cache: "no-store",
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -58,7 +58,7 @@ export async function fetchMangaByChapter(slug: string) {
     }
 
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/chapter/${slug}`, {
-      cache: "no-store", // Always fetch fresh data
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -81,7 +81,7 @@ export async function fetchMangaByChapter(slug: string) {
 export async function fetchMangaRecentData() {
   try {
     const res = await fetch(`${NEXT_PUBLIC_URL}/api/manga/recent`, {
-      cache: "no-store", // 🔥 agar tidak cache
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
       headers: {
         "x-api-key": NEXT_PUBLIC_API_KEY!,
       },
@@ -93,6 +93,66 @@ export async function fetchMangaRecentData() {
     return data; // Return the complete response
   } catch (error) {
     console.error("Error fetching manga recent data:", error);
+    throw error;
+  }
+}
+
+// ✅ Ambil hanya data untuk Manga Popular Data
+export async function fetchMangaPopularData() {
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/manga/popular`, {
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    return data; // Return the complete response
+  } catch (error) {
+    console.error("Error fetching manga popular data:", error);
+    throw error;
+  }
+}
+
+// ✅ Ambil hanya data untuk Manga Ongoing Data
+export async function fetchMangaOngoingData() {
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/manga/ongoing`, {
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    return data; // Return the complete response
+  } catch (error) {
+    console.error("Error fetching manga ongoing data:", error);
+    throw error;
+  }
+}
+
+// ✅ Ambil hanya data untuk Manga Genre Data
+export async function fetchMangaGenreData() {
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/manga/genre`, {
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    return data; // Return the complete response
+  } catch (error) {
+    console.error("Error fetching manga genre data:", error);
     throw error;
   }
 }
