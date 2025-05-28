@@ -1,4 +1,4 @@
-export interface OngoingManga {
+export interface CompletedManga {
   title: string;
   poster: string;
   type: string;
@@ -14,13 +14,19 @@ export interface OngoingManga {
   upCount: number;
 }
 
-export interface OngoingMangaResponse {
+export interface Pagination {
+  currentPage: number;
+  hasNextPage: boolean;
+  nextPage: number;
+}
+
+export interface CompletedMangaResponse {
   statusCode: number;
   statusMessage: string;
   message: string;
   ok: boolean;
   data: {
-    animeList: OngoingManga[];
+    animeList: CompletedManga[];
   };
-  pagination: null;
+  pagination: Pagination;
 }

@@ -156,3 +156,23 @@ export async function fetchMangaGenreData() {
     throw error;
   }
 }
+
+// ✅ Ambil hanya data untuk Manga Completed Data
+export async function fetchMangaCompletedData() {
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/manga/completed`, {
+      next: { revalidate: 5 }, // Revalidate every 5 seconds
+      headers: {
+        "x-api-key": NEXT_PUBLIC_API_KEY!,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    return data; // Return the complete response
+  } catch (error) {
+    console.error("Error fetching manga completed data:", error);
+    throw error;
+  }
+}
