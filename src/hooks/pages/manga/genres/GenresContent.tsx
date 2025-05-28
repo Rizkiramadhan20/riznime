@@ -90,7 +90,7 @@ export default function CategoryContent({ mangaData }: CategoryContentProps) {
 
     return (
         <section className='mb-10 md:mb-20'>
-            <LoadingOverlay isLoading={isLoading} message="Loading content..." />
+            <LoadingOverlay isLoading={isLoading} message="Loading Genre..." />
 
             <div className='container px-4 flex flex-col gap-6 md:gap-8'>
                 <div className='flex gap-4 border-b border-gray-200 dark:border-gray-700 pb-4 md:pb-6'>

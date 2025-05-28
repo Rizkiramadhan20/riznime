@@ -37,12 +37,12 @@ export default function OngoingContent({ mangaData }: MangaContentProps) {
 
     return (
         <section>
-            <LoadingOverlay isLoading={isLoading} message="Loading content..." />
+            <LoadingOverlay isLoading={isLoading} message="Loading Details Manga..." />
 
             <div className='container px-4 flex flex-col gap-6 md:gap-8'>
                 <div className='flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700 pb-4 md:pb-6'>
                     <h3 className='text-xl md:text-2xl font-bold text-gray-900 dark:text-white'>Ongoing Manga</h3>
-                    <Link href={"/manga/ongoing"} onClick={handleLinkClick} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
+                    <Link href={"/manga/ongoing"} className='text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 font-medium flex items-center gap-2'>
                         Lihat Semua
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -52,7 +52,7 @@ export default function OngoingContent({ mangaData }: MangaContentProps) {
 
                 <article className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4'>
                     {mangaData.data.animeList.map((manga, idx) => (
-                        <Link href={manga.href} key={manga.mangaId}>
+                        <Link href={manga.href} key={manga.mangaId} onClick={handleLinkClick}>
                             <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer p-0 border-0">
                                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">
                                     <Image
