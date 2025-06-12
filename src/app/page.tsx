@@ -1,20 +1,64 @@
-import React, { Fragment } from 'react'
+import React, { Fragment } from 'react';
 
-import Banner from "@/components/ui/banner/Banner"
+import { fetchAnimeData } from '@/lib/FetchAnime';
 
-import Anime from '@/components/ui/anime/Anime'
+import { FetchBannerData } from '@/lib/FetchAnime';
 
-import Genres from '@/components/ui/genres/Genres'
+import { fetchGenresData } from '@/lib/FetchAnime';
 
-import Schedule from "@/components/ui/schedule/Schedule"
+import { fetchScheduleData, fetchAnimePoster } from '@/lib/FetchAnime';
 
-export default function page() {
-  return (
-    <Fragment>
-      <Banner />
-      <Genres />
-      <Anime />
-      <Schedule />
-    </Fragment>
-  )
+import AnimeContent from '@/components/ui/anime/AnimeContent';
+
+import BannerContent from '@/components/ui/banner/BannerContent';
+
+import GenresContent from '@/components/ui/genres/GenresContent';
+
+import { DaySchedule, AnimeSchedule } from '@/types/anime';
+
+import ScheduleContent from '@/components/ui/schedule/ScheduleContent';
+
+import AnimeContentSkeleton from '@/components/ui/anime/AnimeContentSkeleton';
+
+export default async function Page() {
+  try {
+    const animeData = await fetchAnimeData();
+    const bannerData = await FetchBannerData();
+    const genresData = await fetchGenresData();
+    const response = await fetchScheduleData();
+
+    if (!response || !response.ok || !response.data) {
+      throw new Error('Failed to fetch schedule data');
+    }
+
+    const scheduleWithPosters = {
+      ...response,
+      data: {
+        ...response.data,
+        days: await Promise.all(
+          response.data.days.map(async (day: DaySchedule) => ({
+            ...day,
+            animeList: await Promise.all(
+              day.animeList.map(async (anime: AnimeSchedule) => ({
+                ...anime,
+                poster: await fetchAnimePoster(anime.animeId)
+              }))
+            )
+          }))
+        )
+      }
+    };
+
+    return <Fragment>
+      <BannerContent bannerData={bannerData} />
+      <AnimeContent animeData={animeData} />
+      <GenresContent genresData={genresData} />
+      <ScheduleContent animeData={scheduleWithPosters} />
+    </Fragment>;
+  } catch (error) {
+    console.error('Error fetching home data:', error);
+    return (
+      <AnimeContentSkeleton />
+    );
+  }
 }

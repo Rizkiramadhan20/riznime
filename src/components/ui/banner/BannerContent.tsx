@@ -19,21 +19,21 @@ import LoadingOverlay from '@/base/helper/LoadingOverlay';
 import { formatSlug } from "@/base/helper/FormatSlug";
 
 interface BannerContentProps {
-    animeData: {
+    bannerData: {
         ongoing: {
             animeList: Anime[];
         };
     };
 }
 
-export default function BannerContent({ animeData }: BannerContentProps) {
+export default function BannerContent({ bannerData }: BannerContentProps) {
     const router = useRouter();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAutoplay, setIsAutoplay] = useState(true);
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
 
-    const displayedAnime = animeData.ongoing.animeList.slice(0, 4);
+    const displayedAnime = bannerData.ongoing.animeList.slice(0, 4);
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
