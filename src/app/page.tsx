@@ -16,7 +16,7 @@ import BannerContent from '@/components/ui/banner/BannerContent';
 
 import GenresContent from '@/components/ui/genres/GenresContent';
 
-import AnichinContent from "@/components/ui/anichin/AnichinContent"
+import AnichinContent from "@/hooks/pages/anichin/AnichinContent"
 
 import { DaySchedule, AnimeSchedule } from '@/types/anime';
 

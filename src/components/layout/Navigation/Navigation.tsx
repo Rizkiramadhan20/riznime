@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { usePathname } from 'next/navigation';
 
-import { House, Search, BookOpen, X } from "lucide-react"
+import { House, Search, BookOpen, X, PlayCircle } from "lucide-react"
 
 import Image from 'next/image';
 
@@ -15,7 +15,8 @@ import { AnimeResult } from '@/types/anime';
 import { searchAnime } from '@/lib/SearchAnime';
 
 const menuItems = [
-    { href: '/', label: 'Home', icon: House },
+    { href: '/', label: 'Anime', icon: House },
+    { href: '/donghua', label: 'Donghua', icon: PlayCircle },
     { href: '/manga', label: 'Manga', icon: BookOpen },
 ];
 
