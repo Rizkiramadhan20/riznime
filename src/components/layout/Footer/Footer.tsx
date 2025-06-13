@@ -4,10 +4,12 @@ import Link from 'next/link'
 
 import { Github, Youtube, Instagram, Facebook } from 'lucide-react'
 
+import { FaTiktok } from "react-icons/fa"
+
 export default function Footer() {
     return (
         <footer className="bg-gray-50 dark:bg-gray-900 border-t border-[var(--card-border)]">
-            <div className="container px-4 py-12 mx-auto">
+            <div className="container px-4 py-12">
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
                     {/* About Section */}
                     <div className="space-y-6">
@@ -68,14 +70,17 @@ export default function Footer() {
                             <a href="https://github.com/Rizkiramadhan20" target="_blank" rel="noopener noreferrer" className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors">
                                 <Github size={24} />
                             </a>
-                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors">
+                            <a href="https://www.instagram.com/rzkir.20" target="_blank" rel="noopener noreferrer" className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors">
                                 <Instagram size={24} />
                             </a>
-                            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors">
+                            <a href="https://www.youtube.com/@codingwithrizki" target="_blank" rel="noopener noreferrer" className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors">
                                 <Youtube size={24} />
                             </a>
                             <a href="https://www.facebook.com/rizki.ramadhan.419859" target="_blank" rel="noopener noreferrer" className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors">
                                 <Facebook size={24} />
+                            </a>
+                            <a href="https://www.tiktok.com/@rzkir.20" target="_blank" rel="noopener noreferrer" className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors">
+                                <FaTiktok size={24} />
                             </a>
                         </div>
                     </div>
