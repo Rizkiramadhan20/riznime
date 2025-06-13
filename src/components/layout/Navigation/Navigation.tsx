@@ -12,7 +12,7 @@ import Image from 'next/image';
 
 import { AnimeResult } from '@/types/anime';
 
-import { searchAnime } from '@/lib/SearchAnime';
+import { searchAnime } from '@/lib/FetchAnime';
 
 const menuItems = [
     { href: '/', label: 'Anime', icon: House },

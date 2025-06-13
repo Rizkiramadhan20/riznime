@@ -5,8 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Search, Play, Download } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
-import { DetailsEpisodeContentProps, Episode, Genre, Quality, Server, DownloadQuality, DownloadUrl } from "@/hooks/pages/episode/types/EpisodeDetails"
-import { fetchServerUrl } from '@/lib/FetchServerUrl'
+import { DetailsEpisodeContentProps, Episode, Genre, Quality, Server, DownloadQuality, DownloadUrl } from "@/hooks/pages/anime/episode/types/EpisodeDetails"
+import { fetchServerUrl } from '@/lib/FetchAnime'
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
 export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeContentProps) {

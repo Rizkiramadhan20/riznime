@@ -2,7 +2,7 @@ import React from 'react'
 
 import DetailsAnimeSkeleton from '@/hooks/pages/anime/DetailsAnimeSkelaton'
 
-import { fetchAnimeBySlug } from '@/lib/FetchAnimeSlug'
+import { fetchAnimeBySlug } from '@/lib/FetchAnime'
 
 import DetailsAnimeContent from '@/hooks/pages/anime/DetailsAnimeContent'
 

@@ -1,12 +1,12 @@
 import React from 'react'
 
-import DetailsEpisodeSkeleton from '@/hooks/pages/episode/DetailsEpisodeSkelaton'
+import DetailsEpisodeSkeleton from '@/hooks/pages/anime/episode/DetailsEpisodeSkelaton'
 
-import { fetchEpisodeBySlug } from '@/lib/FetchEpisodeSlug'
+import { fetchEpisodeBySlug } from '@/lib/FetchAnime'
 
-import DetailsEpisodeContent from '@/hooks/pages/episode/DetailsEpisodeContent'
+import DetailsEpisodeContent from '@/hooks/pages/anime/episode/DetailsEpisodeContent'
 
-import { DetailsEpisodeProps, ApiResponse } from "@/hooks/pages/episode/types/EpisodeDetails"
+import { DetailsEpisodeProps, ApiResponse } from "@/hooks/pages/anime/episode/types/EpisodeDetails"
 
 export default async function DetailsEpisode({ params }: DetailsEpisodeProps) {
     const { slug } = params;

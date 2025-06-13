@@ -2,15 +2,15 @@ import React from 'react'
 
 import { fetchAnimeGenresId } from '@/lib/FetchAnime'
 
-import GenreAnimeSlider from '@/hooks/pages/genres/components/GenreAnimeSlider'
+import GenreAnimeSlider from '@/hooks/pages/anime/genres/components/GenreAnimeSlider'
 
-import GenrePagination from '@/hooks/pages/genres/components/GenrePagination'
+import GenrePagination from '@/hooks/pages/anime/genres/components/GenrePagination'
 
-import AnimeCard from '@/hooks/pages/genres/components/AnimeCard'
+import AnimeCard from '@/hooks/pages/anime/genres/components/AnimeCard'
 
 import { AnimeResponse, Props, AnimeId } from "@/types/anime"
 
-import DetailsGenresSkelaton from "@/hooks/pages/genres/DetailsGenresSkelaton"
+import DetailsGenresSkelaton from "@/hooks/pages/anime/genres/DetailsGenresSkelaton"
 
 export default async function DetailsGenres({ genreId, searchParams }: Props) {
     const resolvedSearchParams = await searchParams;

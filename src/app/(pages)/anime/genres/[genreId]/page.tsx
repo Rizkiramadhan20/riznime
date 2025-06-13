@@ -1,6 +1,6 @@
 import React from 'react'
 
-import DetailsGenres from "@/hooks/pages/genres/DetailsGenres"
+import DetailsGenres from "@/hooks/pages/anime/genres/DetailsGenres"
 
 import { Metadata, ResolvingMetadata } from "next"
 
@@ -30,7 +30,7 @@ export const generateStaticParams = async () => {
 async function getAnimeData(genreId: string, page: number = 1) {
     try {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/genres/${genreId}?page=${page}`,
+            `${process.env.NEXT_PUBLIC_URL}/api/anime/genres/${genreId}?page=${page}`,
             {
                 headers: {
                     "x-api-key": process.env.NEXT_PUBLIC_API_KEY,

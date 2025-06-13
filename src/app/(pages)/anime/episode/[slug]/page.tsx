@@ -1,6 +1,6 @@
 import React from 'react'
 
-import DetailsEpisode from "@/hooks/pages/episode/DetailsEpisode"
+import DetailsEpisode from "@/hooks/pages/anime/episode/DetailsEpisode"
 
 import { Metadata, ResolvingMetadata } from "next"
 
@@ -13,7 +13,7 @@ type Props = {
 async function getAnimeData(slug: string) {
     try {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/episode/${slug}`,
+            `${process.env.NEXT_PUBLIC_URL}/api/anime/episode/${slug}`,
             {
                 headers: {
                     "x-api-key": process.env.NEXT_PUBLIC_API_KEY,

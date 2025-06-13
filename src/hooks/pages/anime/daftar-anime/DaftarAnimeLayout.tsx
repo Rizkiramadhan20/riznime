@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
 
-import { fetchDaftarAnimeData } from '@/lib/FetchDaftarAnime';
+import { fetchDaftarAnimeData } from '@/lib/FetchAnime';
 
 import { fetchGenresData } from "@/lib/FetchAnime"
 
-import DaftarAnimeContent from '@/hooks/pages/daftar-anime/abjad/DaftarAnimeContent';
+import DaftarAnimeContent from '@/hooks/pages/anime/daftar-anime/abjad/DaftarAnimeContent';
 
-import GenreContent from "@/hooks/pages/daftar-anime/genres/GenresContent"
+import GenreContent from "@/hooks/pages/anime/daftar-anime/genres/GenresContent"
 
-import DaftarAnimeSkeleton from '@/hooks/pages/daftar-anime/abjad/DaftarAnimeSkeleton';
+import DaftarAnimeSkeleton from '@/hooks/pages/anime/daftar-anime/abjad/DaftarAnimeSkeleton';
 
 export default async function DaftarAnimeLayout() {
     try {

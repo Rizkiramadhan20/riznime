@@ -2,9 +2,9 @@ import React from 'react';
 
 import { fetchOngoingData } from '@/lib/FetchAnime';
 
-import AnimeOngoing from '@/hooks/pages/ongoing/AnimeOngoing';
+import AnimeOngoing from '@/hooks/pages/anime/ongoing/AnimeOngoing';
 
-import AnimeOngoingSkeleton from '@/hooks/pages/ongoing/AnimeOngoingSkeleton';
+import AnimeOngoingSkeleton from '@/hooks/pages/anime/ongoing/AnimeOngoingSkeleton';
 
 import { Metadata } from 'next';
 

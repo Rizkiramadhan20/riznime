@@ -2,9 +2,9 @@ import React from 'react';
 
 import { fetchCompletedData } from '@/lib/FetchAnime';
 
-import AnimeCompleted from '@/hooks/pages/completed/AnimeCompleted';
+import AnimeCompleted from '@/hooks/pages/anime/completed/AnimeCompleted';
 
-import AnimeCompletedSkeleton from '@/hooks/pages/completed/AnimeCompletedSkeleton';
+import AnimeCompletedSkeleton from '@/hooks/pages/anime/completed/AnimeCompletedSkeleton';
 
 import { Metadata } from 'next';
 

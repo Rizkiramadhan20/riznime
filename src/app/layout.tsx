@@ -40,7 +40,7 @@ export default function RootLayout({
                   if (savedTheme === 'dark' || savedTheme === 'light') {
                     return savedTheme;
                   }
-                  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  return 'dark';
                 }
                 
                 const theme = getTheme();

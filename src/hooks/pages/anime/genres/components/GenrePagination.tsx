@@ -16,7 +16,7 @@ export default function GenrePagination({ genreId, currentPage, totalPages }: Pr
     const router = useRouter();
 
     const handlePageChange = (page: number) => {
-        router.push(`/genres/${genreId}?page=${page}`, { scroll: true });
+        router.push(`/anime/genres/${genreId}?page=${page}`, { scroll: true });
     };
 
     return (

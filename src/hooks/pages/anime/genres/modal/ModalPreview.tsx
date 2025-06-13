@@ -58,7 +58,7 @@ export default function ModalPreview({ anime, isOpen, onClose }: Props) {
                                         {anime.genreList.map((genre) => (
                                             <Link
                                                 key={genre.genreId}
-                                                href={genre.href}
+                                                href={`/anime/genres/${genre.title.toLowerCase()}`}
                                                 className="inline-block"
                                             >
                                                 <span className="px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">

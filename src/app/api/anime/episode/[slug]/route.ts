@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import axios from "axios";
 
-import { EpisodeData } from "@/hooks/pages/episode/types/EpisodeDetails";
+import { EpisodeData } from "@/hooks/pages/anime/episode/types/EpisodeDetails";
 
 export async function GET(
   request: Request,

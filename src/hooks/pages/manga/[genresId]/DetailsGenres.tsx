@@ -11,7 +11,7 @@ import AnimeCard from '@/hooks/pages/manga/[genresId]/components/AnimeCard'
 
 import { GenreMangaListResponse, GenreManga } from "@/types/manga"
 
-import DetailsGenresSkelaton from "@/hooks/pages/genres/DetailsGenresSkelaton"
+import DetailsGenresSkelaton from "@/hooks/pages/anime/genres/DetailsGenresSkelaton"
 
 interface Props {
     genreId: string;
