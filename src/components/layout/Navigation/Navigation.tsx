@@ -31,7 +31,7 @@ export default function Sidebar() {
 
     const isLinkActive = (href: string) => {
         if (href === '/') {
-            return pathname === href;
+            return pathname === href || pathname?.startsWith('/anime/');
         }
         return pathname?.startsWith(href);
     };

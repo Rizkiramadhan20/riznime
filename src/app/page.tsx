@@ -8,15 +8,11 @@ import { fetchGenresData } from '@/lib/FetchAnime';
 
 import { fetchScheduleData, fetchAnimePoster } from '@/lib/FetchAnime';
 
-import { fetchAnichinData } from '@/lib/FetchAnichin';
-
 import AnimeContent from '@/components/ui/anime/AnimeContent';
 
 import BannerContent from '@/components/ui/banner/BannerContent';
 
 import GenresContent from '@/components/ui/genres/GenresContent';
-
-import AnichinContent from "@/hooks/pages/anichin/AnichinContent"
 
 import { DaySchedule, AnimeSchedule } from '@/types/anime';
 
@@ -30,7 +26,6 @@ export default async function Page() {
     const bannerData = await FetchBannerData();
     const genresData = await fetchGenresData();
     const response = await fetchScheduleData();
-    const anichinData = await fetchAnichinData();
 
     if (!response || !response.ok || !response.data) {
       throw new Error('Failed to fetch schedule data');
@@ -59,7 +54,6 @@ export default async function Page() {
       <AnimeContent animeData={animeData} />
       <GenresContent genresData={genresData} />
       <ScheduleContent animeData={scheduleWithPosters} />
-      <AnichinContent anichinData={anichinData} />
     </Fragment>;
   } catch (error) {
     console.error('Error fetching home data:', error);

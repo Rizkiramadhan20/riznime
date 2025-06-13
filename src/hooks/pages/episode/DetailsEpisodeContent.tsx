@@ -30,7 +30,10 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
         // Remove any query parameters and trailing slashes for comparison
         const cleanPathname = pathname.split('?')[0].replace(/\/$/, '');
         const cleanHref = episodeHref.split('?')[0].replace(/\/$/, '');
-        return cleanPathname === cleanHref;
+        // Extract the last part of both paths for comparison
+        const pathnameParts = cleanPathname.split('/');
+        const hrefParts = cleanHref.split('/');
+        return pathnameParts[pathnameParts.length - 1] === hrefParts[hrefParts.length - 1];
     };
 
     useEffect(() => {
@@ -54,7 +57,7 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
     const handleEpisodeClick = (href: string) => {
         if (!href) return;
         setIsEpisodeLoading(true);
-        router.push(href);
+        router.push(`/anime/${href}`);
     };
 
     const handleRecommendedClick = (href: string) => {
@@ -96,24 +99,20 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                         <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">{episodeData.title}</h1>
                         <div className="flex flex-wrap gap-2 mb-6">
                             {episodeData.info.genreList.map((genre: Genre) => (
-                                <Link href={genre.href} rel='noopener noreferrer' key={genre.genreId} className="text-sm text-gray-200 bg-gray-700/70 px-3 py-1.5 rounded-full hover:bg-gray-600/80 transition-colors">{genre.title}</Link>
+                                <Link href={`/anime/episode/${genre.href}`} rel='noopener noreferrer' key={genre.genreId} className="text-sm text-gray-200 bg-gray-700/70 px-3 py-1.5 rounded-full hover:bg-gray-600/80 transition-colors">{genre.title}</Link>
                             ))}
                         </div>
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => {
-                                    const iframeSection = document.querySelector('.aspect-video');
-                                    iframeSection?.scrollIntoView({ behavior: 'smooth' });
-                                }}
-                                className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-6 md:px-8 py-3 rounded-full font-semibold shadow-lg hover:from-blue-700 hover:to-blue-500 transition-all duration-300 text-base md:text-lg flex items-center gap-2 hover:scale-105"
-                            >
-                                <Play className="w-5 h-5" />
-                                Watch Now
-                            </button>
-                            <button className="bg-gray-800/80 p-3 rounded-full text-white hover:bg-gray-700/90 transition-all duration-300 hover:scale-105">
-                                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                            </button>
-                        </div>
+                        <button
+                            onClick={() => {
+                                const iframeSection = document.querySelector('.aspect-video');
+                                iframeSection?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-6 md:px-8 py-3 rounded-full font-semibold shadow-lg hover:from-blue-700 hover:to-blue-500 transition-all duration-300 text-base md:text-lg flex items-center gap-2 hover:scale-105"
+                        >
+                            <Play className="w-5 h-5" />
+                            Watch Now
+                        </button>
+
                         <div className="flex items-center gap-4 mt-6">
                             {episodeData.hasPrevEpisode && episodeData.prevEpisode && (
                                 <button
@@ -230,20 +229,20 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                             {filteredEpisodes.length > 0 ? (
                                 filteredEpisodes.map((ep: Episode) => (
                                     <Link
-                                        href={ep.href}
+                                        href={`/anime/${ep.href}`}
                                         key={ep.episodeId}
-                                        className={`flex items-center gap-4 rounded-xl p-4 shadow-md transition-all duration-300 group relative ${isEpisodeActive(ep.href)
+                                        className={`flex items-center gap-4 rounded-xl p-4 shadow-md transition-all duration-300 group relative ${isEpisodeActive(`/anime/${ep.href}`)
                                             ? 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 border-4 border-blue-300 dark:border-blue-400'
                                             : 'bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800/70 border border-transparent'
                                             }`}
                                     >
-                                        {isEpisodeActive(ep.href) && (
+                                        {isEpisodeActive(`/anime/${ep.href}`) && (
                                             <>
                                                 <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-blue-400 rounded-full"></div>
                                                 <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-blue-400 rounded-full"></div>
                                             </>
                                         )}
-                                        <div className={`relative ${isEpisodeActive(ep.href) ? 'ring-2 ring-blue-300 dark:ring-blue-400' : ''}`}>
+                                        <div className={`relative ${isEpisodeActive(`/anime/${ep.href}`) ? 'ring-2 ring-blue-300 dark:ring-blue-400' : ''}`}>
                                             <Image
                                                 src={episodeData.poster}
                                                 alt={episodeData.title}
@@ -251,7 +250,7 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                                                 height={56}
                                                 className="rounded-lg mr-4 w-14 h-14 md:w-full md:h-16 object-cover"
                                             />
-                                            {isEpisodeActive(ep.href) && (
+                                            {isEpisodeActive(`/anime/${ep.href}`) && (
                                                 <div className="absolute inset-0 flex items-center justify-center bg-blue-500/20 rounded-lg">
                                                     <Play className="w-6 h-6 text-white" />
                                                 </div>
@@ -259,24 +258,24 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-3">
-                                                {isEpisodeActive(ep.href) && (
+                                                {isEpisodeActive(`/anime/${ep.href}`) && (
                                                     <span className="bg-blue-400 text-white text-xs px-2 py-0.5 rounded-full font-medium">Current</span>
                                                 )}
-                                                <span className={`font-semibold text-base md:text-lg ${isEpisodeActive(ep.href)
+                                                <span className={`font-semibold text-base md:text-lg ${isEpisodeActive(`/anime/${ep.href}`)
                                                     ? 'text-white'
                                                     : 'text-gray-900 dark:text-white'
                                                     }`}>E{ep.title}</span>
-                                                <span className={`text-sm ${isEpisodeActive(ep.href)
+                                                <span className={`text-sm ${isEpisodeActive(`/anime/${ep.href}`)
                                                     ? 'text-blue-100'
                                                     : 'text-gray-500 dark:text-gray-400'
                                                     }`}>{episodeData.info.duration}</span>
                                             </div>
-                                            <div className={`text-sm md:text-base truncate ${isEpisodeActive(ep.href)
+                                            <div className={`text-sm md:text-base truncate ${isEpisodeActive(`/anime/${ep.href}`)
                                                 ? 'text-blue-100'
                                                 : 'text-gray-600 dark:text-gray-300'
                                                 }`}>Episode {ep.title}</div>
                                         </div>
-                                        <div className={`ml-4 text-xl md:text-2xl transition-colors ${isEpisodeActive(ep.href)
+                                        <div className={`ml-4 text-xl md:text-2xl transition-colors ${isEpisodeActive(`/anime/${ep.href}`)
                                             ? 'text-white'
                                             : 'text-blue-500 group-hover:text-blue-400'
                                             }`}>▶</div>

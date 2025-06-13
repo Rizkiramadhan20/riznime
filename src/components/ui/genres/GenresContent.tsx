@@ -158,7 +158,7 @@ export default function GenresContent({ genresData }: GenresContentProps) {
 
             if (progress >= 100) {
                 clearInterval(interval);
-                router.push(`/genres/${formatSlug(genreId)}`);
+                router.push(`/anime/genres/${formatSlug(genreId)}`);
             }
         }, 100);
     };
@@ -194,7 +194,7 @@ export default function GenresContent({ genresData }: GenresContentProps) {
                         {genresData.genreList.map((genre) => (
                             <div key={genre.genreId} className="flex-none w-[170px]">
                                 <Link
-                                    href={genre.href}
+                                    href={`/anime/${genre.href}`}
                                     className='block p-4 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow text-center'
                                     draggable="false"
                                     onClick={(e) => handleGenreClick(e, genre.genreId)}
