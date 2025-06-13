@@ -110,7 +110,7 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
 
     if (!animeData || !animeData.data || !animeData.data.days) {
         return (
-            <section className='py-8 sm:py-12 lg:py-16 bg-gray-50 dark:bg-gray-900 min-h-[50vh]'>
+            <section className='py-12 bg-gray-50 dark:bg-gray-900'>
                 <div className="container px-4 sm:px-6 lg:px-8">
                     <div className="text-center text-gray-600 dark:text-gray-400">
                         Tidak ada data jadwal yang tersedia
@@ -127,17 +127,14 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
         : allAnime;
 
     return (
-        <section className='py-6 sm:py-8 lg:py-12 bg-gray-50 dark:bg-gray-900'>
+        <section className='py-5 sm:py-8 bg-gray-50 dark:bg-gray-900'>
             <LoadingOverlay
                 isLoading={!!loadingId || loadingProgress > 0}
                 message="Loading is progress"
                 progress={loadingProgress}
             />
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-6 sm:mb-8">
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">Jadwal Rilis</h2>
-                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Jangan lewatkan anime favorit kamu minggu ini!</p>
-                </div>
+            <div className="container px-4">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8">Jadwal Rilis</h2>
 
                 {/* Filter Buttons */}
                 <div className="mb-6 sm:mb-8 overflow-x-auto pb-2">
@@ -174,7 +171,6 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
                     {/* Gradient Edges */}
                     <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-gray-50 dark:from-gray-900 to-transparent z-10 pointer-events-none" />
                     <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-gray-50 dark:from-gray-900 to-transparent z-10 pointer-events-none" />
-
                     <div
                         ref={sliderRef}
                         className="w-full overflow-x-auto touch-pan-x cursor-grab active:cursor-grabbing select-none
