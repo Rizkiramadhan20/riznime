@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { fetchCompletedData } from '@/lib/FetchAnime';
 
@@ -13,12 +13,16 @@ export const metadata: Metadata = {
     description: 'Jelajahi koleksi lengkap anime completed di Riznime. Temukan berbagai judul anime yang sudah selesai tayang dengan kualitas terbaik dan subtitle Indonesia.',
 }
 
-export default async function Ongoing() {
+export default async function Completed() {
     try {
         const animeData = await fetchCompletedData();
-        return <AnimeCompleted animeData={animeData} />;
+        return (
+            <Suspense fallback={<AnimeCompletedSkeleton />}>
+                <AnimeCompleted animeData={animeData} />
+            </Suspense>
+        );
     } catch (error) {
-        console.error('Error fetching ongoing data:', error);
+        console.error('Error fetching completed data:', error);
         return (
             <AnimeCompletedSkeleton />
         );

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react'
+
 import ReactDOM from 'react-dom/client'
 
 import { OngoingMangaResponse } from './types/ongoing'

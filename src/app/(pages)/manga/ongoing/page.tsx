@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { fetchMangaOngoingData } from '@/lib/FetchManga';
 
@@ -16,7 +16,11 @@ export const metadata: Metadata = {
 export default async function Ongoing() {
     try {
         const mangaData = await fetchMangaOngoingData();
-        return <OngoingMangaLayout mangaData={mangaData} />;
+        return (
+            <Suspense fallback={<OngoingMangaSkelaton />}>
+                <OngoingMangaLayout mangaData={mangaData} />
+            </Suspense>
+        );
     } catch (error) {
         console.error('Error fetching manga data:', error);
         return (
