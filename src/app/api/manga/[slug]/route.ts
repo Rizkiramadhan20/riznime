@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 
 import axios from "axios";
 
+// Function to sanitize text by replacing Unicode quotes with ASCII quotes
+function sanitizeText(text: string): string {
+  return text
+    .replace(/[\u2018\u2019]/g, "'") // Replace smart single quotes
+    .replace(/[\u201C\u201D]/g, '"') // Replace smart double quotes
+    .replace(/[\u2013\u2014]/g, "-"); // Replace en/em dashes
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -29,14 +37,16 @@ export async function GET(
       timeout: 10000, // 10 second timeout
     });
 
-    // Transform data: hapus '/komiku/' di href
+    // Transform data: hapus '/komiku/' di href and sanitize text
     const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {
-      if (
-        key === "href" &&
-        typeof value === "string" &&
-        value.includes("/komiku/")
-      ) {
-        return value.replace("/komiku/", "/");
+      if (typeof value === "string") {
+        // Sanitize text content
+        value = sanitizeText(value);
+
+        // Fix href paths
+        if (key === "href" && value.includes("/komiku/")) {
+          return value.replace("/komiku/", "/");
+        }
       }
       return value;
     });

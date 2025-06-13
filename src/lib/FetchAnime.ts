@@ -34,6 +34,26 @@ export async function fetchAnimeData() {
   }
 }
 
+// export const fetchAnimeData = async (): Promise<HomeData[]> => {
+//   try {
+//     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/home`, {
+//       next: {
+//         revalidate: 50, // Revalidate every hour
+//       },
+//     });
+
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
+
+//     const data: ApiResponse = await response.json();
+//     return data.data;
+//   } catch (error) {
+//     console.error("Error fetching home data:", error);
+//     throw error;
+//   }
+// };
+
 // ✅ Ambil hanya data untuk Banner
 export async function FetchBannerData() {
   try {
@@ -134,52 +154,6 @@ export async function fetchAnimePoster(animeId: string) {
   } catch (error) {
     console.error("Error fetching anime poster:", error);
     return null;
-  }
-}
-
-// ✅ Ambil hanya data untuk Ongoing
-export async function fetchOngoingData() {
-  try {
-    const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime/ongoing`, {
-      next: { revalidate: 5 }, // Revalidate every 5 seconds
-      headers: {
-        "x-api-key": NEXT_PUBLIC_API_KEY!,
-      },
-    });
-
-    if (!res.ok) throw new Error("Failed to fetch");
-
-    const data = await res.json();
-    return {
-      animeList: data.data.animeList,
-      pagination: data.pagination,
-    };
-  } catch (error) {
-    console.error("Error fetching banner data:", error);
-    throw error;
-  }
-}
-
-// ✅ Ambil hanya data untuk Completed
-export async function fetchCompletedData() {
-  try {
-    const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime/completed`, {
-      next: { revalidate: 5 }, // Revalidate every 5 seconds
-      headers: {
-        "x-api-key": NEXT_PUBLIC_API_KEY!,
-      },
-    });
-
-    if (!res.ok) throw new Error("Failed to fetch");
-
-    const data = await res.json();
-    return {
-      animeList: data.data.animeList,
-      pagination: data.pagination,
-    };
-  } catch (error) {
-    console.error("Error fetching completed data:", error);
-    throw error;
   }
 }
 
