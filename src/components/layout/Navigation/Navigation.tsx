@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import Link from 'next/link';
 
@@ -22,6 +22,8 @@ const menuItems = [
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const [isVisible, setIsVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
 
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -69,18 +71,37 @@ export default function Sidebar() {
         setIsSearchModalOpen(false);
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > lastScrollY) {
+                // Scrolling down
+                setIsVisible(false);
+            } else {
+                // Scrolling up
+                setIsVisible(true);
+            }
+
+            setLastScrollY(currentScrollY);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [lastScrollY]);
+
     return (
         <>
-            <nav className="fixed w-[95%] sm:w-[400px] md:w-[500px] mx-auto bottom-2 right-0 left-0">
+            <nav className={`fixed w-[95%] sm:w-[400px] md:w-[500px] mx-auto bottom-2 right-0 left-0 transition-all duration-500 ease-in-out z-50 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-[150%] opacity-0'}`}>
                 <div className="relative w-full mx-auto px-1 sm:px-2">
-                    <div className="absolute inset-0 bg-white/30 dark:bg-black/30 rounded-xl blur-xl"></div>
-                    <div className="relative bg-white/80 dark:bg-black/80 backdrop-blur-xl border-t border-x border-white/20 dark:border-white/10 rounded-xl p-4 shadow-lg">
+                    <div className="absolute inset-0 bg-white/30 dark:bg-black/30 rounded-xl blur-xl transition-all duration-500 ease-in-out"></div>
+                    <div className="relative bg-white/80 dark:bg-black/80 backdrop-blur-xl border-t border-x border-white/20 dark:border-white/10 rounded-xl p-4 shadow-lg transition-all duration-500 ease-in-out">
                         <ul className="flex justify-between items-center gap-1 sm:gap-2">
                             {menuItems.map((item) => (
                                 <li key={item.href} className="flex-1">
                                     <Link
                                         href={item.href}
-                                        className={`flex flex-col items-center gap-0.5 px-1 sm:px-2 py-1.5 rounded-xl transition-all duration-300 hover:bg-white/20 dark:hover:bg-white/10 group relative overflow-hidden ${isLinkActive(item.href) ? 'bg-white/20 dark:bg-white/10' : ''}`}
+                                        className={`flex flex-col items-center gap-0.5 px-1 sm:px-2 py-2 md:py-1.5 rounded-xl transition-all duration-300 hover:bg-white/20 dark:hover:bg-white/10 group relative overflow-hidden ${isLinkActive(item.href) ? 'bg-white/20 dark:bg-white/10' : ''}`}
                                     >
                                         <div className={`absolute inset-0 bg-gradient-to-r from-blue-500/20 to-blue-400/20 dark:from-blue-400/20 dark:to-blue-300/20 transition-all duration-500 ${isLinkActive(item.href) ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}></div>
                                         <item.icon

@@ -60,7 +60,7 @@ export default function AsideCard({ animeData }: { animeData: AnimeData }) {
                     <div className='flex justify-between items-center gap-2 border-b border-gray-200 dark:border-gray-700 pb-4'>
                         <h3 className='text-xl font-bold text-gray-900 dark:text-white'>Completed</h3>
 
-                        <Link href={"/completed"} className='text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 font-medium'>
+                        <Link href={"/anime/completed"} className='text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 font-medium'>
                             Lihat Semua
                         </Link>
                     </div>

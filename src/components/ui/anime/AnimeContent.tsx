@@ -81,7 +81,7 @@ export default function AnimeContent({ animeData }: AnimeContentProps) {
                         <p className='text-gray-600 dark:text-gray-400 mt-3 text-lg'>Temukan anime terbaru yang sedang tayang</p>
                     </div>
                     <Link
-                        href={"/ongoing"}
+                        href={"/anime/ongoing"}
                         className='px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/20'
                     >
                         Lihat Semua
