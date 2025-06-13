@@ -11,7 +11,7 @@ export const viewport = {
 export const metadata = {
   title: "RizNime - Pusatnya Anime",
   description:
-    "Tonton anime terbaru dan terlengkap dengan subtitle Indonesia. Nikmati ribuan judul anime berkualitas tinggi dengan streaming gratis!",
+    "Tonton anime,manga dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga dan donghua berkualitas tinggi dengan streaming gratis!",
 
   authors: [{ name: "Rizki Ramadhan" }],
 
