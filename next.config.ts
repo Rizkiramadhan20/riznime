@@ -45,11 +45,7 @@ const nextConfig: NextConfig = {
     formats: ["image/webp", "image/avif"] as ("image/webp" | "image/avif")[],
   },
   experimental: {
-    turbo: {
-      rules: {
-        // Add any necessary Turbopack rules here
-      },
-    },
+    // Add any necessary Turbopack rules here
   },
 };
 

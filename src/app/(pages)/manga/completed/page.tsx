@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 
 import { fetchMangaCompletedData } from '@/lib/FetchManga';
 
@@ -13,14 +13,10 @@ export const metadata: Metadata = {
     description: 'Manga Completed',
 }
 
-export default async function Completed() {
+export default async function Popular() {
     try {
         const mangaData = await fetchMangaCompletedData();
-        return (
-            <Suspense fallback={<CompletedSkelaton />}>
-                <CompletedMangaLayout mangaData={mangaData} />
-            </Suspense>
-        );
+        return <CompletedMangaLayout mangaData={mangaData} />;
     } catch (error) {
         console.error('Error fetching manga data:', error);
         return (

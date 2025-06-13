@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 
 import { fetchOngoingData } from '@/lib/FetchAnime';
 
@@ -16,11 +16,7 @@ export const metadata: Metadata = {
 export default async function Ongoing() {
     try {
         const animeData = await fetchOngoingData();
-        return (
-            <Suspense fallback={<AnimeOngoingSkeleton />}>
-                <AnimeOngoing animeData={animeData} />
-            </Suspense>
-        );
+        return <AnimeOngoing animeData={animeData} />;
     } catch (error) {
         console.error('Error fetching ongoing data:', error);
         return (
