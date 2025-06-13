@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 import { useRouter } from 'next/navigation';
 
-import { Role, UserAccount, FirebaseUser, AuthContextType } from '@/utils/context/types/Auth';
+import { Role, UserAccount, AuthContextType } from '@/utils/context/types/Auth';
 
 import { auth, db } from '@/utils/firebase/firebase';
 
@@ -12,9 +12,6 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    GoogleAuthProvider,
-    GithubAuthProvider,
-    signInWithPopup,
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
 } from 'firebase/auth';
@@ -33,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const getDashboardUrl = (userRole: string) => {
         switch (userRole) {
-            case Role.SUPER_ADMIN:
+            case Role.ADMINS:
                 return `/dashboard`;
             case Role.USER:
                 return `/profile`;
@@ -167,122 +164,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return `Selamat datang, ${displayName}!`;
     };
 
-    const createSocialUser = async (firebaseUser: FirebaseUser): Promise<UserAccount> => {
-        const userDocRef = doc(db, process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS as string, firebaseUser.uid);
-        const userData: UserAccount = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email || '',
-            displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || '',
-            role: Role.USER,
-            photoURL: firebaseUser.photoURL || undefined,
-            phoneNumber: firebaseUser.phoneNumber || '',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            isActive: true
-        };
-
-        await setDoc(userDocRef, userData, { merge: true });
-        return userData;
-    };
-
-    const loginWithGoogle = async (): Promise<UserAccount> => {
-        try {
-            const provider = new GoogleAuthProvider();
-            const result = await signInWithPopup(auth, provider);
-
-            const userDoc = await getDoc(doc(db, process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS as string, result.user.uid));
-            let userData: UserAccount;
-
-            if (!userDoc.exists()) {
-                userData = await createSocialUser({
-                    uid: result.user.uid,
-                    email: result.user.email,
-                    displayName: result.user.displayName,
-                    photoURL: result.user.photoURL,
-                    phoneNumber: result.user.phoneNumber || ''
-                });
-            } else {
-                userData = userDoc.data() as UserAccount;
-            }
-
-            // Check if user account is inactive
-            if (!userData.isActive) {
-                setShowInactiveModal(true);
-                await signOut(auth);
-                return userData; // Return userData but don't proceed with login
-            }
-
-            setUser(userData);
-            const welcomeMessage = getWelcomeMessage(userData);
-            toast.success(welcomeMessage);
-            handleRedirect(userData);
-
-            return userData;
-        } catch (error) {
-            // Check if the error is due to disabled account
-            if (error instanceof Error && error.message.includes('auth/user-disabled')) {
-                setShowInactiveModal(true);
-            } else {
-                toast.error('Gagal login dengan Google');
-            }
-            throw error;
-        }
-    };
-
-    const loginWithGithub = async (): Promise<UserAccount> => {
-        try {
-            const provider = new GithubAuthProvider();
-            const result = await signInWithPopup(auth, provider);
-
-            const userDoc = await getDoc(doc(db, process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS as string, result.user.uid));
-            let userData: UserAccount;
-
-            if (!userDoc.exists()) {
-                userData = await createSocialUser({
-                    uid: result.user.uid,
-                    email: result.user.email,
-                    displayName: result.user.displayName,
-                    photoURL: result.user.photoURL,
-                    phoneNumber: result.user.phoneNumber || ''
-                });
-            } else {
-                userData = userDoc.data() as UserAccount;
-            }
-
-            // Check if user account is inactive
-            if (!userData.isActive) {
-                setShowInactiveModal(true);
-                await signOut(auth);
-                return userData;
-            }
-
-            setUser(userData);
-            const welcomeMessage = getWelcomeMessage(userData);
-            toast.success(welcomeMessage);
-            handleRedirect(userData);
-
-            return userData;
-        } catch (error) {
-            if (error instanceof Error && error.message.includes('auth/user-disabled')) {
-                setShowInactiveModal(true);
-            } else {
-                toast.error('Gagal login dengan GitHub');
-            }
-            throw error;
-        }
-    };
-
     const signUp = async (email: string, password: string, displayName: string): Promise<void> => {
         try {
-            if (!process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS) {
-                throw new Error('Collection path is not configured');
+            if (!email || !password || !displayName) {
+                throw new Error('Semua field harus diisi');
             }
 
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const emailString = String(email).trim();
+            const userCredential = await createUserWithEmailAndPassword(auth, emailString, password);
 
             const userData: UserAccount = {
                 uid: userCredential.user.uid,
-                email: email,
+                email: emailString,
                 displayName: displayName,
                 role: Role.USER,
                 photoURL: undefined,
@@ -292,24 +185,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 isActive: true
             };
 
-            const userDocRef = doc(db, process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS, userCredential.user.uid);
-            await setDoc(userDocRef, userData);
-
-            // Sign out immediately after creating account
-            await signOut(auth);
-
-            toast.success('Registration successful! Please log in.', {
-                duration: 2000
-            });
+            await setDoc(doc(db, process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS as string, userCredential.user.uid), userData);
+            toast.success('Akun berhasil dibuat');
         } catch (error) {
             if (error instanceof Error) {
-                if (error.message.includes('auth/email-already-in-use')) {
-                    toast.error('Email already in use. Please use a different email.');
-                } else {
-                    toast.error('Registration failed: ' + error.message);
-                }
+                toast.error('Gagal membuat akun: ' + error.message);
             } else {
-                toast.error('Registration failed');
+                toast.error('Terjadi kesalahan saat membuat akun');
             }
             throw error;
         }
@@ -317,37 +199,67 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const forgotPassword = async (email: string): Promise<void> => {
         try {
-            await sendPasswordResetEmail(auth, email);
-            toast.success('Password reset email sent! Please check your inbox.');
+            if (!email) {
+                throw new Error('Email harus diisi');
+            }
+
+            const emailString = String(email).trim();
+            await sendPasswordResetEmail(auth, emailString);
+            toast.success('Link reset password telah dikirim ke email Anda');
         } catch (error) {
             if (error instanceof Error) {
-                if (error.message.includes('auth/user-not-found')) {
-                    toast.error('No account found with this email address.');
-                } else {
-                    toast.error('Failed to send reset email: ' + error.message);
-                }
+                toast.error('Gagal mengirim reset password: ' + error.message);
             } else {
-                toast.error('Failed to send reset email.');
+                toast.error('Terjadi kesalahan saat mengirim reset password');
             }
             throw error;
         }
     };
 
+    const removeFromBookmarks = async (bookmarkId: string): Promise<boolean> => {
+        try {
+            if (!user) {
+                throw new Error('No user logged in');
+            }
+
+            const idToken = await auth.currentUser?.getIdToken();
+            if (!idToken) {
+                throw new Error('Failed to get authentication token');
+            }
+
+            const response = await fetch(`/api/user/bookmarks/${bookmarkId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                },
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Failed to remove bookmark');
+            }
+
+            toast.success('Bookmark berhasil dihapus');
+            return true;
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : 'Gagal menghapus bookmark');
+            return false;
+        }
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-            try {
-                if (firebaseUser && process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS) {
-                    const userDoc = await getDoc(doc(db, process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS as string, firebaseUser.uid));
-                    const userData = userDoc.data() as UserAccount;
+            if (firebaseUser) {
+                const userDoc = await getDoc(doc(db, process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS as string, firebaseUser.uid));
+                const userData = userDoc.data() as UserAccount;
+
+                if (userData) {
                     setUser(userData);
-                } else {
-                    setUser(null);
                 }
-            } catch {
+            } else {
                 setUser(null);
-            } finally {
-                setLoading(false);
             }
+            setLoading(false);
         });
 
         return () => unsubscribe();
@@ -357,8 +269,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         loading,
         login,
-        loginWithGoogle,
-        loginWithGithub,
         logout,
         deleteAccount,
         hasRole,
@@ -366,11 +276,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signUp,
         forgotPassword,
         showInactiveModal,
-        setShowInactiveModal
+        setShowInactiveModal,
+        removeFromBookmarks
     };
+
     return (
-        <AuthContext.Provider value={value as AuthContextType}>
-            {!loading && children}
+        <AuthContext.Provider value={value}>
+            {children}
         </AuthContext.Provider>
     );
 }

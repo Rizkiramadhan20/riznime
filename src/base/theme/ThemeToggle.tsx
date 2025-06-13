@@ -1,30 +1,18 @@
 'use client';
 
 import { useTheme } from './ThemeProvider';
-import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 export function ThemeToggle() {
     const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(0);
 
-    // Listen to system theme changes
     useEffect(() => {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-        const handleChange = (e: MediaQueryListEvent) => {
-            setTheme(e.matches ? 'dark' : 'light');
-        };
-
-        // Set initial theme based on system preference
-        setTheme(mediaQuery.matches ? 'dark' : 'light');
-
-        // Listen for changes
-        mediaQuery.addEventListener('change', handleChange);
-
-        return () => {
-            mediaQuery.removeEventListener('change', handleChange);
-        };
-    }, [setTheme]);
+        setMounted(true);
+        setWindowWidth(window.innerWidth);
+    }, []);
 
     // Urutan mode
     const modes = ['light', 'dark'];
@@ -38,6 +26,16 @@ export function ThemeToggle() {
     // Fungsi untuk pindah ke mode berikutnya
     const nextMode = () => setTheme(modes[(currentIndex + 1) % modes.length] as 'light' | 'dark');
 
+    if (!mounted) {
+        return null;
+    }
+
+    const getTogglePosition = () => {
+        if (windowWidth < 640) return 32;
+        if (windowWidth < 768) return 40;
+        return 36;
+    };
+
     return (
         <div className="flex flex-col items-center overflow-hidden">
             <button
@@ -49,7 +47,7 @@ export function ThemeToggle() {
                     className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shadow-md"
                     layout
                     animate={{
-                        x: currentIndex * (window.innerWidth < 640 ? 32 : window.innerWidth < 768 ? 40 : 36),
+                        x: currentIndex * getTogglePosition(),
                         background: theme === 'dark'
                             ? 'linear-gradient(135deg, #6366f1 0%, #818cf8 100%)'
                             : 'linear-gradient(135deg, #fff 0%, #e0e7ff 100%)',

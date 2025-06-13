@@ -42,12 +42,12 @@ export default function DashboardLayout({
 
         // Check role priority and validate access
         if (currentPath.startsWith('/dashboard')) {
-            if (!hasRole(Role.SUPER_ADMIN)) {
+            if (!hasRole(Role.ADMINS)) {
                 setIsAuthorized(false);
                 setLoading(false);
                 return;
             }
-            setCurrentRole(Role.SUPER_ADMIN);
+            setCurrentRole(Role.ADMINS);
         } else if (currentPath.startsWith('/')) {
             if (!hasRole(Role.USER)) {
                 setIsAuthorized(false);
@@ -88,7 +88,7 @@ export default function DashboardLayout({
 
     const renderHeader = () => {
         switch (currentRole) {
-            case Role.SUPER_ADMIN:
+            case Role.ADMINS:
                 return <SuperAdminHeader onSidebarToggle={setIsSidebarOpen} />;
             case Role.USER:
                 return <UserHeader onSidebarToggle={setIsSidebarOpen} />;

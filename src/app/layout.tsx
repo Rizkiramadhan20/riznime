@@ -31,27 +31,8 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <head>
         <ThemeModeScript />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                function getTheme() {
-                  const savedTheme = localStorage.getItem('theme');
-                  if (savedTheme === 'dark' || savedTheme === 'light') {
-                    return savedTheme;
-                  }
-                  return 'dark';
-                }
-                
-                const theme = getTheme();
-                document.documentElement.classList.add(theme);
-                document.documentElement.style.colorScheme = theme;
-              })();
-            `,
-          }}
-        />
       </head>
-      <body className={`${poppins.variable} bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200`}>
+      <body className={poppins.variable}>
         <ThemeProvider>
           <Providers>
             <Pathname>
