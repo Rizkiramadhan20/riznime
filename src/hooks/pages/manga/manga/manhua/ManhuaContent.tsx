@@ -156,7 +156,7 @@ export default function ManhuaContent({ mangaData }: { mangaData: MangaData }) {
                                     onDragStart={(e) => e.preventDefault()}
                                 >
                                     <Link
-                                        href={manga.href}
+                                        href={`manga/${manga.href}`}
                                         className="block w-[160px] sm:w-[200px] lg:w-[240px]"
                                         onClick={handleLinkClick}
                                     >

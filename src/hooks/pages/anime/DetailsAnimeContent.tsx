@@ -14,6 +14,8 @@ import { DetailsAnimeContentProps } from "@/hooks/pages/anime/types/AnimeDetails
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
+import { formatSlug } from "@/base/helper/FormatSlug"
+
 export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentProps) {
     const router = useRouter();
     const [search, setSearch] = useState('');
@@ -153,9 +155,9 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                 {animeData.genreList.map((genre, index) => (
                                     <Link
                                         key={index}
-                                        href={`/anime/${genre.href}`}
+                                        href={`/anime/genres/${genre.href}`}
                                         className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/70 transition-colors text-sm"
-                                        onClick={(e) => handleClick(e, `/anime/${genre.href}`)}
+                                        onClick={(e) => handleClick(e, `/anime/genres/${genre.href}`)}
                                     >
                                         {genre.title}
                                     </Link>
@@ -187,10 +189,10 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                 {filteredEpisodes.length > 0 ? (
                                     filteredEpisodes.map((ep) => (
                                         <Link
-                                            href={`/anime/${ep.href}`}
+                                            href={`/anime/episode/${formatSlug(ep.href)}`}
                                             key={ep.episodeId}
                                             className="flex items-center rounded-xl p-2 md:p-3 shadow transition-all duration-300 bg-gray-800/70 hover:bg-gray-700/80"
-                                            onClick={(e) => handleClick(e, `/anime/${ep.href}`)}
+                                            onClick={(e) => handleClick(e, `/anime/episode/${formatSlug(ep.href)}`)}
                                         >
                                             <div className="relative">
                                                 <Image
@@ -229,9 +231,9 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                     {animeData.recommendedAnimeList.map((anime, index) => (
                                         <Link
                                             key={index}
-                                            href={anime.href}
+                                            href={`/anime/${formatSlug(anime.href)}`}
                                             className="group"
-                                            onClick={(e) => handleClick(e, anime.href)}
+                                            onClick={(e) => handleClick(e, `/anime/${formatSlug(anime.href)}`)}
                                         >
                                             <div className="relative aspect-[3/4] rounded-lg overflow-hidden mb-2 shadow-md">
                                                 <Image

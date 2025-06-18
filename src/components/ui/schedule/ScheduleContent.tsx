@@ -197,7 +197,7 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
                                     onDragStart={(e) => e.preventDefault()}
                                 >
                                     <Link
-                                        href={anime.href}
+                                        href={`/anime/${anime.href}`}
                                         className="block w-[140px] sm:w-[160px] lg:w-[180px]"
                                         onClick={(e) => handleAnimeClick(e, anime.href)}
                                     >

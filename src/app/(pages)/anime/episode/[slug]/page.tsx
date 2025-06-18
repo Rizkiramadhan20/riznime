@@ -4,7 +4,7 @@ import DetailsEpisode from "@/hooks/pages/anime/episode/DetailsEpisode"
 
 import { Metadata, ResolvingMetadata } from "next"
 
-import axios from "axios"
+import { fetchEpisodeBySlug } from "@/lib/FetchAnime"
 
 type Props = {
     params: Promise<{ slug: string }>
@@ -12,15 +12,8 @@ type Props = {
 
 async function getAnimeData(slug: string) {
     try {
-        const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/anime/episode/${slug}`,
-            {
-                headers: {
-                    "x-api-key": process.env.NEXT_PUBLIC_API_KEY,
-                },
-            }
-        );
-        return response.data;
+        const data = await fetchEpisodeBySlug(slug);
+        return data;
     } catch (error) {
         console.error("Error fetching episode data:", error);
         return null;

@@ -16,11 +16,13 @@ import { formatSlug } from "@/base/helper/FormatSlug"
 
 import Pagination from '@/base/helper/Pagination';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay';
 
 import ImagePlaceholder from '@/base/helper/ImagePlaceholder';
+
+import { fetchMangaPopularData } from '@/lib/FetchManga';
 
 interface Manga {
     title: string;
@@ -54,24 +56,24 @@ interface MangaContentProps {
 
 export default function MangaContent({ mangaData }: MangaContentProps) {
     const router = useRouter();
-    const searchParams = useSearchParams();
     const [currentPage, setCurrentPage] = useState(mangaData.pagination.currentPage);
     const [mangaList, setMangaList] = useState(mangaData.data.animeList);
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [totalPages, setTotalPages] = useState(mangaData.pagination.nextPage);
 
+    // Function to get URL parameters
+    const getUrlParams = () => {
+        if (typeof window === 'undefined') return new URLSearchParams();
+        return new URLSearchParams(window.location.search);
+    };
+
     const handlePageChange = useCallback(async (page: number) => {
         try {
             setLoadingProgress(0);
             router.push(`/manga/popular?page=${page}`);
 
-            const response = await fetch(`/api/manga/popular?page=${page}`, {
-                headers: {
-                    "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
-                },
-            });
-            const data = await response.json();
+            const data = await fetchMangaPopularData(page);
             setMangaList(data.data.animeList);
             setCurrentPage(data.pagination.currentPage);
             setTotalPages(data.pagination.nextPage);
@@ -86,11 +88,12 @@ export default function MangaContent({ mangaData }: MangaContentProps) {
     }, [router]);
 
     useEffect(() => {
-        const page = searchParams.get('page');
+        const urlParams = getUrlParams();
+        const page = urlParams.get('page');
         if (page && parseInt(page) !== currentPage) {
             handlePageChange(parseInt(page));
         }
-    }, [searchParams, currentPage, handlePageChange]);
+    }, [currentPage, handlePageChange]);
 
     const handleMangaClick = (e: React.MouseEvent<HTMLAnchorElement>, mangaId: string) => {
         e.preventDefault();

@@ -4,7 +4,7 @@ import DetailsGenres from "@/hooks/pages/anime/genres/DetailsGenres"
 
 import { Metadata, ResolvingMetadata } from "next"
 
-import axios from "axios"
+import { fetchAnimeGenresId } from "@/lib/FetchAnime"
 
 type Props = {
     params: Promise<{ genreId: string }>;
@@ -29,18 +29,8 @@ export const generateStaticParams = async () => {
 
 async function getAnimeData(genreId: string, page: number = 1) {
     try {
-        const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/anime/genres/${genreId}?page=${page}`,
-            {
-                headers: {
-                    "x-api-key": process.env.NEXT_PUBLIC_API_KEY,
-                    "Cache-Control": "no-cache, no-store, must-revalidate",
-                    "Pragma": "no-cache",
-                    "Expires": "0"
-                }
-            }
-        );
-        return response.data;
+        const response = await fetchAnimeGenresId(genreId, page);
+        return response;
     } catch (error) {
         console.error("Error fetching episode data:", error);
         return null;

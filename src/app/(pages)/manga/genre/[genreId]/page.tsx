@@ -4,7 +4,7 @@ import DetailsGenres from "@/hooks/pages/manga/[genresId]/DetailsGenres"
 
 import { Metadata, ResolvingMetadata } from "next"
 
-import axios from "axios"
+import { fetchMangaGenresId } from "@/lib/FetchManga"
 
 type Props = {
     params: Promise<{ genreId: string }>;
@@ -27,26 +27,6 @@ export const generateStaticParams = async () => {
     return [];
 };
 
-async function getAnimeData(genreId: string, page: number = 1) {
-    try {
-        const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/genres/${genreId}?page=${page}`,
-            {
-                headers: {
-                    "x-api-key": process.env.NEXT_PUBLIC_API_KEY,
-                    "Cache-Control": "no-cache, no-store, must-revalidate",
-                    "Pragma": "no-cache",
-                    "Expires": "0"
-                }
-            }
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching episode data:", error);
-        return null;
-    }
-}
-
 export async function generateMetadata(
     { params, searchParams }: Props,
     parent: ResolvingMetadata
@@ -56,34 +36,34 @@ export async function generateMetadata(
     const page = resolvedSearchParams.page ? parseInt(resolvedSearchParams.page as string) : 1;
 
     // fetch data
-    const animeData = await getAnimeData(genreId, page);
-    const animeList = animeData?.data?.animeList;
+    const mangaData = await fetchMangaGenresId(genreId, page);
+    const mangaList = mangaData?.data?.mangaList;
 
-    if (!animeList || animeList.length === 0) {
+    if (!mangaList || mangaList.length === 0) {
         return {
             title: "Genre Not Found",
             description: "The requested genre could not be found.",
         };
     }
 
-    // Get the first anime's genre title for metadata
-    const genreTitle = animeList[0].genreList.find((genre: Genre) => genre.genreId === genreId)?.title || genreId;
+    // Get the first manga's genre title for metadata
+    const genreTitle = mangaList[0].genreList.find((genre: Genre) => genre.genreId === genreId)?.title || genreId;
 
     // optionally access and extend parent metadata
     const previousImages = (await parent).openGraph?.images || [];
 
     return {
         title: `${genreTitle} | Riznime`,
-        description: `Watch ${genreTitle} anime online. Browse our collection of ${genreTitle} anime series and movies.`,
+        description: `Read ${genreTitle} manga online. Browse our collection of ${genreTitle} manga series.`,
         openGraph: {
             title: `${genreTitle} | Riznime`,
-            description: `Watch ${genreTitle} anime online. Browse our collection of ${genreTitle} anime series and movies.`,
+            description: `Read ${genreTitle} manga online. Browse our collection of ${genreTitle} manga series.`,
             images: [...previousImages],
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${genreTitle} Anime | Riznime`,
-            description: `Watch ${genreTitle} anime online. Browse our collection of ${genreTitle} anime series and movies.`,
+            title: `${genreTitle} Manga | Riznime`,
+            description: `Read ${genreTitle} manga online. Browse our collection of ${genreTitle} manga series.`,
         },
     };
 }

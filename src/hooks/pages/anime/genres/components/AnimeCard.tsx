@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Anime } from '@/types/anime'
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 import { useRouter } from 'next/navigation'
+import { formatSlug } from '@/base/helper/FormatSlug'
 
 import ModalPreview from '../modal/ModalPreview'
 
@@ -32,8 +33,8 @@ export default function AnimeCard({ anime }: Props) {
     const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         setIsNavigating(true);
-        const href = anime.href.replace(/\/otak[ou]desu/, '');
-        router.push(href);
+        const slug = formatSlug(anime.href);
+        router.push(`/anime/${slug}`);
     };
 
     return (
@@ -71,7 +72,7 @@ export default function AnimeCard({ anime }: Props) {
                             </svg>
                         </button>
                         <Link
-                            href={anime.href.replace(/\/otak[ou]desu/, '')}
+                            href={`/anime/${formatSlug(anime.href)}`}
                             onClick={handleNavigation}
                             className="p-2.5 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full transition-all duration-300 transform hover:scale-110"
                             title="Go to Anime"

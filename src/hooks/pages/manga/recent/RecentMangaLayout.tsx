@@ -14,11 +14,13 @@ import Image from 'next/image'
 
 import { formatSlug } from "@/base/helper/FormatSlug"
 
-import Pagination from '@/base/helper/Pagination'
-
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
+
+import Pagination from '@/base/helper/Pagination'
+
+import { fetchMangaRecentData } from '@/lib/FetchManga'
 
 interface MangaContentProps {
     mangaData: RecentMangaResponse;
@@ -26,51 +28,20 @@ interface MangaContentProps {
 
 export default function RecentMangaContent({ mangaData }: MangaContentProps) {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const [currentPage, setCurrentPage] = useState(1);
     const [mangaList, setMangaList] = useState(mangaData.data.animeList);
-    const [hasMorePages, setHasMorePages] = useState(true);
+    const [pagination, setPagination] = useState(mangaData.pagination);
     const [isLoading, setIsLoading] = useState(false);
-    const MAX_PAGE = 300;
+    const [isPageLoading, setIsPageLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(mangaData.pagination.currentPage);
 
-    const handlePageChange = useCallback(async (page: number) => {
-        try {
-            setIsLoading(true);
-            const response = await fetch(`/api/manga/recent?page=${page}`, {
-                headers: {
-                    "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
-                },
-            });
-            const data: RecentMangaResponse = await response.json();
+    // Function to get URL parameters
+    const getUrlParams = () => {
+        if (typeof window === 'undefined') return new URLSearchParams();
+        return new URLSearchParams(window.location.search);
+    };
 
-            if (data.data.animeList && data.data.animeList.length > 0) {
-                setMangaList(data.data.animeList);
-                setCurrentPage(page);
-                router.push(`/manga/recent?page=${page}`);
-
-                if (page >= MAX_PAGE) {
-                    setHasMorePages(false);
-                } else {
-                    setHasMorePages(true);
-                }
-            } else {
-                setHasMorePages(false);
-            }
-        } catch (error) {
-            console.error('Failed to fetch manga data:', error);
-            setHasMorePages(false);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [router]);
-
-    useEffect(() => {
-        const page = searchParams.get('page');
-        if (page) {
-            const pageNumber = parseInt(page);
-            handlePageChange(pageNumber);
-        }
-    }, [searchParams, handlePageChange]);
+    // Calculate total pages based on current page and hasNextPage
+    const totalPages = pagination.hasNextPage ? currentPage + 1 : currentPage;
 
     const handleMangaClick = (e: React.MouseEvent<HTMLAnchorElement>, mangaId: string) => {
         e.preventDefault();
@@ -78,9 +49,37 @@ export default function RecentMangaContent({ mangaData }: MangaContentProps) {
         router.push(`/manga/${formatSlug(mangaId)}`);
     };
 
+    const handlePageChange = useCallback(async (page: number) => {
+        if (page === currentPage) return;
+
+        setIsPageLoading(true);
+        try {
+            const newData = await fetchMangaRecentData(page);
+            setMangaList(newData.data.animeList);
+            setPagination(newData.pagination);
+            setCurrentPage(page);
+
+            // Update URL with new page
+            router.push(`/manga/recent?page=${page}`);
+        } catch (error) {
+            console.error('Error fetching page data:', error);
+        } finally {
+            setIsPageLoading(false);
+        }
+    }, [currentPage, router]);
+
+    // Update data when component mounts with different page
+    useEffect(() => {
+        const urlParams = getUrlParams();
+        const page = urlParams.get('page');
+        if (page && parseInt(page) !== currentPage) {
+            handlePageChange(parseInt(page));
+        }
+    }, [currentPage, handlePageChange]);
+
     return (
         <section className='py-12 bg-gray-50 dark:bg-gray-900'>
-            <LoadingOverlay isLoading={isLoading} message="Loading content..." />
+            <LoadingOverlay isLoading={isLoading || isPageLoading} message="Loading content..." />
             <div className='container px-4'>
                 <div className='flex mb-12 flex-col gap-4'>
                     <h3 className='text-4xl font-bold text-gray-900 dark:text-white tracking-tight'>Manga Terbaru</h3>
@@ -142,11 +141,12 @@ export default function RecentMangaContent({ mangaData }: MangaContentProps) {
                     ))}
                 </article>
 
-                {hasMorePages && (
-                    <div className="mt-8">
+                {/* Pagination */}
+                {pagination && totalPages > 1 && (
+                    <div className="mt-12 flex justify-center">
                         <Pagination
-                            currentPage={currentPage}
-                            totalPages={MAX_PAGE}
+                            currentPage={pagination.currentPage}
+                            totalPages={totalPages}
                             onPageChange={handlePageChange}
                         />
                     </div>

@@ -4,7 +4,7 @@ import { Metadata, ResolvingMetadata } from "next"
 
 import DetailsManga from "@/hooks/pages/manga/details-manga/DetailsManga"
 
-import axios from "axios"
+import { fetchMangaBySlug } from "@/lib/FetchManga"
 
 type Props = {
     params: Promise<{ slug: string }>
@@ -12,15 +12,8 @@ type Props = {
 
 async function getAnimeData(slug: string) {
     try {
-        const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/manga/${slug}`,
-            {
-                headers: {
-                    "x-api-key": process.env.NEXT_PUBLIC_API_KEY,
-                },
-            }
-        );
-        return response.data;
+        const response = await fetchMangaBySlug(slug);
+        return response;
     } catch (error) {
         console.error("Error fetching manga data:", error);
         return null;

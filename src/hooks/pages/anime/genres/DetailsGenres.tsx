@@ -24,8 +24,7 @@ export default async function DetailsGenres({ genreId, searchParams }: Props) {
         );
     }
 
-    const { animeList } = response.data;
-    const { pagination } = response;
+    const { data: { animeList }, pagination } = response;
 
     // Take the top 3 anime for the slider
     const top3Anime = animeList.slice(0, 3);

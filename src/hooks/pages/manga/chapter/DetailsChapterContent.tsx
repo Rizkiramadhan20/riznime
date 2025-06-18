@@ -3,9 +3,14 @@
 import React, { useState } from 'react'
 
 import Image from 'next/image'
+
 import Link from 'next/link'
+
 import { Card } from 'flowbite-react'
+
 import { BookOpen } from 'lucide-react'
+
+import { formatSlug } from '@/base/helper/FormatSlugManga'
 
 import { DetailsChapterContentProps } from './types/ChapterDetails'
 
@@ -111,7 +116,7 @@ export default function DetailsChapterContent({ mangaData }: DetailsChapterConte
                         {mangaData.recommendedChapters.map((chapter) => (
                             <Link
                                 key={chapter.mangaId}
-                                href={chapter.href}
+                                href={`/manga/${formatSlug(chapter.href)}`}
                                 className="group"
                             >
                                 <Card className="h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer p-0 border-0">

@@ -38,7 +38,7 @@ export default function MangaSidebar({ popularManga }: MangaSidebarProps) {
                         {popularManga.map((manga) => (
                             <Link
                                 key={manga.mangaId}
-                                href={manga.href}
+                                href={`manga/${manga.href}`}
                                 onClick={handleLinkClick}
                                 className='w-40 sm:w-44 xl:w-auto min-w-[160px] sm:min-w-[176px] xl:min-w-0 group flex-shrink-0 xl:flex-shrink'
                             >

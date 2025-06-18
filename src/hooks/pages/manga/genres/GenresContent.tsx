@@ -101,7 +101,7 @@ export default function CategoryContent({ mangaData }: CategoryContentProps) {
                     {mangaData.data.genreList.map((manga) => {
                         const Icon = getGenreIcon(manga.genreId);
                         return (
-                            <Link href={`manga${manga.href}`} key={manga.genreId} onClick={handleLinkClick}>
+                            <Link href={`manga/genre/${manga.href}`} key={manga.genreId} onClick={handleLinkClick}>
                                 <Card className="group h-full bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 cursor-pointer">
                                     <div className="flex flex-col items-center gap-2 p-2">
                                         <Icon className="w-6 h-6 text-gray-600 dark:text-gray-400 group-hover:text-primary dark:group-hover:text-primary transition-colors duration-200" />

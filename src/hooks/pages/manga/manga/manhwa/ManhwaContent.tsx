@@ -45,7 +45,7 @@ export default function ManhuaContent({ mangaData }: { mangaData: MangaData }) {
                 <article className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                     {mangaData.manhwa_popular.mangaList.map((manga, idx) => (
                         <Link
-                            href={manga.href}
+                            href={`manga/${manga.href}`}
                             key={manga.mangaId}
                             onClick={handleLinkClick}
                         >

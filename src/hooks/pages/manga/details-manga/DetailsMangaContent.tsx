@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 import { Search } from 'lucide-react'
 
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import { DetailsMangaContentProps } from "@/hooks/pages/manga/details-manga/types/AnimeDetails"
 
@@ -16,17 +16,9 @@ import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
 export default function DetailsMangaContent({ mangaData }: DetailsMangaContentProps) {
     const router = useRouter();
-    const pathname = usePathname();
     const [search, setSearch] = useState('');
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
-
-    const isChapterActive = (chapterHref: string) => {
-        // Remove any query parameters and trailing slashes for comparison
-        const cleanPathname = pathname.split('?')[0].replace(/\/$/, '');
-        const cleanHref = chapterHref.split('?')[0].replace(/\/$/, '');
-        return cleanPathname === cleanHref;
-    };
 
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         e.preventDefault();
@@ -99,11 +91,11 @@ export default function DetailsMangaContent({ mangaData }: DetailsMangaContentPr
                         <div className="flex flex-wrap gap-2 mb-4">
                             {mangaData.genreList.map((genre) => (
                                 <Link
-                                    href={genre.href}
+                                    href={`genre/${genre.href}`}
                                     rel='noopener noreferrer'
                                     key={genre.genreId}
                                     className="text-xs text-gray-200 bg-gray-700/60 px-2 py-1 rounded"
-                                    onClick={(e) => handleClick(e, genre.href)}
+                                    onClick={(e) => handleClick(e, `genre/${genre.href}`)}
                                 >
                                     {genre.title}
                                 </Link>
@@ -205,9 +197,9 @@ export default function DetailsMangaContent({ mangaData }: DetailsMangaContentPr
                                 {mangaData.genreList.map((genre, index) => (
                                     <Link
                                         key={index}
-                                        href={genre.href}
+                                        href={`genre/${genre.href}`}
                                         className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/70 transition-colors text-sm"
-                                        onClick={(e) => handleClick(e, genre.href)}
+                                        onClick={(e) => handleClick(e, `genre/${genre.href}`)}
                                     >
                                         {genre.title}
                                     </Link>
@@ -262,15 +254,12 @@ export default function DetailsMangaContent({ mangaData }: DetailsMangaContentPr
                                 {filteredChapters.length > 0 ? (
                                     filteredChapters.map((chapter) => (
                                         <Link
-                                            href={chapter.href}
+                                            href={`chapter/${chapter.href}`}
                                             key={chapter.chapterId}
-                                            className={`flex items-center rounded-xl p-3 md:p-4 shadow-lg transition-all duration-300 hover:scale-[1.02] ${isChapterActive(chapter.href)
-                                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800'
-                                                : 'bg-gray-800/70 hover:bg-gray-700/80 dark:bg-gray-800/50 dark:hover:bg-gray-700/60'
-                                                }`}
-                                            onClick={(e) => handleClick(e, chapter.href)}
+                                            className="flex items-center rounded-xl p-3 md:p-4 shadow-lg transition-all duration-300 hover:scale-[1.02] bg-gray-800/70 hover:bg-gray-700/80 dark:bg-gray-800/50 dark:hover:bg-gray-700/60"
+                                            onClick={(e) => handleClick(e, `chapter/${chapter.href}`)}
                                         >
-                                            <div className={`relative ${isChapterActive(chapter.href) ? 'ring-2 ring-blue-300 dark:ring-blue-400' : ''}`}>
+                                            <div className="relative">
                                                 <Image
                                                     src={mangaData.poster}
                                                     alt={mangaData.title}
@@ -278,40 +267,20 @@ export default function DetailsMangaContent({ mangaData }: DetailsMangaContentPr
                                                     height={56}
                                                     className="rounded-lg w-14 h-14 object-cover"
                                                 />
-                                                {isChapterActive(chapter.href) && (
-                                                    <div className="absolute inset-0 flex items-center justify-center bg-blue-500/20 rounded-lg backdrop-blur-sm">
-                                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                        </svg>
-                                                    </div>
-                                                )}
                                             </div>
                                             <div className="flex-1 min-w-0 ml-4">
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    {isChapterActive(chapter.href) && (
-                                                        <span className="bg-blue-400 text-white text-xs px-2.5 py-1 rounded-full font-medium shadow-sm">Current</span>
-                                                    )}
-                                                    <span className={`font-semibold text-sm md:text-base ${isChapterActive(chapter.href)
-                                                        ? 'text-white'
-                                                        : 'text-gray-100'
-                                                        }`}>{chapter.title}</span>
+                                                    <span className="font-semibold text-sm md:text-base text-gray-100">{chapter.title}</span>
                                                 </div>
                                                 <div className="flex items-center gap-3">
-                                                    <span className={`text-xs ${isChapterActive(chapter.href)
-                                                        ? 'text-blue-100'
-                                                        : 'text-gray-400'
-                                                        }`}>
+                                                    <span className="text-xs text-gray-400">
                                                         <svg className="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                         </svg>
                                                         {chapter.views} views
                                                     </span>
-                                                    <span className={`text-xs ${isChapterActive(chapter.href)
-                                                        ? 'text-blue-100'
-                                                        : 'text-gray-400'
-                                                        }`}>
+                                                    <span className="text-xs text-gray-400">
                                                         <svg className="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                         </svg>
@@ -319,10 +288,7 @@ export default function DetailsMangaContent({ mangaData }: DetailsMangaContentPr
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className={`ml-4 text-lg md:text-xl transition-colors ${isChapterActive(chapter.href)
-                                                ? 'text-white'
-                                                : 'text-blue-500 group-hover:text-blue-400'
-                                                }`}>
+                                            <div className="ml-4 text-lg md:text-xl text-blue-500 group-hover:text-blue-400">
                                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                 </svg>

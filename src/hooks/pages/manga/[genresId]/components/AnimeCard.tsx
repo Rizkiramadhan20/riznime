@@ -14,6 +14,8 @@ import ImagePlaceholder from '@/base/helper/ImagePlaceholder'
 
 import { useRouter } from 'next/navigation'
 
+import { formatSlug } from '@/base/helper/FormatSlugManga'
+
 type Props = {
     anime: GenreManga;
 }
@@ -26,14 +28,20 @@ export default function AnimeCard({ anime }: Props) {
     const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         setIsNavigating(true);
-        const href = anime.href.replace(/\/komiku/, '');
+        const href = `/manga/${formatSlug(anime.href)}`;
         router.push(href);
+    };
+
+    const handleChapterClick = (e: React.MouseEvent<HTMLButtonElement>, url: string) => {
+        e.preventDefault();
+        e.stopPropagation();
+        router.push(url);
     };
 
     return (
         <>
             <LoadingOverlay isLoading={isNavigating} message="Loading manga page..." />
-            <Link href={anime.href.replace(/\/komiku/, '')} className="group relative" onClick={handleNavigation}>
+            <Link href={`/manga/${formatSlug(anime.href)}`} className="group relative" onClick={handleNavigation}>
                 <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
                     {imageError ? (
                         <ImagePlaceholder className="w-full h-full" />
@@ -55,7 +63,7 @@ export default function AnimeCard({ anime }: Props) {
                         </span>
                     </div>
 
-                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
                         <h3 className="text-lg font-semibold line-clamp-2 mb-2">{anime.title}</h3>
                         <div className="flex flex-col gap-2 text-sm text-gray-200">
                             <div className="flex items-center gap-2">
@@ -63,18 +71,18 @@ export default function AnimeCard({ anime }: Props) {
                             </div>
                             <p className="line-clamp-2 text-gray-300">{anime.description}</p>
                             <div className="flex items-center justify-between mt-2">
-                                <Link
-                                    href={anime.firstChapterUrl || '#'}
+                                <button
+                                    onClick={(e) => handleChapterClick(e, anime.firstChapterUrl || '#')}
                                     className="text-sm hover:text-blue-400 transition-colors"
                                 >
                                     {anime.firstChapter}
-                                </Link>
-                                <Link
-                                    href={anime.latestChapterUrl || '#'}
+                                </button>
+                                <button
+                                    onClick={(e) => handleChapterClick(e, anime.latestChapterUrl || '#')}
                                     className="text-sm hover:text-blue-400 transition-colors"
                                 >
                                     {anime.latestChapter}
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     </div>

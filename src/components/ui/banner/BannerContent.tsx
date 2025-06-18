@@ -188,7 +188,7 @@ export default function BannerContent({ bannerData }: BannerContentProps) {
                         transition={{ duration: 0.5, delay: 0.7 }}
                     >
                         <Link
-                            href={displayedAnime[currentIndex].href}
+                            href={`/anime/${displayedAnime[currentIndex].href}`}
                             onClick={(e) => handleAnimeClick(e, displayedAnime[currentIndex].href)}
                             className="group relative inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-lg shadow-lg overflow-hidden"
                         >

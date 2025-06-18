@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Anime } from '@/types/anime';
 import LoadingOverlay from '@/base/helper/LoadingOverlay';
 import { useRouter } from 'next/navigation';
+import { formatSlug } from '@/base/helper/FormatSlug';
 
 type Props = {
     animeList: Anime[];
@@ -28,8 +29,8 @@ export default function GenreAnimeSlider({ animeList }: Props) {
     const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         setIsNavigating(true);
-        const href = animeList[activeIndex].href.replace(/\/otak[ou]desu/, '');
-        router.push(href);
+        const slug = formatSlug(animeList[activeIndex].href);
+        router.push(`/anime/${slug}`);
     };
 
     React.useEffect(() => {
@@ -121,7 +122,7 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                                     transition={{ delay: 0.6, duration: 0.5 }}
                                 >
                                     <Link
-                                        href={animeList[activeIndex].href.replace(/\/otak[ou]desu/, '')}
+                                        href={`/anime/${formatSlug(animeList[activeIndex].href)}`}
                                         onClick={handleNavigation}
                                         className="inline-flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors mt-2 w-fit text-sm"
                                     >

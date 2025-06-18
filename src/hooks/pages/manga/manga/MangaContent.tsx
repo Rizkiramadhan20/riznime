@@ -102,7 +102,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                             <span className="w-1.5 h-1.5 bg-text-secondary rounded-full"></span>
                             <span>{banner.releasedOn}</span>
                         </p>
-                        <Link href={banner.href} onClick={handleLinkClick}>
+                        <Link href={`/manga/${banner.href}`} onClick={handleLinkClick}>
                             <span className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-semibold px-6 md:px-8 py-3 md:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer">
                                 Baca Sekarang
                                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,7 +143,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                                 {recentList.map((manga) => (
-                                    <Link href={manga.href} key={manga.animeId} onClick={handleLinkClick}>
+                                    <Link href={`manga/${manga.href}`} key={manga.animeId} onClick={handleLinkClick}>
                                         <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer border-card-border rounded-lg">
                                             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">
                                                 <Image
@@ -202,7 +202,7 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                         {
                             currentItems.map((item) => {
                                 return (
-                                    <Link href={item.href} key={item.mangaId} onClick={handleLinkClick}>
+                                    <Link href={`manga/${item.href}`} key={item.mangaId} onClick={handleLinkClick}>
                                         <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer border-card-border rounded-lg">
                                             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">
                                                 <Image

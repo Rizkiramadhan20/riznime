@@ -16,6 +16,8 @@ import ImagePlaceholder from '@/base/helper/ImagePlaceholder';
 
 import { useRouter } from 'next/navigation';
 
+import { formatSlug } from '@/base/helper/FormatSlugManga';
+
 type Props = {
     animeList: GenreManga[];
 };
@@ -37,7 +39,7 @@ export default function GenreAnimeSlider({ animeList }: Props) {
     const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         setIsNavigating(true);
-        const href = animeList[activeIndex].href.replace(/\/komiku/, '');
+        const href = `/manga/${formatSlug(animeList[activeIndex].href)}`;
         router.push(href);
     };
 
@@ -149,7 +151,7 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                                     className="flex items-center gap-4"
                                 >
                                     <Link
-                                        href={animeList[activeIndex].href.replace(/\/komiku/, '')}
+                                        href={`/manga/${formatSlug(animeList[activeIndex].href)}`}
                                         onClick={handleNavigation}
                                         className="inline-flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors mt-2 w-fit text-sm"
                                     >

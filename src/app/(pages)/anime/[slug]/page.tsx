@@ -4,7 +4,7 @@ import DetailsAnime from "@/hooks/pages/anime/DetailsAnime"
 
 import { Metadata, ResolvingMetadata } from "next"
 
-import axios from "axios"
+import { fetchAnimeBySlug } from "@/lib/FetchAnime"
 
 type Props = {
     params: Promise<{ slug: string }>
@@ -12,15 +12,9 @@ type Props = {
 
 async function getAnimeData(slug: string) {
     try {
-        const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/anime/${slug}`,
-            {
-                headers: {
-                    "x-api-key": process.env.NEXT_PUBLIC_API_KEY,
-                },
-            }
-        );
-        return response.data;
+        // Use fetchAnimeBySlug to get the data
+        const data = await fetchAnimeBySlug(slug);
+        return data;
     } catch (error) {
         console.error("Error fetching anime data:", error);
         return null;
@@ -49,17 +43,17 @@ export async function generateMetadata(
     const previousImages = (await parent).openGraph?.images || [];
 
     return {
-        title: `${anime.japanese || anime.english || 'Anime'} | My Anime`,
-        description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.japanese || anime.english || 'this anime'} online.`,
+        title: `${anime.title || anime.japan || 'Anime'} | RizNime`,
+        description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.title || anime.japan || 'this anime'} online.`,
         openGraph: {
-            title: `${anime.japanese || anime.english || 'Anime'} | My Anime`,
-            description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.japanese || anime.english || 'this anime'} online.`,
+            title: `${anime.title || anime.japan || 'Anime'} | RizNime`,
+            description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.title || anime.japan || 'this anime'} online.`,
             images: [anime.poster, ...previousImages],
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${anime.japanese || anime.english || 'Anime'} | My Anime`,
-            description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.japanese || anime.english || 'this anime'} online.`,
+            title: `${anime.title || anime.japan || 'Anime'} | RizNime`,
+            description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.title || anime.japan || 'this anime'} online.`,
             images: [anime.poster],
         },
     };

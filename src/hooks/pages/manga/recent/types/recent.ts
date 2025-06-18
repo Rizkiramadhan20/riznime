@@ -14,6 +14,13 @@ export interface RecentManga {
   upCount: number;
 }
 
+export interface PaginationInfo {
+  currentPage: number;
+  hasNextPage: boolean;
+  nextPage: number | null;
+  prevPage: number | null;
+}
+
 export interface RecentMangaResponse {
   statusCode: number;
   statusMessage: string;
@@ -22,5 +29,5 @@ export interface RecentMangaResponse {
   data: {
     animeList: RecentManga[];
   };
-  pagination: null;
+  pagination: PaginationInfo;
 }
