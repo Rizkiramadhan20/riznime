@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Link from 'next/link';
 
@@ -38,18 +38,19 @@ export default function Sidebar() {
         return pathname?.startsWith(href);
     };
 
-    // Debounced search function
-    const debouncedSearch = useCallback((query: string) => {
+    // Debounce search with useEffect
+    useEffect(() => {
+        if (!showResults) return;
+        if (!searchQuery.trim()) {
+            setSearchResults([]);
+            setIsLoading(false);
+            return;
+        }
+        setIsLoading(true);
         const handler = setTimeout(async () => {
-            if (!query.trim()) {
-                setSearchResults([]);
-                setIsLoading(false);
-                return;
-            }
-            setIsLoading(true);
             try {
-                const data = await searchAnime(query);
-                setSearchResults(data.animeList);
+                const data = await searchAnime(searchQuery);
+                setSearchResults(data.animeList || []);
             } catch {
                 setSearchResults([]);
             } finally {
@@ -57,13 +58,12 @@ export default function Sidebar() {
             }
         }, 300);
         return () => clearTimeout(handler);
-    }, []);
+    }, [searchQuery, showResults]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
         setSearchQuery(query);
         setShowResults(true);
-        debouncedSearch(query);
     };
 
     const handleResultClick = () => {
@@ -176,7 +176,7 @@ export default function Sidebar() {
                                             {searchResults.map((result, index) => (
                                                 <Link
                                                     key={index}
-                                                    href={result.href}
+                                                    href={`/anime/${result.href}`}
                                                     onClick={handleResultClick}
                                                     className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 hover:bg-[var(--hover-bg)] cursor-pointer transition-colors duration-200"
                                                 >

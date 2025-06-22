@@ -6,7 +6,7 @@ import { FetchBannerData } from '@/lib/FetchAnime';
 
 import { fetchGenresData } from '@/lib/FetchAnime';
 
-import { fetchScheduleData, fetchAnimePoster } from '@/lib/FetchAnime';
+import { fetchScheduleData } from '@/lib/FetchAnime';
 
 import AnimeContent from '@/components/ui/anime/AnimeContent';
 
@@ -38,12 +38,10 @@ export default async function Page() {
         days: await Promise.all(
           response.data.days.map(async (day: DaySchedule) => ({
             ...day,
-            animeList: await Promise.all(
-              day.animeList.map(async (anime: AnimeSchedule) => ({
-                ...anime,
-                poster: await fetchAnimePoster(anime.animeId)
-              }))
-            )
+            animeList: day.animeList.map((anime: AnimeSchedule) => ({
+              ...anime,
+              poster: anime.poster
+            }))
           }))
         )
       }

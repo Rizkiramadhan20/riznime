@@ -20,11 +20,14 @@ interface ServerResponse {
 
 export const fetchAnimeData = async () => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/home`, {
-      next: {
-        revalidate: 50, // Revalidate every hour
-      },
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/home`,
+      {
+        next: {
+          revalidate: 50, // Revalidate every hour
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
@@ -50,9 +53,12 @@ export const fetchAnimeData = async () => {
 // ✅ Ambil hanya data untuk Banner
 export async function FetchBannerData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/home`, {
-      next: { revalidate: 5 }, // Revalidate every 5 seconds
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/home`,
+      {
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
+      }
+    );
 
     if (!res.ok) throw new Error("Failed to fetch");
 
@@ -76,9 +82,12 @@ export async function FetchBannerData() {
 // ✅ Ambil hanya data untuk Genres
 export async function fetchGenresData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/genres`, {
-      next: { revalidate: 5 }, // Revalidate every 5 seconds
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/genres`,
+      {
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
+      }
+    );
 
     if (!res.ok) throw new Error("Failed to fetch");
 
@@ -131,9 +140,12 @@ export async function fetchAnimeGenresId(genreId: string, page: number = 1) {
 // ✅ Ambil hanya data untuk Schedule
 export async function fetchScheduleData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/schedule`, {
-      next: { revalidate: 5 }, // Revalidate every 5 seconds
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/schedule`,
+      {
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
+      }
+    );
 
     if (!res.ok) throw new Error("Failed to fetch");
 
@@ -158,9 +170,12 @@ export async function fetchScheduleData() {
 
 export async function fetchOngoinData(page: number = 1) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/ongoing?page=${page}`, {
-      next: { revalidate: 5 }, // Validasi ulang setiap 5 detik
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/ongoing?page=${page}`,
+      {
+        next: { revalidate: 5 }, // Validasi ulang setiap 5 detik
+      }
+    );
 
     if (!res.ok) throw new Error("Failed to fetch");
 
@@ -184,9 +199,12 @@ export async function fetchOngoinData(page: number = 1) {
 
 export async function fetchCompletedData(page: number = 1) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/completed?page=${page}`, {
-      next: { revalidate: 5 }, // Validasi ulang setiap 5 detik
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/completed?page=${page}`,
+      {
+        next: { revalidate: 5 }, // Validasi ulang setiap 5 detik
+      }
+    );
 
     if (!res.ok) throw new Error("Failed to fetch");
 
@@ -231,9 +249,12 @@ export async function fetchAnimeBySlug(slug: string) {
   try {
     const cleanSlug = formatSlug(slug);
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/anime/${cleanSlug}`, {
-      next: { revalidate: 5 }, // Revalidate every 5 seconds
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/anime/${cleanSlug}`,
+      {
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
+      }
+    );
 
     if (!res.ok) {
       throw new Error(
@@ -257,12 +278,15 @@ export async function fetchAnimeBySlug(slug: string) {
   }
 }
 
-// Ambil hanya data untuk Semua Anime 
+// Ambil hanya data untuk Semua Anime
 export async function fetchDaftarAnimeData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/daftar-anime`, {
-      next: { revalidate: 5 }, // Revalidate every 5 seconds
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/daftar-anime`,
+      {
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
+      }
+    );
 
     if (!res.ok) throw new Error("Failed to fetch");
 
@@ -288,9 +312,12 @@ export async function fetchEpisodeBySlug(slug: string) {
   try {
     const cleanSlug = formatSlug(slug);
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/episode/${cleanSlug}`, {
-      next: { revalidate: 5 }, // Revalidate every 5 seconds
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/episode/${cleanSlug}`,
+      {
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
+      }
+    );
 
     if (!res.ok) {
       throw new Error(
@@ -301,16 +328,20 @@ export async function fetchEpisodeBySlug(slug: string) {
     const data = await res.json();
 
     // Fetch anime data to get the poster
-    const animeRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/otakudesu/anime/${data.data.animeId}`, {
-      next: { revalidate: 5 }, // Revalidate every 5 seconds
-    });
+    const animeRes = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/anime/${data.data.animeId}`,
+      {
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
+      }
+    );
 
     if (animeRes.ok) {
       const animeData = await animeRes.json();
       // Add the poster from anime data
       data.data.poster = animeData.data?.poster || null;
       // Add recommended anime list from anime data
-      data.data.recommendedAnimeList = animeData.data?.recommendedAnimeList || [];
+      data.data.recommendedAnimeList =
+        animeData.data?.recommendedAnimeList || [];
     }
 
     // Transform data using formatSlug
@@ -337,12 +368,15 @@ export const fetchServerUrl = async (
     );
 
     // Transform data using formatSlug
-    const transformedData = JSON.parse(JSON.stringify(response.data), (key, value) => {
-      if (key === "href" && typeof value === "string") {
-        return formatSlug(value);
+    const transformedData = JSON.parse(
+      JSON.stringify(response.data),
+      (key, value) => {
+        if (key === "href" && typeof value === "string") {
+          return formatSlug(value);
+        }
+        return value;
       }
-      return value;
-    });
+    );
 
     return transformedData;
   } catch (error) {
@@ -359,7 +393,9 @@ export const fetchServerUrl = async (
 export async function searchAnime(query: string) {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/otakudesu/search?q=${encodeURIComponent(query)}`,
+      `${
+        process.env.NEXT_PUBLIC_API_SEARCH
+      }/otakudesu/search?q=${encodeURIComponent(query)}`,
       {
         next: { revalidate: 5 }, // Revalidate every 5 seconds
       }
