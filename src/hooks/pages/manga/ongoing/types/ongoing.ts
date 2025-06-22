@@ -27,7 +27,7 @@ export interface OngoingMangaResponse {
   message: string;
   ok: boolean;
   data: {
-    animeList: OngoingManga[];
+    komikuList: OngoingManga[];
   };
   pagination: PaginationInfo;
 }

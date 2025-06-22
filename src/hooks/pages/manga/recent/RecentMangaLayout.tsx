@@ -28,7 +28,7 @@ interface MangaContentProps {
 
 export default function RecentMangaContent({ mangaData }: MangaContentProps) {
     const router = useRouter();
-    const [mangaList, setMangaList] = useState(mangaData.data.animeList);
+    const [mangaList, setMangaList] = useState(mangaData.data.komikuList);
     const [pagination, setPagination] = useState(mangaData.pagination);
     const [isLoading, setIsLoading] = useState(false);
     const [isPageLoading, setIsPageLoading] = useState(false);
@@ -55,7 +55,7 @@ export default function RecentMangaContent({ mangaData }: MangaContentProps) {
         setIsPageLoading(true);
         try {
             const newData = await fetchMangaRecentData(page);
-            setMangaList(newData.data.animeList);
+            setMangaList(newData.data.komikuList);
             setPagination(newData.pagination);
             setCurrentPage(page);
 

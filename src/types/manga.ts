@@ -5,7 +5,7 @@ export interface GenreMangaListResponse {
   message: string;
   ok: boolean;
   data: {
-    animeList: GenreManga[];
+    komikuList: GenreManga[];
   };
   pagination: {
     currentPage: number;

@@ -6,7 +6,7 @@ import { fetchMangaBySlug } from '@/lib/FetchManga'
 
 import DetailsMangaContent from '@/hooks/pages/manga/details-manga/DetailsMangaContent'
 
-import { DetailsMangaProps, ApiResponse } from "@/hooks/pages/manga/details-manga/types/AnimeDetails"
+import { DetailsMangaProps, ApiResponse } from "@/hooks/pages/manga/details-manga/types/MangaDetails"
 
 export default async function DetailsManga({ params }: DetailsMangaProps) {
     const { slug } = params;

@@ -17,10 +17,10 @@ import { BookOpen } from 'lucide-react'
 
 interface MangaData {
     recent: {
-        animeList: Array<{
+        komikuList: Array<{
             title: string
             poster: string
-            animeId: string
+            mangaId: string
             href: string
             type: string
             latestChapter: string
@@ -54,8 +54,8 @@ interface MangaData {
 }
 
 export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
-    const banner = mangaData.recent.animeList[0];
-    const recentList = mangaData.recent.animeList.slice(1); // Exclude banner
+    const banner = mangaData.recent.komikuList[0];
+    const recentList = mangaData.recent.komikuList.slice(1); // Exclude banner
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const itemsPerPage = 10;
@@ -142,8 +142,8 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                             </div>
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                                {recentList.map((manga) => (
-                                    <Link href={`manga/${manga.href}`} key={manga.animeId} onClick={handleLinkClick}>
+                                {recentList.map((manga, index) => (
+                                    <Link href={`manga/${manga.href}`} key={index} onClick={handleLinkClick}>
                                         <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer border-card-border rounded-lg">
                                             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">
                                                 <Image

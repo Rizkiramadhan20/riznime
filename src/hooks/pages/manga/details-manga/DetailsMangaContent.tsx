@@ -10,7 +10,7 @@ import { Search } from 'lucide-react'
 
 import { useRouter } from 'next/navigation'
 
-import { DetailsMangaContentProps } from "@/hooks/pages/manga/details-manga/types/AnimeDetails"
+import { DetailsMangaContentProps } from "@/hooks/pages/manga/details-manga/types/MangaDetails"
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
@@ -89,11 +89,11 @@ export default function DetailsMangaContent({ mangaData }: DetailsMangaContentPr
                         </div>
                         <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{mangaData.title}</h1>
                         <div className="flex flex-wrap gap-2 mb-4">
-                            {mangaData.genreList.map((genre) => (
+                            {mangaData.genreList.map((genre, idx) => (
                                 <Link
                                     href={`genre/${genre.href}`}
                                     rel='noopener noreferrer'
-                                    key={genre.genreId}
+                                    key={idx}
                                     className="text-xs text-gray-200 bg-gray-700/60 px-2 py-1 rounded"
                                     onClick={(e) => handleClick(e, `genre/${genre.href}`)}
                                 >

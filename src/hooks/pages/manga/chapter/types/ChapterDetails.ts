@@ -11,7 +11,7 @@ interface Synopsis {
 
 interface ChapterData {
   title: string;
-  animeId: string;
+  mangaId: string;
   poster: string;
   releasedOn: string;
   synopsis: Synopsis;

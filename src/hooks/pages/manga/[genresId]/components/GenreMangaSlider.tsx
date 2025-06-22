@@ -19,39 +19,39 @@ import { useRouter } from 'next/navigation';
 import { formatSlug } from '@/base/helper/FormatSlugManga';
 
 type Props = {
-    animeList: GenreManga[];
+    mangaList: GenreManga[];
 };
 
-export default function GenreAnimeSlider({ animeList }: Props) {
+export default function GenreMangaSlider({ mangaList }: Props) {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isNavigating, setIsNavigating] = useState(false);
     const [imageError, setImageError] = useState(false);
     const router = useRouter();
 
     const goToPrevSlide = () => {
-        setActiveIndex(prevIndex => (prevIndex === 0 ? animeList.length - 1 : prevIndex - 1));
+        setActiveIndex(prevIndex => (prevIndex === 0 ? mangaList.length - 1 : prevIndex - 1));
     };
 
     const goToNextSlide = useCallback(() => {
-        setActiveIndex(prevIndex => (prevIndex === animeList.length - 1 ? 0 : prevIndex + 1));
-    }, [animeList.length]);
+        setActiveIndex(prevIndex => (prevIndex === mangaList.length - 1 ? 0 : prevIndex + 1));
+    }, [mangaList.length]);
 
     const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         setIsNavigating(true);
-        const href = `/manga/${formatSlug(animeList[activeIndex].href)}`;
+        const href = `/manga/${formatSlug(mangaList[activeIndex].href)}`;
         router.push(href);
     };
 
     React.useEffect(() => {
-        if (animeList.length <= 1) return;
+        if (mangaList.length <= 1) return;
         const interval = setInterval(() => {
             goToNextSlide();
         }, 5000);
         return () => clearInterval(interval);
-    }, [activeIndex, animeList.length, goToNextSlide]);
+    }, [activeIndex, mangaList.length, goToNextSlide]);
 
-    if (!animeList || animeList.length === 0) {
+    if (!mangaList || mangaList.length === 0) {
         return null;
     }
 
@@ -73,8 +73,8 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                                 <ImagePlaceholder className="w-full h-full" />
                             ) : (
                                 <Image
-                                    src={animeList[activeIndex].poster}
-                                    alt={animeList[activeIndex].title}
+                                    src={mangaList[activeIndex].poster}
+                                    alt={mangaList[activeIndex].title}
                                     fill
                                     quality={90}
                                     priority={activeIndex === 0}
@@ -100,7 +100,7 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                                     transition={{ delay: 0.3, duration: 0.5 }}
                                     className="text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-lg tracking-tight"
                                 >
-                                    {animeList[activeIndex].title}
+                                    {mangaList[activeIndex].title}
                                 </motion.h2>
 
                                 <motion.div
@@ -109,9 +109,9 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                                     transition={{ delay: 0.4, duration: 0.5 }}
                                     className="flex items-center gap-2 text-xs md:text-sm text-gray-200"
                                 >
-                                    <span className="font-medium">{animeList[activeIndex].type || "N/A"}</span>
+                                    <span className="font-medium">{mangaList[activeIndex].type || "N/A"}</span>
                                     <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-                                    <span>{animeList[activeIndex].views || "N/A"}</span>
+                                    <span>{mangaList[activeIndex].views || "N/A"}</span>
                                 </motion.div>
 
                                 <motion.p
@@ -120,7 +120,7 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                                     transition={{ delay: 0.5, duration: 0.5 }}
                                     className="text-sm md:text-base text-gray-300 line-clamp-2 max-w-2xl"
                                 >
-                                    {animeList[activeIndex].description}
+                                    {mangaList[activeIndex].description}
                                 </motion.p>
 
                                 <motion.div
@@ -130,17 +130,17 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                                     className="flex items-center gap-4 text-sm"
                                 >
                                     <Link
-                                        href={animeList[activeIndex].firstChapterUrl || '#'}
+                                        href={mangaList[activeIndex].firstChapterUrl || '#'}
                                         className="text-gray-300 hover:text-white transition-colors"
                                     >
-                                        {animeList[activeIndex].firstChapter}
+                                        {mangaList[activeIndex].firstChapter}
                                     </Link>
                                     <span className="text-gray-500">•</span>
                                     <Link
-                                        href={animeList[activeIndex].latestChapterUrl || '#'}
+                                        href={mangaList[activeIndex].latestChapterUrl || '#'}
                                         className="text-gray-300 hover:text-white transition-colors"
                                     >
-                                        {animeList[activeIndex].latestChapter}
+                                        {mangaList[activeIndex].latestChapter}
                                     </Link>
                                 </motion.div>
 
@@ -151,7 +151,7 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                                     className="flex items-center gap-4"
                                 >
                                     <Link
-                                        href={`/manga/${formatSlug(animeList[activeIndex].href)}`}
+                                        href={`/manga/${formatSlug(mangaList[activeIndex].href)}`}
                                         onClick={handleNavigation}
                                         className="inline-flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors mt-2 w-fit text-sm"
                                     >
@@ -168,7 +168,7 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                 </AnimatePresence>
 
                 {/* Navigation Arrows */}
-                {animeList.length > 1 && (
+                {mangaList.length > 1 && (
                     <>
                         <motion.button
                             whileHover={{ scale: 1.1 }}
@@ -196,10 +196,10 @@ export default function GenreAnimeSlider({ animeList }: Props) {
                 )}
 
                 {/* Dots */}
-                {animeList.length > 1 && (
+                {mangaList.length > 1 && (
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-1 z-20">
                         <div className="flex items-center bg-black/30 backdrop-blur-sm px-2 py-1.5 rounded-full">
-                            {animeList.map((_, index) => (
+                            {mangaList.map((_, index) => (
                                 <motion.div
                                     key={index}
                                     className="relative"

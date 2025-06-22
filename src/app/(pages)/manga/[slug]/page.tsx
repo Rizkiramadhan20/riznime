@@ -10,7 +10,7 @@ type Props = {
     params: Promise<{ slug: string }>
 }
 
-async function getAnimeData(slug: string) {
+async function getMangaData(slug: string) {
     try {
         const response = await fetchMangaBySlug(slug);
         return response;
@@ -28,8 +28,8 @@ export async function generateMetadata(
     const { slug } = await params;
 
     // fetch data
-    const animeData = await getAnimeData(slug);
-    const manga = animeData?.data;
+    const mangaData = await getMangaData(slug);
+    const manga = mangaData?.data;
 
     if (!manga) {
         return {

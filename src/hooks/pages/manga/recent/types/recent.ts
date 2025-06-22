@@ -27,7 +27,7 @@ export interface RecentMangaResponse {
   message: string;
   ok: boolean;
   data: {
-    animeList: RecentManga[];
+    komikuList: RecentManga[];
   };
   pagination: PaginationInfo;
 }

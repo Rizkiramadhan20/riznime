@@ -26,7 +26,7 @@ export interface CompletedMangaResponse {
   message: string;
   ok: boolean;
   data: {
-    animeList: CompletedManga[];
+    komikuList: CompletedManga[];
   };
   pagination: Pagination;
 }

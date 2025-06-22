@@ -28,7 +28,6 @@ export default function OngoingContent({ mangaData }: MangaContentProps) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
-
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         setIsLoading(true);
@@ -51,8 +50,8 @@ export default function OngoingContent({ mangaData }: MangaContentProps) {
                 </div>
 
                 <article className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4'>
-                    {mangaData.data.animeList.map((manga, idx) => (
-                        <Link href={manga.href} key={manga.mangaId} onClick={handleLinkClick}>
+                    {mangaData.data.komikuList.map((manga, idx) => (
+                        <Link href={manga.href} key={idx} onClick={handleLinkClick}>
                             <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer p-0 border-0">
                                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">
                                     <Image

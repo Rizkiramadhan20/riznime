@@ -142,7 +142,7 @@ export default function CompletedContent({ mangaData }: { mangaData: CompletedMa
                         } as React.CSSProperties}
                     >
                         <div className="flex gap-3 sm:gap-4">
-                            {mangaData.data.animeList.map((manga, idx) => (
+                            {mangaData.data.komikuList.map((manga, idx) => (
                                 <div
                                     key={manga.mangaId}
                                     className="flex-none group touch-pan-y"

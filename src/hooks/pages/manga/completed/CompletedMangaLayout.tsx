@@ -43,7 +43,7 @@ interface Manga {
 interface MangaContentProps {
     mangaData: {
         data: {
-            animeList: Manga[];
+            komikuList: Manga[];
         };
         pagination: {
             currentPage: number;
@@ -57,7 +57,7 @@ interface MangaContentProps {
 export default function CompletedMangaLayout({ mangaData }: MangaContentProps) {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(mangaData.pagination.currentPage);
-    const [mangaList, setMangaList] = useState(mangaData.data.animeList);
+    const [mangaList, setMangaList] = useState(mangaData.data.komikuList);
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [totalPages, setTotalPages] = useState(mangaData.pagination.nextPage);
@@ -76,8 +76,8 @@ export default function CompletedMangaLayout({ mangaData }: MangaContentProps) {
             const data = await fetchMangaCompletedData(page);
 
             // Validate the data structure before updating state
-            if (data && data.data && data.data.animeList && data.pagination) {
-                setMangaList(data.data.animeList);
+            if (data && data.data && data.data.komikuList && data.pagination) {
+                setMangaList(data.data.komikuList);
                 setCurrentPage(data.pagination.currentPage);
                 setTotalPages(data.pagination.nextPage);
             } else {

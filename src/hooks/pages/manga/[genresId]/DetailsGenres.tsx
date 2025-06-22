@@ -3,11 +3,11 @@ import Link from 'next/link'
 
 import { fetchMangaGenresId } from '@/lib/FetchManga'
 
-import GenreAnimeSlider from '@/hooks/pages/manga/[genresId]/components/GenreAnimeSlider'
+import GenreMangaSlider from '@/hooks/pages/manga/[genresId]/components/GenreMangaSlider'
 
 import GenrePagination from '@/hooks/pages/manga/[genresId]/components/GenrePagination'
 
-import AnimeCard from '@/hooks/pages/manga/[genresId]/components/AnimeCard'
+import MangaCard from '@/hooks/pages/manga/[genresId]/components/MangaCard'
 
 import { GenreMangaListResponse, GenreManga } from "@/types/manga"
 
@@ -29,11 +29,11 @@ export default async function DetailsGenres({ genreId, searchParams }: Props) {
         );
     }
 
-    const { animeList } = response.data;
+    const { komikuList } = response.data;
     const { pagination } = response;
 
     // Check if animeList is empty
-    if (animeList.length === 0) {
+    if (komikuList.length === 0) {
         return (
             <section className='py-8 min-h-screen flex items-center justify-center'>
                 <div className="container px-4">
@@ -61,21 +61,22 @@ export default async function DetailsGenres({ genreId, searchParams }: Props) {
     }
 
     // Take the top 3 anime for the slider
-    const top3Anime = animeList.slice(0, 2);
+    const top3Manga = komikuList.slice(0, 2);
     // Get the rest of the anime for the grid
-    const restOfAnime = animeList.slice(2);
+    const restOfManga = komikuList.slice(2);
+
 
     return (
         <section className='py-8'>
             <div className="container px-4">
-                {/* Render the slider with the top 3 anime */}
-                <GenreAnimeSlider animeList={top3Anime} />
+                {/* Render the slider with the top 3 manga */}
+                <GenreMangaSlider mangaList={top3Manga} />
 
-                {/* Render the rest of the anime in a grid */}
-                {restOfAnime.length > 0 && (
+                {/* Render the rest of the manga in a grid */}
+                {restOfManga.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-                        {restOfAnime.map((anime: GenreManga) => (
-                            <AnimeCard key={anime.mangaId} anime={anime} />
+                        {restOfManga.map((manga: GenreManga) => (
+                            <MangaCard key={manga.mangaId} manga={manga} />
                         ))}
                     </div>
                 )}

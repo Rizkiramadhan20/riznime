@@ -13,14 +13,9 @@ export const metadata: Metadata = {
     description: 'Manga Terbaru',
 }
 
-interface PageProps {
-    searchParams: Promise<{ page?: string }>;
-}
-
-export default async function Recent({ searchParams }: PageProps) {
+export default async function Recent() {
     try {
-        const params = await searchParams;
-        const page = parseInt(params.page || '1');
+        const page = 1;
         const mangaData = await fetchMangaRecentData(page);
         return <RecentMangaLayout mangaData={mangaData} />;
     } catch (error) {

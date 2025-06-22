@@ -10,7 +10,7 @@ type Props = {
     params: Promise<{ slug: string }>
 }
 
-async function getAnimeData(slug: string) {
+async function getMangaData(slug: string) {
     try {
         const response = await fetchMangaByChapter(slug);
         return response;
@@ -28,10 +28,10 @@ export async function generateMetadata(
     const { slug } = await params;
 
     // fetch data
-    const animeData = await getAnimeData(slug);
-    const anime = animeData?.data;
+    const mangaData = await getMangaData(slug);
+    const manga = mangaData?.data;
 
-    if (!anime) {
+    if (!manga) {
         return {
             title: "chapter Not Found",
             description: "The requested chapter could not be found.",
@@ -42,18 +42,18 @@ export async function generateMetadata(
     const previousImages = (await parent).openGraph?.images || [];
 
     return {
-        title: `${anime.title} | Riznime`,
-        description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.title} online.`,
+        title: `${manga.title} | Riznime`,
+        description: manga.synopsis?.paragraphs?.[0] || `Watch ${manga.title} online.`,
         openGraph: {
-            title: `${anime.title} | Riznime`,
-            description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.title} online.`,
-            images: [anime.poster, ...previousImages],
+            title: `${manga.title} | Riznime`,
+            description: manga.synopsis?.paragraphs?.[0] || `Watch ${manga.title} online.`,
+            images: [manga.poster, ...previousImages],
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${anime.title} | Riznime`,
-            description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.title} online.`,
-            images: [anime.poster],
+            title: `${manga.title} | Riznime`,
+            description: manga.synopsis?.paragraphs?.[0] || `Watch ${manga.title} online.`,
+            images: [manga.poster],
         },
     };
 }

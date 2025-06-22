@@ -43,7 +43,7 @@ interface Manga {
 interface MangaContentProps {
     mangaData: {
         data: {
-            animeList: Manga[];
+            komikuList: Manga[];
         };
         pagination: {
             currentPage: number;
@@ -57,7 +57,7 @@ interface MangaContentProps {
 export default function MangaContent({ mangaData }: MangaContentProps) {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(mangaData.pagination.currentPage);
-    const [mangaList, setMangaList] = useState(mangaData.data.animeList);
+    const [mangaList, setMangaList] = useState(mangaData.data.komikuList);
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [totalPages, setTotalPages] = useState(mangaData.pagination.nextPage);
@@ -74,7 +74,7 @@ export default function MangaContent({ mangaData }: MangaContentProps) {
             router.push(`/manga/popular?page=${page}`);
 
             const data = await fetchMangaPopularData(page);
-            setMangaList(data.data.animeList);
+            setMangaList(data.data.komikuList);
             setCurrentPage(data.pagination.currentPage);
             setTotalPages(data.pagination.nextPage);
             setLoadingProgress(100);
