@@ -1,12 +1,12 @@
 import React from 'react'
 
-import DetailsAnimeSkeleton from '@/hooks/pages/anichin/anime/DetailsAnimeSkelaton'
+import DetailsAnimeSkeleton from '@/hooks/pages/anichin/anime/DetailsDonghuaSkelaton'
 
-import { fetchAnimeBySlug } from '@/lib/FetchAnichin'
+import { fetchDonghuaBySlug } from '@/lib/FetchAnichin'
 
-import DetailsAnimeContent from '@/hooks/pages/anichin/anime/DetailsAnimeContent'
+import DetailsAnimeContent from '@/hooks/pages/anichin/anime/DetailsDonghuaContent'
 
-import { DetailsAnimeProps, ApiResponse } from "@/hooks/pages/anichin/anime/types/AnimeDetails"
+import { DetailsAnimeProps, ApiResponse } from "@/hooks/pages/anichin/anime/types/DonghuaDetails"
 
 export default async function DetailsAnime({ params }: DetailsAnimeProps) {
     const { slug } = params;
@@ -14,9 +14,9 @@ export default async function DetailsAnime({ params }: DetailsAnimeProps) {
     let error: string | null = null;
 
     try {
-        animeResponse = await fetchAnimeBySlug(slug);
+        animeResponse = await fetchDonghuaBySlug(slug);
     } catch (err) {
-        error = err instanceof Error ? err.message : "Failed to load anime data";
+        error = err instanceof Error ? err.message : "Failed to load donghua data";
     }
 
     if (error || !animeResponse || !animeResponse.ok) {
