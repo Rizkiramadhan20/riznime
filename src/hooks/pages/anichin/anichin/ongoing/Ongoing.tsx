@@ -27,9 +27,9 @@ export default function AnimeContent({ anichinData }: AnimeContentProps) {
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
 
-    const handleAnimeClick = (e: React.MouseEvent<HTMLAnchorElement>, animeId: string) => {
+    const handleAnimeClick = (e: React.MouseEvent<HTMLAnchorElement>, anichinId: string) => {
         e.preventDefault();
-        setLoadingId(animeId);
+        setLoadingId(anichinId);
         setLoadingProgress(0);
 
         // Simulate progress
@@ -40,7 +40,7 @@ export default function AnimeContent({ anichinData }: AnimeContentProps) {
 
             if (progress >= 100) {
                 clearInterval(interval);
-                router.push(`/donghua/${formatSlug(animeId)}`);
+                router.push(`/donghua/${formatSlug(anichinId)}`);
             }
         }, 100);
     };
@@ -62,12 +62,12 @@ export default function AnimeContent({ anichinData }: AnimeContentProps) {
                 <div className='flex gap-8'>
                     <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6'>
                         {
-                            anichinData.ongoing.animeList.map((Item: AnimeItem, idx) => {
+                            anichinData.ongoing.anichinList.map((Item: AnimeItem, idx) => {
                                 return (
                                     <Link
-                                        href={`/donghua/${formatSlug(Item.animeId)}`}
+                                        href={`/donghua/${formatSlug(Item.anichinId)}`}
                                         key={idx}
-                                        onClick={(e) => handleAnimeClick(e, Item.animeId)}
+                                        onClick={(e) => handleAnimeClick(e, Item.anichinId)}
                                     >
                                         <Card className="group h-full bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer p-0 border-0">
                                             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-lg">

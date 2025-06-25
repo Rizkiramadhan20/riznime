@@ -62,3 +62,45 @@ export async function searchDonghua(query: string) {
     throw error;
   }
 }
+
+export async function fetchAnimeBySlug(slug: string) {
+  const cleanSlug = formatSlug(slug);
+
+  // Coba ke endpoint anime dulu
+  let res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/anichin/anime/${cleanSlug}`,
+    { next: { revalidate: 5 } }
+  );
+
+  if (res.ok) {
+    const data = await res.json();
+    // Transform data using formatSlug
+    const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {
+      if (key === "href" && typeof value === "string") {
+        return formatSlug(value);
+      }
+      return value;
+    });
+    return { type: "anime", ...transformedData };
+  }
+
+  // Jika gagal, coba ke endpoint seri
+  res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/anichin/seri/${cleanSlug}`,
+    { next: { revalidate: 5 } }
+  );
+
+  if (res.ok) {
+    const data = await res.json();
+    const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {
+      if (key === "href" && typeof value === "string") {
+        return formatSlug(value);
+      }
+      return value;
+    });
+    return { type: "seri", ...transformedData };
+  }
+
+  // Jika dua-duanya gagal
+  throw new Error("Data not found in both anime and seri endpoints");
+}

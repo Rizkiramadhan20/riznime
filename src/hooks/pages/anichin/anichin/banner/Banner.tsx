@@ -30,9 +30,9 @@ export default function Banner({ anichinData }: AnimeContentProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [imageError, setImageError] = useState<{ [key: string]: boolean }>({});
 
-    const handleAnimeClick = (e: React.MouseEvent<HTMLAnchorElement>, animeId: string) => {
+    const handleAnimeClick = (e: React.MouseEvent<HTMLAnchorElement>, anichinId: string) => {
         e.preventDefault();
-        setLoadingId(animeId);
+        setLoadingId(anichinId);
         setLoadingProgress(0);
 
         // Simulate progress
@@ -43,33 +43,33 @@ export default function Banner({ anichinData }: AnimeContentProps) {
 
             if (progress >= 100) {
                 clearInterval(interval);
-                router.push(`/donghua/${formatSlug(animeId)}`);
+                router.push(`/donghua/${formatSlug(anichinId)}`);
             }
         }, 100);
     };
 
-    const handleImageError = (animeId: string) => {
-        setImageError(prev => ({ ...prev, [animeId]: true }));
+    const handleImageError = (anichinId: string) => {
+        setImageError(prev => ({ ...prev, [anichinId]: true }));
     };
 
     const goToPrevSlide = () => {
-        setActiveIndex(prevIndex => (prevIndex === 0 ? anichinData.update.animeList.length - 1 : prevIndex - 1));
+        setActiveIndex(prevIndex => (prevIndex === 0 ? anichinData.update.anichinList.length - 1 : prevIndex - 1));
     };
 
     const goToNextSlide = useCallback(() => {
-        setActiveIndex(prevIndex => (prevIndex === anichinData.update.animeList.length - 1 ? 0 : prevIndex + 1));
-    }, [anichinData.update.animeList.length]);
+        setActiveIndex(prevIndex => (prevIndex === anichinData.update.anichinList.length - 1 ? 0 : prevIndex + 1));
+    }, [anichinData.update.anichinList.length]);
 
     React.useEffect(() => {
-        if (anichinData.update.animeList.length <= 1) return;
+        if (anichinData.update.anichinList.length <= 1) return;
         const interval = setInterval(() => {
             goToNextSlide();
         }, 5000);
         return () => clearInterval(interval);
-    }, [activeIndex, anichinData.update.animeList.length, goToNextSlide]);
+    }, [activeIndex, anichinData.update.anichinList.length, goToNextSlide]);
 
-    const currentAnime = anichinData.update.animeList[activeIndex];
-    const isImageError = imageError[currentAnime.animeId];
+    const currentAnime = anichinData.update.anichinList[activeIndex];
+    const isImageError = imageError[currentAnime.anichinId];
 
     return (
         <section className='pt-14 bg-gray-50 dark:bg-gray-900'>
@@ -95,8 +95,8 @@ export default function Banner({ anichinData }: AnimeContentProps) {
                             className="absolute inset-0"
                         >
                             <Link
-                                href={`/donghua/${formatSlug(currentAnime.animeId)}`}
-                                onClick={(e) => handleAnimeClick(e, currentAnime.animeId)}
+                                href={`/donghua/${formatSlug(currentAnime.anichinId)}`}
+                                onClick={(e) => handleAnimeClick(e, currentAnime.anichinId)}
                                 className="block relative w-full h-full"
                             >
                                 <div className='relative w-full h-full'>
@@ -111,7 +111,7 @@ export default function Banner({ anichinData }: AnimeContentProps) {
                                             priority={activeIndex === 0}
                                             className="object-cover transition-transform duration-700 ease-in-out hover:scale-105"
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                                            onError={() => handleImageError(currentAnime.animeId)}
+                                            onError={() => handleImageError(currentAnime.anichinId)}
                                         />
                                     )}
                                 </div>
@@ -150,7 +150,7 @@ export default function Banner({ anichinData }: AnimeContentProps) {
                     </AnimatePresence>
 
                     {/* Navigation Buttons */}
-                    {anichinData.update.animeList.length > 1 && (
+                    {anichinData.update.anichinList.length > 1 && (
                         <>
                             <motion.button
                                 initial={{ opacity: 0 }}
@@ -182,10 +182,10 @@ export default function Banner({ anichinData }: AnimeContentProps) {
                     )}
 
                     {/* Dots Navigation */}
-                    {anichinData.update.animeList.length > 1 && (
+                    {anichinData.update.anichinList.length > 1 && (
                         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-1 z-20">
                             <div className="flex items-center bg-black/30 backdrop-blur-sm px-2 py-1.5 rounded-full">
-                                {anichinData.update.animeList.map((_, index) => (
+                                {anichinData.update.anichinList.map((_, index) => (
                                     <motion.div
                                         key={index}
                                         className="relative"

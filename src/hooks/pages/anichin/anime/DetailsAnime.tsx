@@ -1,12 +1,12 @@
 import React from 'react'
 
-import DetailsAnimeSkeleton from '@/hooks/pages/anime/DetailsAnimeSkelaton'
+import DetailsAnimeSkeleton from '@/hooks/pages/anichin/anime/DetailsAnimeSkelaton'
 
-import { fetchAnimeBySlug } from '@/lib/FetchAnime'
+import { fetchAnimeBySlug } from '@/lib/FetchAnichin'
 
-import DetailsAnimeContent from '@/hooks/pages/anime/DetailsAnimeContent'
+import DetailsAnimeContent from '@/hooks/pages/anichin/anime/DetailsAnimeContent'
 
-import { DetailsAnimeProps, ApiResponse } from "@/hooks/pages/anime/types/AnimeDetails"
+import { DetailsAnimeProps, ApiResponse } from "@/hooks/pages/anichin/anime/types/AnimeDetails"
 
 export default async function DetailsAnime({ params }: DetailsAnimeProps) {
     const { slug } = params;

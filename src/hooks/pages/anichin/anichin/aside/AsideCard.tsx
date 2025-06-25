@@ -12,7 +12,7 @@ import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
 interface AnimeData {
     completed: {
-        animeList: {
+        anichinList: {
             href: string;
             title: string;
             episodes: number;
@@ -59,7 +59,7 @@ export default function AsideCard({ animeData }: { animeData: AnimeData }) {
 
                     <div className='flex flex-row xl:flex-col gap-4 sm:gap-6 overflow-x-auto xl:overflow-x-visible pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent px-2 sm:px-0'>
                         {
-                            animeData.completed.animeList.map((Item, idx) => {
+                            animeData.completed.anichinList.map((Item, idx) => {
                                 return (
                                     <Link
                                         href={`/donghua/${formatSlug(Item.href)}`}

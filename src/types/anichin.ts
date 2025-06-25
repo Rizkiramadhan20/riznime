@@ -16,19 +16,19 @@ export interface AnichinData {
 export interface AnimeSection {
   href: string;
   anichinUrl: string;
-  animeList: AnimeItem[];
+  anichinList: AnimeItem[];
 }
 
 export interface UpdateSection {
   href: string;
   anichinUrl: string;
-  animeList: UpdateItem[];
+  anichinList: UpdateItem[];
 }
 
 export interface AnimeItem {
   title: string;
   poster: string;
-  animeId: string;
+  anichinId: string;
   href: string;
   anichinUrl: string;
   type: string;
@@ -39,7 +39,7 @@ export interface AnimeItem {
 export interface UpdateItem {
   title: string;
   poster: string;
-  animeId: string;
+  anichinId: string;
   href: string;
   anichinUrl: string;
   synopsis: string;
@@ -59,7 +59,7 @@ export interface DonghuaResult {
   type: string;
   score: string;
   status: string;
-  animeId: string;
+  anichinId: string;
   href: string;
   anichinUrl: string;
   genreList: DonghuaGenre[];

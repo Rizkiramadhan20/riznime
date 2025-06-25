@@ -51,6 +51,13 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
         );
     });
 
+    // Filter recommendedAnimeList to only unique titles
+    const uniqueRecommendedAnimeList = animeData.recommendedAnimeList
+        ? animeData.recommendedAnimeList.filter((anime, index, self) =>
+            index === self.findIndex((a) => a.title === anime.title)
+        )
+        : [];
+
     return (
         <section className='py-6 md:py-10'>
             <LoadingOverlay
@@ -155,7 +162,7 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                 {animeData.genreList.map((genre, index) => (
                                     <Link
                                         key={index}
-                                        href={`/anime/genres/${genre.href}`}
+                                        href={`/donghua/genres/${genre.href}`}
                                         className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/70 transition-colors text-sm"
                                         onClick={(e) => handleClick(e, `/anime/genres/${genre.href}`)}
                                     >
@@ -189,10 +196,10 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                 {filteredEpisodes.length > 0 ? (
                                     filteredEpisodes.map((ep) => (
                                         <Link
-                                            href={`/anime/episode/${formatSlug(ep.href)}`}
+                                            href={`/donghua/episode/${formatSlug(ep.href)}`}
                                             key={ep.episodeId}
                                             className="flex items-center rounded-xl p-2 md:p-3 shadow transition-all duration-300 bg-gray-800/70 hover:bg-gray-700/80"
-                                            onClick={(e) => handleClick(e, `/anime/episode/${formatSlug(ep.href)}`)}
+                                            onClick={(e) => handleClick(e, `/donghua/episode/${formatSlug(ep.href)}`)}
                                         >
                                             <div className="relative">
                                                 <Image
@@ -205,7 +212,7 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                             </div>
                                             <div className="flex-1 min-w-0 ml-3">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-semibold text-sm md:text-base text-gray-100">E{ep.title}</span>
+                                                    <span className="font-semibold text-sm md:text-base text-gray-100">{ep.title}</span>
                                                     <span className="text-xs text-gray-400">{animeData.duration}</span>
                                                 </div>
                                                 <div className="text-xs md:text-sm truncate text-gray-400">Episode {ep.title}</div>
@@ -219,7 +226,7 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                             </div>
                         </div>
 
-                        {animeData.recommendedAnimeList && animeData.recommendedAnimeList.length > 0 && (
+                        {uniqueRecommendedAnimeList && uniqueRecommendedAnimeList.length > 0 && (
                             <div className="bg-white dark:bg-gray-800/50 rounded-xl p-4 md:p-6 shadow-md">
                                 <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
                                     <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -228,12 +235,12 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                     Recommended Anime
                                 </h2>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                                    {animeData.recommendedAnimeList.map((anime, index) => (
+                                    {uniqueRecommendedAnimeList.map((anime, index) => (
                                         <Link
                                             key={index}
-                                            href={`/anime/${formatSlug(anime.href)}`}
+                                            href={`/donghua/${formatSlug(anime.href)}`}
                                             className="group"
-                                            onClick={(e) => handleClick(e, `/anime/${formatSlug(anime.href)}`)}
+                                            onClick={(e) => handleClick(e, `/donghua/${formatSlug(anime.href)}`)}
                                         >
                                             <div className="relative aspect-[3/4] rounded-lg overflow-hidden mb-2 shadow-md">
                                                 <Image
