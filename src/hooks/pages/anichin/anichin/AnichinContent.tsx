@@ -55,7 +55,7 @@ export default function AnimeContent({ anichinData }: AnimeContentProps) {
 
             if (progress >= 100) {
                 clearInterval(interval);
-                router.push(`/anime/${formatSlug(animeId)}`);
+                router.push(`/donghua/${formatSlug(animeId)}`);
             }
         }, 100);
     };
@@ -74,12 +74,13 @@ export default function AnimeContent({ anichinData }: AnimeContentProps) {
                         <p className='text-gray-600 dark:text-gray-400 mt-3 text-lg'>Temukan anime terbaru yang sedang tayang</p>
                     </div>
                     <Link
-                        href={"/ongoing"}
+                        href={"/donghua/ongoing"}
                         className='px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/20'
                     >
                         Lihat Semua
                     </Link>
                 </div>
+
                 <div className='flex gap-8 flex-col xl:flex-row'>
                     <article className='w-full xl:w-3/4'>
                         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6'>
@@ -87,7 +88,7 @@ export default function AnimeContent({ anichinData }: AnimeContentProps) {
                                 anichinData.latestRelease.animeList.map((Item: AnimeItem, idx) => {
                                     return (
                                         <Link
-                                            href={`/anime/${formatSlug(Item.animeId)}`}
+                                            href={`/donghua/${formatSlug(Item.animeId)}`}
                                             key={idx}
                                             onClick={(e) => handleAnimeClick(e, Item.animeId)}
                                         >

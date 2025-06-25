@@ -41,7 +41,7 @@ export default function AsideCard({ animeData }: { animeData: AnimeData }) {
 
             if (progress >= 100) {
                 clearInterval(interval);
-                router.push(`/anime/${formatSlug(href)}`);
+                router.push(`/donghua/${formatSlug(href)}`);
             }
         }, 100);
     };
@@ -62,7 +62,7 @@ export default function AsideCard({ animeData }: { animeData: AnimeData }) {
                             animeData.completed.animeList.map((Item, idx) => {
                                 return (
                                     <Link
-                                        href={`/anime/${formatSlug(Item.href)}`}
+                                        href={`/donghua/${formatSlug(Item.href)}`}
                                         key={idx}
                                         rel=''
                                         className='w-40 sm:w-44 xl:w-auto min-w-[160px] sm:min-w-[176px] xl:min-w-0 group flex-shrink-0 xl:flex-shrink'

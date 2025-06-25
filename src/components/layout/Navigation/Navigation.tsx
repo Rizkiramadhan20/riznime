@@ -6,19 +6,25 @@ import Link from 'next/link';
 
 import { usePathname } from 'next/navigation';
 
-import { House, Search, BookOpen, X, PlayCircle } from "lucide-react"
+import { House, Search, BookOpen, X, PlayCircle, ArrowLeft } from "lucide-react"
 
 import Image from 'next/image';
 
 import { AnimeResult } from '@/types/anime';
+import { MangaResult } from '@/types/manga';
+import { DonghuaResult } from '@/types/anichin';
 
 import { searchAnime } from '@/lib/FetchAnime';
+import { searchManga } from '@/lib/FetchManga';
+import { searchDonghua } from '@/lib/FetchAnichin';
 
 const menuItems = [
     { href: '/', label: 'Anime', icon: House },
     { href: '/donghua', label: 'Donghua', icon: PlayCircle },
     { href: '/manga', label: 'Manga', icon: BookOpen },
 ];
+
+type SearchCategory = 'anime' | 'manga' | 'donghua';
 
 export default function Sidebar() {
     const pathname = usePathname();
@@ -27,9 +33,10 @@ export default function Sidebar() {
 
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<AnimeResult[]>([]);
+    const [searchResults, setSearchResults] = useState<(AnimeResult | MangaResult | DonghuaResult)[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showResults, setShowResults] = useState(false);
+    const [searchCategory, setSearchCategory] = useState<SearchCategory | null>(null);
 
     const isLinkActive = (href: string) => {
         if (href === '/') {
@@ -49,8 +56,17 @@ export default function Sidebar() {
         setIsLoading(true);
         const handler = setTimeout(async () => {
             try {
-                const data = await searchAnime(searchQuery);
-                setSearchResults(data.animeList || []);
+                let data;
+                if (searchCategory === 'anime') {
+                    data = await searchAnime(searchQuery);
+                    setSearchResults(data.animeList || []);
+                } else if (searchCategory === 'manga') {
+                    data = await searchManga(searchQuery);
+                    setSearchResults(data.komikuList || []);
+                } else if (searchCategory === 'donghua') {
+                    data = await searchDonghua(searchQuery);
+                    setSearchResults(data.donghuaList || []);
+                }
             } catch {
                 setSearchResults([]);
             } finally {
@@ -58,7 +74,7 @@ export default function Sidebar() {
             }
         }, 300);
         return () => clearTimeout(handler);
-    }, [searchQuery, showResults]);
+    }, [searchQuery, showResults, searchCategory]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
@@ -69,6 +85,8 @@ export default function Sidebar() {
     const handleResultClick = () => {
         setShowResults(false);
         setIsSearchModalOpen(false);
+        setSearchCategory(null);
+        setSearchQuery('');
     };
 
     useEffect(() => {
@@ -89,6 +107,47 @@ export default function Sidebar() {
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollY]);
+
+    const openSearchModal = () => {
+        setIsSearchModalOpen(true);
+    }
+
+    const closeSearchModal = () => {
+        setIsSearchModalOpen(false);
+        setSearchCategory(null);
+        setSearchQuery('');
+        setSearchResults([]);
+    }
+
+    const searchCategoryTitles: Record<SearchCategory, string> = {
+        anime: 'Search Anime',
+        manga: 'Search Manga',
+        donghua: 'Search Donghua'
+    }
+
+    const searchCategoryPlaceholders: Record<SearchCategory, string> = {
+        anime: 'Search anime...',
+        manga: 'Search manga...',
+        donghua: 'Search donghua...'
+    }
+
+    const getResultLink = (result: AnimeResult | MangaResult | DonghuaResult) => {
+        if (searchCategory === 'anime') {
+            return `/anime/${result.href}`;
+        }
+        if (searchCategory === 'manga') {
+            return `/manga/${result.href}`;
+        }
+        if (searchCategory === 'donghua') {
+            return `/donghua/seri/${result.href}`;
+        }
+        return '/';
+    }
+
+    // Type guards
+    const isAnimeResult = (result: AnimeResult | MangaResult | DonghuaResult): result is AnimeResult => searchCategory === 'anime';
+    const isMangaResult = (result: AnimeResult | MangaResult | DonghuaResult): result is MangaResult => searchCategory === 'manga';
+    const isDonghuaResult = (result: AnimeResult | MangaResult | DonghuaResult): result is DonghuaResult => searchCategory === 'donghua';
 
     return (
         <>
@@ -122,7 +181,7 @@ export default function Sidebar() {
                             {/* Search Button */}
                             <li className="flex-1">
                                 <button
-                                    onClick={() => setIsSearchModalOpen(true)}
+                                    onClick={openSearchModal}
                                     className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all duration-300 hover:bg-white/20 dark:hover:bg-white/10 group relative overflow-hidden w-full"
                                 >
                                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-blue-400/20 dark:from-blue-400/20 dark:to-blue-300/20 transition-all duration-500 opacity-0 group-hover:opacity-100 scale-95"></div>
@@ -140,91 +199,164 @@ export default function Sidebar() {
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-start justify-center pt-10 sm:pt-20">
                     <div className="bg-[var(--header-bg)] border border-[var(--header-border)] rounded-lg shadow-lg w-[95%] sm:w-full max-w-2xl mx-4">
                         <div className="p-3 sm:p-4">
-                            <div className="flex items-center justify-between mb-3 sm:mb-4">
-                                <h2 className="text-base sm:text-lg font-medium text-[var(--text)]">Search Anime</h2>
-                                <button
-                                    onClick={() => setIsSearchModalOpen(false)}
-                                    className="p-1.5 sm:p-2 hover:bg-[var(--hover-bg)] rounded-lg transition-all duration-300"
-                                >
-                                    <X className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--text)]" />
-                                </button>
-                            </div>
-                            <div className="relative group w-full">
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={handleSearchChange}
-                                    onFocus={() => setShowResults(true)}
-                                    placeholder="Search anime..."
-                                    className="w-full h-10 sm:h-12 pl-8 sm:pl-10 pr-3 sm:pr-4 bg-transparent text-[var(--text)] placeholder-[var(--text-secondary)] border-b border-[var(--header-border)] focus:border-primary transition-all duration-300 outline-none text-sm"
-                                />
-                                <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[var(--text-secondary)]" />
-                            </div>
-                            {/* Search Results */}
-                            {showResults && (searchQuery.trim() !== '' || isLoading) && (
-                                <div className="mt-2 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto">
-                                    {isLoading ? (
-                                        <div className="p-3 sm:p-4 text-center text-[var(--text-secondary)]">
-                                            Loading...
+                            {!searchCategory ? (
+                                <>
+                                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                                        <h2 className="text-base sm:text-lg font-medium text-[var(--text)]">Select Search Category</h2>
+                                        <button
+                                            onClick={closeSearchModal}
+                                            className="p-1.5 sm:p-2 hover:bg-[var(--hover-bg)] rounded-lg transition-all duration-300"
+                                        >
+                                            <X className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--text)]" />
+                                        </button>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                                        <button onClick={() => setSearchCategory('anime')} className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-[var(--hover-bg)] hover:bg-primary/20 transition-all duration-300">
+                                            <House className="w-8 h-8 text-primary" />
+                                            <span className="font-medium text-sm text-[var(--text)]">Anime</span>
+                                        </button>
+                                        <button onClick={() => setSearchCategory('donghua')} className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-[var(--hover-bg)] hover:bg-primary/20 transition-all duration-300">
+                                            <PlayCircle className="w-8 h-8 text-primary" />
+                                            <span className="font-medium text-sm text-[var(--text)]">Donghua</span>
+                                        </button>
+                                        <button onClick={() => setSearchCategory('manga')} className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-[var(--hover-bg)] hover:bg-primary/20 transition-all duration-300">
+                                            <BookOpen className="w-8 h-8 text-primary" />
+                                            <span className="font-medium text-sm text-[var(--text)]">Manga</span>
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => {
+                                                    setSearchCategory(null);
+                                                    setSearchQuery('');
+                                                    setSearchResults([]);
+                                                }}
+                                                className="p-1.5 sm:p-2 hover:bg-[var(--hover-bg)] rounded-lg transition-all duration-300"
+                                            >
+                                                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--text)]" />
+                                            </button>
+                                            <h2 className="text-base sm:text-lg font-medium text-[var(--text)]">{searchCategoryTitles[searchCategory]}</h2>
                                         </div>
-                                    ) : searchResults.length === 0 ? (
-                                        <div className="p-3 sm:p-4 text-center text-[var(--text-secondary)]">
-                                            No results found
-                                        </div>
-                                    ) : (
-                                        <div className="py-1 sm:py-2">
-                                            {searchResults.map((result, index) => (
-                                                <Link
-                                                    key={index}
-                                                    href={`/anime/${result.href}`}
-                                                    onClick={handleResultClick}
-                                                    className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 hover:bg-[var(--hover-bg)] cursor-pointer transition-colors duration-200"
-                                                >
-                                                    <div className="relative w-10 h-14 sm:w-12 sm:h-16 flex-shrink-0">
-                                                        <Image
-                                                            src={result.poster || '/images/no-image.png'}
-                                                            alt={result.title}
-                                                            fill
-                                                            className="object-cover rounded"
-                                                            unoptimized
-                                                        />
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <h4 className="text-xs sm:text-sm font-medium text-[var(--text)] line-clamp-1">
-                                                            {result.title}
-                                                        </h4>
-                                                        <div className="flex items-center gap-1 sm:gap-2 mt-0.5 sm:mt-1">
-                                                            <span className="text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 bg-primary/10 text-primary rounded">
-                                                                {result.type}
-                                                            </span>
-                                                            <span className="text-[10px] sm:text-xs text-[var(--text-secondary)]">
-                                                                Score: {result.score}
-                                                            </span>
-                                                            <span className="text-[10px] sm:text-xs text-[var(--text-secondary)]">
-                                                                {result.status}
-                                                            </span>
-                                                        </div>
-                                                        <div className="flex flex-wrap gap-1 mt-0.5 sm:mt-1">
-                                                            {result.genreList.slice(0, 3).map((genre, idx) => (
-                                                                <span
-                                                                    key={idx}
-                                                                    className="text-[10px] sm:text-xs text-[var(--text-secondary)] px-1 sm:px-1.5 py-0.5 bg-[var(--hover-bg)] rounded"
-                                                                >
-                                                                    {genre.title}
-                                                                </span>
-                                                            ))}
-                                                            {result.genreList.length > 3 && (
-                                                                <span className="text-[10px] sm:text-xs text-[var(--text-secondary)]">
-                                                                    +{result.genreList.length - 3}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </Link>
-                                            ))}
+                                        <button
+                                            onClick={closeSearchModal}
+                                            className="p-1.5 sm:p-2 hover:bg-[var(--hover-bg)] rounded-lg transition-all duration-300"
+                                        >
+                                            <X className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--text)]" />
+                                        </button>
+                                    </div>
+                                    <div className="relative group w-full">
+                                        <input
+                                            type="text"
+                                            value={searchQuery}
+                                            onChange={handleSearchChange}
+                                            onFocus={() => setShowResults(true)}
+                                            placeholder={searchCategoryPlaceholders[searchCategory]}
+                                            className="w-full h-10 sm:h-12 pl-8 sm:pl-10 pr-3 sm:pr-4 bg-transparent text-[var(--text)] placeholder-[var(--text-secondary)] border-b border-[var(--header-border)] focus:border-primary transition-all duration-300 outline-none text-sm"
+                                        />
+                                        <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[var(--text-secondary)]" />
+                                    </div>
+                                    {/* Search Results */}
+                                    {showResults && (searchQuery.trim() !== '' || isLoading) && (
+                                        <div className="mt-2 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto">
+                                            {isLoading ? (
+                                                <div className="p-3 sm:p-4 text-center text-[var(--text-secondary)]">
+                                                    Loading...
+                                                </div>
+                                            ) : searchResults.length === 0 ? (
+                                                <div className="p-3 sm:p-4 text-center text-[var(--text-secondary)]">
+                                                    No results found
+                                                </div>
+                                            ) : (
+                                                <div className="py-1 sm:py-2">
+                                                    {searchResults.map((result, index) => (
+                                                        <Link
+                                                            key={index}
+                                                            href={getResultLink(result)}
+                                                            onClick={handleResultClick}
+                                                            className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 hover:bg-[var(--hover-bg)] cursor-pointer transition-colors duration-200"
+                                                        >
+                                                            <div className="relative w-10 h-14 sm:w-12 sm:h-16 flex-shrink-0">
+                                                                <Image
+                                                                    src={result.poster || '/images/no-image.png'}
+                                                                    alt={result.title}
+                                                                    fill
+                                                                    className="object-cover rounded"
+                                                                    unoptimized
+                                                                />
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <h4 className="text-xs sm:text-sm font-medium text-[var(--text)] line-clamp-1">
+                                                                    {result.title}
+                                                                </h4>
+                                                                <div className="flex items-center gap-1 sm:gap-2 mt-0.5 sm:mt-1">
+                                                                    {isAnimeResult(result) && (
+                                                                        <>
+                                                                            <span className="text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 bg-primary/10 text-primary rounded">
+                                                                                {result.type}
+                                                                            </span>
+                                                                            <span className="text-[10px] sm:text-xs text-[var(--text-secondary)]">
+                                                                                Score: {result.score}
+                                                                            </span>
+                                                                            <span className="text-[10px] sm:text-xs text-[var(--text-secondary)]">
+                                                                                {result.status}
+                                                                            </span>
+                                                                        </>
+                                                                    )}
+                                                                    {isMangaResult(result) && (
+                                                                        <>
+                                                                            <span className="text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 bg-primary/10 text-primary rounded">
+                                                                                {result.type}
+                                                                            </span>
+                                                                            {result.description && (
+                                                                                <span className="text-[10px] sm:text-xs text-[var(--text-secondary)] line-clamp-1">
+                                                                                    {result.description}
+                                                                                </span>
+                                                                            )}
+                                                                        </>
+                                                                    )}
+                                                                    {isDonghuaResult(result) && (
+                                                                        <>
+                                                                            <span className="text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 bg-primary/10 text-primary rounded">
+                                                                                {result.type}
+                                                                            </span>
+                                                                            <span className="text-[10px] sm:text-xs text-[var(--text-secondary)]">
+                                                                                Score: {result.score}
+                                                                            </span>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex flex-wrap gap-1 mt-0.5 sm:mt-1">
+                                                                    {(isAnimeResult(result) || isDonghuaResult(result)) && result.genreList && result.genreList.slice(0, 3).map((genre, idx) => (
+                                                                        <span
+                                                                            key={idx}
+                                                                            className="text-[10px] sm:text-xs text-[var(--text-secondary)] px-1 sm:px-1.5 py-0.5 bg-[var(--hover-bg)] rounded"
+                                                                        >
+                                                                            {genre.title}
+                                                                        </span>
+                                                                    ))}
+                                                                    {(isAnimeResult(result) || isDonghuaResult(result)) && result.genreList && result.genreList.length > 3 && (
+                                                                        <span className="text-[10px] sm:text-xs text-[var(--text-secondary)]">
+                                                                            +{result.genreList.length - 3}
+                                                                        </span>
+                                                                    )}
+                                                                    {isMangaResult(result) && result.latestChapter && (
+                                                                        <span className="text-[10px] sm:text-xs text-[var(--text-secondary)] px-1 sm:px-1.5 py-0.5 bg-[var(--hover-bg)] rounded">
+                                                                            Latest: {result.latestChapter}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     )}
-                                </div>
+                                </>
                             )}
                         </div>
                     </div>

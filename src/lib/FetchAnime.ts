@@ -2,9 +2,6 @@ import axios from "axios";
 
 import { formatSlug } from "@/base/helper/FormatSlug";
 
-const NEXT_PUBLIC_API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL as string;
-
 interface ServerResponse {
   statusCode: number;
   statusMessage: string;
@@ -167,7 +164,6 @@ export async function fetchScheduleData() {
 }
 
 // ✅ Ambil hanya data untuk Ongoing
-
 export async function fetchOngoinData(page: number = 1) {
   try {
     const res = await fetch(
@@ -196,7 +192,6 @@ export async function fetchOngoinData(page: number = 1) {
 }
 
 // ✅ Ambil hanya data untuk Completed
-
 export async function fetchCompletedData(page: number = 1) {
   try {
     const res = await fetch(
@@ -221,26 +216,6 @@ export async function fetchCompletedData(page: number = 1) {
   } catch (error) {
     console.error("Error fetching completed data:", error);
     throw error;
-  }
-}
-
-// ✅ Ambil poster anime
-export async function fetchAnimePoster(animeId: string) {
-  try {
-    const res = await fetch(`${NEXT_PUBLIC_URL}/api/anime/${animeId}`, {
-      next: { revalidate: 5 }, // Validasi ulang setiap 5 detik
-      headers: {
-        "x-api-key": NEXT_PUBLIC_API_KEY!,
-      },
-    });
-
-    if (!res.ok) throw new Error("Failed to fetch anime poster");
-
-    const data = await res.json();
-    return data.data?.poster || null;
-  } catch (error) {
-    console.error("Error fetching anime poster:", error);
-    return null;
   }
 }
 

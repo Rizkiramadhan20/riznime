@@ -12,6 +12,8 @@ import { formatSlug } from "@/base/helper/FormatSlug"
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay';
 
+import ImagePlaceholder from '@/base/helper/ImagePlaceholder';
+
 import { useRouter } from 'next/navigation';
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,6 +28,7 @@ export default function Banner({ anichinData }: AnimeContentProps) {
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [activeIndex, setActiveIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
+    const [imageError, setImageError] = useState<{ [key: string]: boolean }>({});
 
     const handleAnimeClick = (e: React.MouseEvent<HTMLAnchorElement>, animeId: string) => {
         e.preventDefault();
@@ -40,9 +43,13 @@ export default function Banner({ anichinData }: AnimeContentProps) {
 
             if (progress >= 100) {
                 clearInterval(interval);
-                router.push(`/anime/${formatSlug(animeId)}`);
+                router.push(`/donghua/${formatSlug(animeId)}`);
             }
         }, 100);
+    };
+
+    const handleImageError = (animeId: string) => {
+        setImageError(prev => ({ ...prev, [animeId]: true }));
     };
 
     const goToPrevSlide = () => {
@@ -60,6 +67,9 @@ export default function Banner({ anichinData }: AnimeContentProps) {
         }, 5000);
         return () => clearInterval(interval);
     }, [activeIndex, anichinData.update.animeList.length, goToNextSlide]);
+
+    const currentAnime = anichinData.update.animeList[activeIndex];
+    const isImageError = imageError[currentAnime.animeId];
 
     return (
         <section className='pt-14 bg-gray-50 dark:bg-gray-900'>
@@ -85,20 +95,25 @@ export default function Banner({ anichinData }: AnimeContentProps) {
                             className="absolute inset-0"
                         >
                             <Link
-                                href={`/anime/${formatSlug(anichinData.update.animeList[activeIndex].animeId)}`}
-                                onClick={(e) => handleAnimeClick(e, anichinData.update.animeList[activeIndex].animeId)}
+                                href={`/donghua/${formatSlug(currentAnime.animeId)}`}
+                                onClick={(e) => handleAnimeClick(e, currentAnime.animeId)}
                                 className="block relative w-full h-full"
                             >
                                 <div className='relative w-full h-full'>
-                                    <Image
-                                        src={anichinData.update.animeList[activeIndex].poster}
-                                        alt={anichinData.update.animeList[activeIndex].title}
-                                        fill
-                                        quality={90}
-                                        priority={activeIndex === 0}
-                                        className="object-cover transition-transform duration-700 ease-in-out hover:scale-105"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                                    />
+                                    {isImageError ? (
+                                        <ImagePlaceholder className="object-cover" />
+                                    ) : (
+                                        <Image
+                                            src={currentAnime.poster}
+                                            alt={currentAnime.title}
+                                            fill
+                                            quality={90}
+                                            priority={activeIndex === 0}
+                                            className="object-cover transition-transform duration-700 ease-in-out hover:scale-105"
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                                            onError={() => handleImageError(currentAnime.animeId)}
+                                        />
+                                    )}
                                 </div>
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
 
@@ -116,7 +131,7 @@ export default function Banner({ anichinData }: AnimeContentProps) {
                                             transition={{ delay: 0.3, duration: 0.5 }}
                                             className="text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-lg tracking-tight"
                                         >
-                                            {anichinData.update.animeList[activeIndex].title}
+                                            {currentAnime.title}
                                         </motion.h2>
                                         <motion.div
                                             initial={{ opacity: 0, y: 20 }}
@@ -125,7 +140,7 @@ export default function Banner({ anichinData }: AnimeContentProps) {
                                             className="flex items-center gap-3 text-sm text-gray-200"
                                         >
                                             <span>
-                                                {anichinData.update.animeList[activeIndex].synopsis}
+                                                {currentAnime.synopsis}
                                             </span>
                                         </motion.div>
                                     </div>

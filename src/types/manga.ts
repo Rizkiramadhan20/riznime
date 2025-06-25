@@ -29,3 +29,25 @@ export interface GenreManga {
   latestChapterUrl: string;
   upCount: number;
 }
+
+// Search types
+export interface MangaGenre {
+  title: string;
+  genreId: string;
+  href: string;
+  komikuUrl: string;
+}
+
+export interface MangaResult {
+  title: string;
+  poster: string;
+  type: string;
+  mangaId: string;
+  href: string;
+  komikuUrl: string;
+  description: string;
+  latestChapter?: string;
+  score?: string;
+  status?: string;
+  genreList?: MangaGenre[];
+}

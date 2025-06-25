@@ -1,12 +1,19 @@
 "use client"
 
 import React, { useState, useRef, MouseEvent, useEffect, TouchEvent } from 'react';
+
 import { ScheduleResponse } from '@/types/anime';
+
 import Link from 'next/link';
+
 import Image from 'next/image';
+
 import { motion } from 'framer-motion';
+
 import { useRouter } from 'next/navigation';
+
 import LoadingOverlay from '@/base/helper/LoadingOverlay';
+
 import { formatSlug } from "@/base/helper/FormatSlug";
 
 export default function ScheduleContent({ animeData }: { animeData: ScheduleResponse | null }) {

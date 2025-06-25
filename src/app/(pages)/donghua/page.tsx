@@ -2,13 +2,13 @@ import React, { Fragment } from 'react';
 
 import { fetchAnichinData } from '@/lib/FetchAnichin';
 
-import Banner from "@/hooks/pages/anichin/banner/Banner"
+import Banner from "@/hooks/pages/anichin/anichin/banner/Banner"
 
-import AnichinContent from "@/hooks/pages/anichin/AnichinContent"
+import AnichinContent from "@/hooks/pages/anichin/anichin/AnichinContent"
 
-import Ongoing from "@/hooks/pages/anichin/ongoing/Ongoing"
+import Ongoing from "@/hooks/pages/anichin/anichin/ongoing/Ongoing"
 
-import AnichinSkeleton from '@/hooks/pages/anichin/AnichinSkeleton';
+import AnichinSkeleton from '@/hooks/pages/anichin/anichin/AnichinSkeleton';
 
 export default async function Page() {
     try {

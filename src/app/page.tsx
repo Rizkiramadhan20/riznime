@@ -1,12 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { fetchAnimeData } from '@/lib/FetchAnime';
-
-import { FetchBannerData } from '@/lib/FetchAnime';
-
-import { fetchGenresData } from '@/lib/FetchAnime';
-
-import { fetchScheduleData } from '@/lib/FetchAnime';
+import { fetchAnimeData, FetchBannerData, fetchGenresData, fetchScheduleData } from '@/lib/FetchAnime';
 
 import AnimeContent from '@/components/ui/anime/AnimeContent';
 
@@ -31,19 +25,24 @@ export default async function Page() {
       throw new Error('Failed to fetch schedule data');
     }
 
+    const posterMap = new Map<string, string>();
+    if (animeData?.ongoing_anime) {
+      for (const anime of animeData.ongoing_anime) {
+        posterMap.set(anime.href, anime.poster);
+      }
+    }
+
     const scheduleWithPosters = {
       ...response,
       data: {
         ...response.data,
-        days: await Promise.all(
-          response.data.days.map(async (day: DaySchedule) => ({
-            ...day,
-            animeList: day.animeList.map((anime: AnimeSchedule) => ({
-              ...anime,
-              poster: anime.poster
-            }))
+        days: response.data.days.map((day: DaySchedule) => ({
+          ...day,
+          animeList: day.animeList.map((anime: AnimeSchedule) => ({
+            ...anime,
+            poster: posterMap.get(anime.href) || null
           }))
-        )
+        }))
       }
     };
 
