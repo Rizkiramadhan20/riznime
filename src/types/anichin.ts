@@ -64,3 +64,30 @@ export interface DonghuaResult {
   anichinUrl: string;
   genreList: DonghuaGenre[];
 }
+
+export interface ScheduleResponse {
+  statusCode: number;
+  statusMessage: string;
+  message: string;
+  ok: boolean;
+  data: {
+    days: DaySchedule[];
+  };
+  pagination: null;
+}
+
+export interface DaySchedule {
+  day: string;
+  animeList: AnimeSchedule[];
+}
+
+export interface AnimeSchedule {
+  anichinId: string;
+  title: string;
+  poster?: string;
+  href: string;
+  episode: string;
+  quality: string;
+  releaseTime: string;
+  otakudesuUrl: string;
+}

@@ -46,6 +46,73 @@ export const fetchAnichinData = async () => {
   }
 };
 
+// ✅ Ambil hanya data untuk Anichin Genre Data
+export const fetchAnichinGenreData = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/anichin/genres`,
+      {
+        next: {
+          revalidate: 5, // Revalidate milisecond
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+
+    // Transform data using formatSlug
+    const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {
+      if (key === "href" && typeof value === "string") {
+        return formatSlug(value);
+      }
+      return value;
+    });
+
+    return transformedData;
+  } catch (error) {
+    console.error("Error fetching anichin genre data:", error);
+    throw error;
+  }
+};
+
+// ✅ Ambil hanya data untuk Anichin Schedule Data
+export const fetchAnichinScheduleData = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/anichin/schedule`,
+      {
+        next: {
+          revalidate: 5, // Revalidate milisecond
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+
+    // Transform data using formatSlug
+    const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {
+      if (key === "href" && typeof value === "string") {
+        return formatSlug(value);
+      }
+      return value;
+    });
+
+    return transformedData;
+  } catch (error) {
+    console.error("Error fetching anichin schedule data:", error);
+    throw error;
+  }
+};
+
+// ✅ Ambil hanya data untuk Search Anichin Data
 export async function searchDonghua(query: string) {
   try {
     const res = await fetch(
@@ -75,7 +142,7 @@ export async function searchDonghua(query: string) {
     throw error;
   }
 }
-
+// ✅ Ambil hanya data untuk Anichin By Slug Data
 export async function fetchDonghuaBySlug(slug: string) {
   const cleanSlug = formatSlug(slug);
 
@@ -118,6 +185,7 @@ export async function fetchDonghuaBySlug(slug: string) {
   throw new Error("Data not found in both anime and seri endpoints");
 }
 
+// ✅ Ambil hanya data untuk Episode Data
 export async function fetchEpisodeBySlug(slug: string) {
   try {
     const cleanSlug = formatSlug(slug);
@@ -151,6 +219,7 @@ export async function fetchEpisodeBySlug(slug: string) {
   }
 }
 
+// ✅ Ambil hanya data untuk Server Data
 export const fetchServerUrl = async (
   serverId: string
 ): Promise<ServerResponse> => {

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, MouseEvent, useEffect, TouchEvent } from 'react';
 
-import { ScheduleResponse } from '@/types/anime';
+import { ScheduleResponse } from '@/types/anichin';
 
 import Link from 'next/link';
 
@@ -16,7 +16,9 @@ import { formatSlug } from "@/base/helper/FormatSlug";
 
 import ImagePlaceholder from '@/base/helper/ImagePlaceholder';
 
-export default function ScheduleContent({ animeData }: { animeData: ScheduleResponse | null }) {
+import Image from 'next/image';
+
+export default function ScheduleContent({ scheduleAnichinData }: { scheduleAnichinData: ScheduleResponse | null }) {
     const router = useRouter();
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
@@ -47,15 +49,15 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
     useEffect(() => {
         const currentDay = getCurrentDayInIndonesian();
         // Cek apakah hari saat ini ada dalam data anime
-        const isCurrentDayAvailable = animeData?.data?.days.some(day => day.day === currentDay);
+        const isCurrentDayAvailable = scheduleAnichinData?.data?.days.some(day => day.day === currentDay);
 
         if (isCurrentDayAvailable) {
             setSelectedDay(currentDay);
         } else {
             // Jika hari saat ini tidak tersedia, gunakan hari pertama dari data
-            setSelectedDay(animeData?.data?.days[0]?.day || null);
+            setSelectedDay(scheduleAnichinData?.data?.days[0]?.day || null);
         }
-    }, [animeData]);
+    }, [scheduleAnichinData]);
 
     const handleMouseDown = (e: MouseEvent) => {
         if (!sliderRef.current) return;
@@ -110,12 +112,12 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
 
             if (progress >= 100) {
                 clearInterval(interval);
-                router.push(`/anime/${formatSlug(animeId)}`);
+                router.push(`/donghua/${formatSlug(animeId)}`);
             }
         }, 100);
     };
 
-    if (!animeData || !animeData.data || !animeData.data.days) {
+    if (!scheduleAnichinData || !scheduleAnichinData.data || !scheduleAnichinData.data.days) {
         return (
             <section className='py-12 bg-gray-50 dark:bg-gray-900'>
                 <div className="container px-4 sm:px-6 lg:px-8">
@@ -127,10 +129,10 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
         );
     }
 
-    const allAnime = animeData.data.days.flatMap(day => day.animeList);
+    const allAnime = scheduleAnichinData.data.days.flatMap(day => day.animeList);
 
     const filteredAnime = selectedDay
-        ? animeData.data.days.find(day => day.day === selectedDay)?.animeList || []
+        ? scheduleAnichinData.data.days.find(day => day.day === selectedDay)?.animeList || []
         : allAnime;
 
     return (
@@ -146,7 +148,7 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
                 {/* Filter Buttons */}
                 <div className="mb-6 sm:mb-8 overflow-x-auto pb-2">
                     <div className="flex items-center justify-start gap-1 sm:gap-2 p-1 bg-gray-200 dark:bg-gray-800 rounded-xl w-fit min-w-full sm:min-w-0">
-                        {animeData.data.days.map((day) => (
+                        {scheduleAnichinData.data.days.map((day) => (
                             <motion.button
                                 key={day.day}
                                 className={`relative px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm sm:text-base font-medium whitespace-nowrap transition-colors duration-200 ${selectedDay === day.day
@@ -197,20 +199,35 @@ export default function ScheduleContent({ animeData }: { animeData: ScheduleResp
                         } as React.CSSProperties}
                     >
                         <div className="flex gap-3 sm:gap-4 lg:gap-6 px-4">
-                            {filteredAnime.map((anime) => (
+                            {filteredAnime.map((anime, idx) => (
                                 <div
-                                    key={anime.animeId}
+                                    key={`${anime.anichinId}-${idx}`}
                                     className="flex-none group touch-pan-y"
                                     onDragStart={(e) => e.preventDefault()}
                                 >
                                     <Link
-                                        href={`/anime/${anime.href}`}
+                                        href={`donghua/${anime.href}`}
                                         className="block w-[140px] sm:w-[160px] lg:w-[180px]"
-                                        onClick={(e) => handleAnimeClick(e, anime.href)}
+                                        onClick={(e) => handleAnimeClick(e, `donghua/${anime.href}`)}
                                     >
                                         {/* Poster Replacement */}
                                         <div className="relative w-full aspect-[3/4] rounded-lg sm:rounded-xl overflow-hidden mb-2 sm:mb-3 ring-1 ring-black/5 dark:ring-white/5 group-hover:ring-2 group-hover:ring-blue-500/50 transition-all duration-300">
-                                            <ImagePlaceholder />
+                                            {anime.poster ? (
+                                                <Image
+                                                    src={anime.poster}
+                                                    alt={anime.title}
+                                                    className="w-full h-full object-cover"
+                                                    loading="lazy"
+                                                    fill
+                                                />
+                                            ) : (
+                                                <ImagePlaceholder />
+                                            )}
+                                            {/* Episode and Quality Overlay */}
+                                            <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between bg-black/60 text-white text-xs px-2 py-1 rounded-md">
+                                                <span>{anime.releaseTime}</span>
+                                                <span>{anime.quality}</span>
+                                            </div>
                                         </div>
                                         {/* Title */}
                                         <h3 className="font-medium text-sm sm:text-base text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 line-clamp-2">
