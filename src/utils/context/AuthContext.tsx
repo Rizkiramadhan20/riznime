@@ -16,7 +16,10 @@ import {
     sendPasswordResetEmail,
     GoogleAuthProvider,
     GithubAuthProvider,
-    signInWithPopup
+    signInWithPopup,
+    updatePassword,
+    EmailAuthProvider,
+    reauthenticateWithCredential
 } from 'firebase/auth';
 
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -122,7 +125,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 ...item,
                 watchedAt: new Date().toISOString(),
             };
-            await set(ref(database, `history/${user.uid}/${item.episodeId}`), historyItem);
+            await set(ref(database, `${process.env.NEXT_PUBLIC_DATABASE_HISTORY}/${user.uid}/${item.episodeId}`), historyItem);
         } catch (error) {
             console.error("Failed to add to history:", error);
         }
@@ -323,7 +326,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 ...item,
                 addedAt: new Date().toISOString(),
             };
-            await set(ref(database, `bookmarks/${user.uid}/${item.animeId}`), bookmarkItem);
+            await set(ref(database, `${process.env.NEXT_PUBLIC_DATABASE_BOOKMARKS}/${user.uid}/${item.animeId}`), bookmarkItem);
             toast.success('Berhasil menambahkan ke bookmark!');
         } catch (error) {
             console.error('Failed to add to bookmarks:', error);
@@ -334,7 +337,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const getBookmarkByAnimeId = async (animeId: string): Promise<BookmarkItem | null> => {
         if (!user) return null;
         try {
-            const snapshot = await get(ref(database, `bookmarks/${user.uid}/${animeId}`));
+            const snapshot = await get(ref(database, `${process.env.NEXT_PUBLIC_DATABASE_BOOKMARKS}/${user.uid}/${animeId}`));
             if (snapshot.exists()) {
                 return snapshot.val() as BookmarkItem;
             }
@@ -349,11 +352,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const existing = await getBookmarkByAnimeId(item.animeId);
         if (existing) {
             // Remove
-            await remove(ref(database, `bookmarks/${user.uid}/${item.animeId}`));
+            await remove(ref(database, `${process.env.NEXT_PUBLIC_DATABASE_BOOKMARKS}/${user.uid}/${item.animeId}`));
             toast.success('Bookmark dihapus!');
         } else {
             // Add
             await addToBookmarks(item);
+        }
+    };
+
+    const changePassword = async (oldPassword: string, newPassword: string): Promise<void> => {
+        if (!auth.currentUser || !user) {
+            toast.error('User not authenticated');
+            throw new Error('User not authenticated');
+        }
+        try {
+            // Re-authenticate user
+            const credential = EmailAuthProvider.credential(user.email, oldPassword);
+            await reauthenticateWithCredential(auth.currentUser, credential);
+            // Update password
+            await updatePassword(auth.currentUser, newPassword);
+            toast.success('Password updated successfully');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                toast.error(error.message || 'Failed to update password');
+            } else {
+                toast.error('Failed to update password');
+            }
+            throw error;
         }
     };
 
@@ -393,6 +418,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         addToBookmarks,
         getBookmarkByAnimeId,
         toggleBookmark,
+        changePassword,
     };
 
     return (
