@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Anime } from '@/types/anime'
+import { Anime } from '@/interface/anime'
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 import { useRouter } from 'next/navigation'
 import { formatSlug } from '@/base/helper/FormatSlug'

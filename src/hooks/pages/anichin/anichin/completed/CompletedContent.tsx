@@ -17,9 +17,9 @@ import ReactDOM from 'react-dom/client'
 
 import { useRouter } from 'next/navigation'
 
-import { CompletedDonghuaResponse } from './types/completed'
+import { DonghuaListResponse } from '@/interface/anichin'
 
-export default function CompletedContent({ completedAnichinData }: { completedAnichinData: CompletedDonghuaResponse }) {
+export default function CompletedContent({ completedAnichinData }: { completedAnichinData: DonghuaListResponse }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const sliderRef = useRef<HTMLDivElement>(null);

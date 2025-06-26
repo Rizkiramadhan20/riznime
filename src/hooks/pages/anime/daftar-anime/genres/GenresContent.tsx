@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import { GenresList } from '@/types/anime';
+import { GenresList } from '@/interface/anime';
 import Link from 'next/link';
 import {
     Sword,

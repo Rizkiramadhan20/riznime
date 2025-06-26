@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { Anime } from '@/types/anime';
+import { Anime } from '@/interface/anime';
 
 import Button from './Button';
 

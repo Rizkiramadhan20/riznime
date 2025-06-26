@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, MouseEvent, useEffect, TouchEvent } from 'react';
 
-import { ScheduleResponse } from '@/types/anichin';
+import { ScheduleResponse } from '@/interface/anichin';
 
 import Link from 'next/link';
 

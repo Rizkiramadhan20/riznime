@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import Link from 'next/link'
 
-import { Anime } from '@/types/anime'
+import { Anime } from '@/interface/anime'
 
 type Props = {
     anime: Anime;

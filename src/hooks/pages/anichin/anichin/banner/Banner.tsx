@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react'
 
-import { AnichinData } from '@/types/anichin';
+import { AnichinData } from '@/interface/anichin';
 
 import Link from 'next/link';
 

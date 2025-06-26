@@ -91,3 +91,76 @@ export interface AnimeSchedule {
   releaseTime: string;
   otakudesuUrl: string;
 }
+
+export interface Donghua {
+  title: string;
+  poster: string;
+  type: string;
+  anichinId: string;
+  href: string;
+  anichinUrl: string;
+  status: string;
+  episode: string;
+  quality: string;
+}
+
+export interface DonghuaContentProps {
+  anichinData: {
+    animeList: Donghua[];
+    pagination: {
+      currentPage: number;
+      hasPrevPage: boolean;
+      prevPage: number | null;
+      hasNextPage: boolean;
+      nextPage: number | null;
+      totalPages: number;
+    };
+  };
+}
+
+export interface DonghuaListResponse {
+  statusCode: number;
+  statusMessage: string;
+  message: string;
+  ok: boolean;
+  data: {
+    animeList: Donghua[];
+  };
+  pagination: {
+    currentPage: number;
+    hasPrevPage: boolean;
+    prevPage: number | null;
+    hasNextPage: boolean;
+    nextPage: number | null;
+    totalPages: number;
+  };
+}
+
+export interface GenreAnichinListResponse {
+  statusCode: number;
+  statusMessage: string;
+  message: string;
+  ok: boolean;
+  data: {
+    animeList: GenreAnichin[];
+  };
+  pagination: {
+    currentPage: number;
+    hasPrevPage: boolean;
+    prevPage: number | null;
+    hasNextPage: boolean;
+    nextPage: number | null;
+    totalPages: number;
+  };
+}
+
+export interface GenreAnichin {
+  title: string;
+  poster: string;
+  anichinId: string;
+  href: string;
+  anichinUrl: string;
+  type: string;
+  episode: string;
+  quality: string;
+}

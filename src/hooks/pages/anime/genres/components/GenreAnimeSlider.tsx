@@ -4,7 +4,7 @@ import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Anime } from '@/types/anime';
+import { Anime } from '@/interface/anime';
 import LoadingOverlay from '@/base/helper/LoadingOverlay';
 import { useRouter } from 'next/navigation';
 import { formatSlug } from '@/base/helper/FormatSlug';

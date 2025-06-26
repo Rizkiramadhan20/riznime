@@ -8,7 +8,7 @@ import GenrePagination from '@/hooks/pages/anime/genres/components/GenrePaginati
 
 import AnimeCard from '@/hooks/pages/anime/genres/components/AnimeCard'
 
-import { AnimeResponse, Props, AnimeId } from "@/types/anime"
+import { AnimeResponse, Props, AnimeId } from "@/interface/anime"
 
 import DetailsGenresSkelaton from "@/hooks/pages/anime/genres/DetailsGenresSkelaton"
 

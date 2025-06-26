@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
-import { DaftarAnime } from '@/types/anime'
+import { DaftarAnime } from '@/interface/anime'
 import { Search } from 'lucide-react'
 
 export interface DaftarAnimeProps {

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, MouseEvent, useEffect, TouchEvent } from 'react';
 
-import { ScheduleResponse } from '@/types/anime';
+import { ScheduleResponse } from '@/interface/anime';
 
 import Link from 'next/link';
 

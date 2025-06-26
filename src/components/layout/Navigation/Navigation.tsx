@@ -10,9 +10,9 @@ import { House, Search, BookOpen, X, PlayCircle, ArrowLeft } from "lucide-react"
 
 import Image from 'next/image';
 
-import { AnimeResult } from '@/types/anime';
-import { MangaResult } from '@/types/manga';
-import { DonghuaResult } from '@/types/anichin';
+import { AnimeResult } from '@/interface/anime';
+import { MangaResult } from '@/interface/manga';
+import { DonghuaResult } from '@/interface/anichin';
 
 import { searchAnime } from '@/lib/FetchAnime';
 import { searchManga } from '@/lib/FetchManga';

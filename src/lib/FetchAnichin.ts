@@ -186,6 +186,35 @@ export const fetchDonghuaCompletedData = async (page: number = 1) => {
   }
 };
 
+// ✅ Ambil hanya data untuk Genre Anichin Id Data
+export async function fetchAnichinGenresId(genreId: string, page: number = 1) {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/anichin/genres/${genreId}?page=${page}`,
+      {
+        next: { revalidate: 5 }, // Revalidate every 5 seconds
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch anime data");
+
+    const data = await res.json();
+
+    // Transform data using formatSlug
+    const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {
+      if (key === "href" && typeof value === "string") {
+        return formatSlug(value);
+      }
+      return value;
+    });
+
+    return transformedData;
+  } catch (error) {
+    console.error("Error fetching manga genres data:", error);
+    return null;
+  }
+}
+
 // ✅ Ambil hanya data untuk Search Anichin Data
 export async function searchDonghua(query: string) {
   try {

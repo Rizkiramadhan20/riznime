@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 
-import { AnichinData, AnimeItem } from '@/types/anichin';
+import { AnichinData, AnimeItem } from '@/interface/anichin';
 
 import Link from 'next/link';
 

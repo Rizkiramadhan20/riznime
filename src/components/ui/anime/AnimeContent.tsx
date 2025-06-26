@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 
-import { Anime } from '@/types/anime';
+import { Anime } from '@/interface/anime';
 
 import Link from 'next/link';
 

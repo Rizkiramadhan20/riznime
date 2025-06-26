@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { GenreManga } from '@/interface/manga';
+import { GenreAnichin } from '@/interface/anichin';
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay';
 
@@ -16,48 +16,48 @@ import ImagePlaceholder from '@/base/helper/ImagePlaceholder';
 
 import { useRouter } from 'next/navigation';
 
-import { formatSlug } from '@/base/helper/FormatSlugManga';
+import { formatSlug } from '@/base/helper/FormatSlugAnichin';
 
 type Props = {
-    mangaList: GenreManga[];
+    donghuaList: GenreAnichin[];
 };
 
-export default function GenreMangaSlider({ mangaList }: Props) {
+export default function GenreAnichinSlider({ donghuaList }: Props) {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isNavigating, setIsNavigating] = useState(false);
     const [imageError, setImageError] = useState(false);
     const router = useRouter();
 
     const goToPrevSlide = () => {
-        setActiveIndex(prevIndex => (prevIndex === 0 ? mangaList.length - 1 : prevIndex - 1));
+        setActiveIndex(prevIndex => (prevIndex === 0 ? donghuaList.length - 1 : prevIndex - 1));
     };
 
     const goToNextSlide = useCallback(() => {
-        setActiveIndex(prevIndex => (prevIndex === mangaList.length - 1 ? 0 : prevIndex + 1));
-    }, [mangaList.length]);
+        setActiveIndex(prevIndex => (prevIndex === donghuaList.length - 1 ? 0 : prevIndex + 1));
+    }, [donghuaList.length]);
 
     const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         setIsNavigating(true);
-        const href = `/manga/${formatSlug(mangaList[activeIndex].href)}`;
+        const href = `/donghua/${formatSlug(donghuaList[activeIndex].href)}`;
         router.push(href);
     };
 
     React.useEffect(() => {
-        if (mangaList.length <= 1) return;
+        if (donghuaList.length <= 1) return;
         const interval = setInterval(() => {
             goToNextSlide();
         }, 5000);
         return () => clearInterval(interval);
-    }, [activeIndex, mangaList.length, goToNextSlide]);
+    }, [activeIndex, donghuaList.length, goToNextSlide]);
 
-    if (!mangaList || mangaList.length === 0) {
+    if (!donghuaList || donghuaList.length === 0) {
         return null;
     }
 
     return (
         <>
-            <LoadingOverlay isLoading={isNavigating} message="Loading manga page..." />
+            <LoadingOverlay isLoading={isNavigating} message="Loading donghua page..." />
             <div className="relative w-full rounded-lg overflow-hidden shadow-lg mb-8 aspect-[21/9]">
                 <AnimatePresence mode="wait">
                     <motion.div
@@ -73,8 +73,8 @@ export default function GenreMangaSlider({ mangaList }: Props) {
                                 <ImagePlaceholder className="w-full h-full" />
                             ) : (
                                 <Image
-                                    src={mangaList[activeIndex].poster}
-                                    alt={mangaList[activeIndex].title}
+                                    src={donghuaList[activeIndex].poster}
+                                    alt={donghuaList[activeIndex].title}
                                     fill
                                     quality={90}
                                     priority={activeIndex === 0}
@@ -100,7 +100,7 @@ export default function GenreMangaSlider({ mangaList }: Props) {
                                     transition={{ delay: 0.3, duration: 0.5 }}
                                     className="text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-lg tracking-tight"
                                 >
-                                    {mangaList[activeIndex].title}
+                                    {donghuaList[activeIndex].title}
                                 </motion.h2>
 
                                 <motion.div
@@ -109,39 +109,11 @@ export default function GenreMangaSlider({ mangaList }: Props) {
                                     transition={{ delay: 0.4, duration: 0.5 }}
                                     className="flex items-center gap-2 text-xs md:text-sm text-gray-200"
                                 >
-                                    <span className="font-medium">{mangaList[activeIndex].type || "N/A"}</span>
+                                    <span className="font-medium">{donghuaList[activeIndex].type || "N/A"}</span>
                                     <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-                                    <span>{mangaList[activeIndex].views || "N/A"}</span>
-                                </motion.div>
-
-                                <motion.p
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.5, duration: 0.5 }}
-                                    className="text-sm md:text-base text-gray-300 line-clamp-2 max-w-2xl"
-                                >
-                                    {mangaList[activeIndex].description}
-                                </motion.p>
-
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.6, duration: 0.5 }}
-                                    className="flex items-center gap-4 text-sm"
-                                >
-                                    <Link
-                                        href={mangaList[activeIndex].firstChapterUrl || '#'}
-                                        className="text-gray-300 hover:text-white transition-colors"
-                                    >
-                                        {mangaList[activeIndex].firstChapter}
-                                    </Link>
-                                    <span className="text-gray-500">•</span>
-                                    <Link
-                                        href={mangaList[activeIndex].latestChapterUrl || '#'}
-                                        className="text-gray-300 hover:text-white transition-colors"
-                                    >
-                                        {mangaList[activeIndex].latestChapter}
-                                    </Link>
+                                    <span>{donghuaList[activeIndex].episode || "N/A"}</span>
+                                    <span className="w-1 h-1 rounded-full bg-gray-400"></span>
+                                    <span>{donghuaList[activeIndex].quality || "N/A"}</span>
                                 </motion.div>
 
                                 <motion.div
@@ -151,11 +123,11 @@ export default function GenreMangaSlider({ mangaList }: Props) {
                                     className="flex items-center gap-4"
                                 >
                                     <Link
-                                        href={`/manga/${formatSlug(mangaList[activeIndex].href)}`}
+                                        href={`/donghua/${formatSlug(donghuaList[activeIndex].href)}`}
                                         onClick={handleNavigation}
                                         className="inline-flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors mt-2 w-fit text-sm"
                                     >
-                                        Read Now
+                                        Watch Now
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -168,7 +140,7 @@ export default function GenreMangaSlider({ mangaList }: Props) {
                 </AnimatePresence>
 
                 {/* Navigation Arrows */}
-                {mangaList.length > 1 && (
+                {donghuaList.length > 1 && (
                     <>
                         <motion.button
                             whileHover={{ scale: 1.1 }}
@@ -196,10 +168,10 @@ export default function GenreMangaSlider({ mangaList }: Props) {
                 )}
 
                 {/* Dots */}
-                {mangaList.length > 1 && (
+                {donghuaList.length > 1 && (
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-1 z-20">
                         <div className="flex items-center bg-black/30 backdrop-blur-sm px-2 py-1.5 rounded-full">
-                            {mangaList.map((_, index) => (
+                            {donghuaList.map((_, index) => (
                                 <motion.div
                                     key={index}
                                     className="relative"

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
 import Link from 'next/link'
 
@@ -8,96 +8,32 @@ import Image from 'next/image'
 
 import { Search, Play } from 'lucide-react'
 
-import { usePathname, useRouter } from 'next/navigation'
-
-import { DetailsEpisodeContentProps, Episode, Genre, Quality, Server, PopularSeriesItem } from "@/hooks/pages/anichin/episode/types/EpisodeDetails"
-
-import { fetchServerUrl } from '@/lib/FetchAnichin'
+import { DetailsEpisodeContentProps, Episode, Genre, Server, PopularSeriesItem } from "@/hooks/pages/anichin/episode/types/EpisodeDetails"
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
 import { formatSlug } from '@/base/helper/FormatSlug'
 
+import { useManagementEpisodeAnichin } from '@/hooks/pages/anichin/episode/utils/useManagementEpisodeAnichin'
+
 export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeContentProps) {
-    const pathname = usePathname();
-    const router = useRouter();
-    const [search, setSearch] = useState('');
-    const [selectedQuality, setSelectedQuality] = useState<Quality>(() => {
-        const firstValidQuality = episodeData.server.qualities.find(q => q.serverList && q.serverList.length > 0);
-        return firstValidQuality || episodeData.server.qualities[0];
-    });
-
-    const [selectedServer, setSelectedServer] = useState<Server>(() => {
-        const firstValidQuality = episodeData.server.qualities.find(q => q.serverList && q.serverList.length > 0);
-        return firstValidQuality?.serverList[0] || episodeData.server.qualities[0].serverList[0];
-    });
-
-    const [currentStreamingUrl, setCurrentStreamingUrl] = useState(episodeData.defaultStreamingUrl);
-    const [isEpisodeLoading, setIsEpisodeLoading] = useState(false);
-    const [isRecommendedLoading, setIsRecommendedLoading] = useState(false);
-    const [popularFilter, setPopularFilter] = useState<'weekly' | 'monthly' | 'allTime' | 'movies'>('weekly');
-
-    const isEpisodeActive = (episodeHref: string) => {
-        // Remove any query parameters and trailing slashes for comparison
-        const cleanPathname = pathname.split('?')[0].replace(/\/$/, '');
-        const cleanHref = episodeHref.split('?')[0].replace(/\/$/, '');
-        // Extract the last part of both paths for comparison
-        const pathnameParts = cleanPathname.split('/');
-        const hrefParts = cleanHref.split('/');
-        return formatSlug(pathnameParts[pathnameParts.length - 1]) === formatSlug(hrefParts[hrefParts.length - 1]);
-    };
-
-    useEffect(() => {
-        // Selalu fetch dari server default saat mount
-        handleServerSelect(selectedServer);
-        // eslint-disable-next-line
-    }, []);
-
-    const handleServerSelect = async (server: Server) => {
-        try {
-            const response = await fetchServerUrl(server.serverId);
-            if (response.ok) {
-                setSelectedServer(server);
-                setCurrentStreamingUrl(response.data.url);
-            }
-        } catch (error) {
-            console.error('Failed to fetch server URL:', error);
-        }
-    };
-
-    const handleEpisodeClick = (href: string) => {
-        if (!href) return;
-        setIsEpisodeLoading(true);
-        router.push(`/anime/episode/${href}`);
-    };
-
-    const handleRecommendedClick = (href: string) => {
-        setIsRecommendedLoading(true);
-        router.push(href);
-    };
-
-    const filteredEpisodes = (episodeData.episodeList ?? []).filter((ep: Episode) => {
-        if (!ep || ep.title === undefined || ep.title === null) return false;
-        const titleStr = ep.title.toString().toLowerCase();
-        const searchStr = search.toLowerCase();
-        return (
-            titleStr.includes(searchStr) ||
-            `episode ${titleStr}`.includes(searchStr) ||
-            `e${titleStr}`.includes(searchStr)
-        );
-    });
-
-    // Helper to get filtered list
-    const getFilteredPopular = () => {
-        if (!episodeData.popularSeries) return [];
-        const list = episodeData.popularSeries[popularFilter] || [];
-        const seenTitles = new Set<string>();
-        return list.filter((anime: PopularSeriesItem) => {
-            if (seenTitles.has(anime.title)) return false;
-            seenTitles.add(anime.title);
-            return true;
-        });
-    };
+    const {
+        search,
+        setSearch,
+        selectedQuality,
+        selectedServer,
+        currentStreamingUrl,
+        isEpisodeLoading,
+        isRecommendedLoading,
+        popularFilter,
+        setPopularFilter,
+        isEpisodeActive,
+        handleServerSelect,
+        handleEpisodeClick,
+        handleRecommendedClick,
+        filteredEpisodes,
+        getFilteredPopular,
+    } = useManagementEpisodeAnichin({ episodeData });
 
     return (
         <section className='py-8 md:py-12'>
@@ -199,29 +135,6 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
                                                 {server.title}
                                             </option>
                                         ))}
-                                    </select>
-                                </div>
-
-                                <div className="flex flex-wrap gap-3">
-                                    <select
-                                        value={selectedQuality.title}
-                                        onChange={(e) => {
-                                            e.preventDefault();
-                                            const quality = episodeData.server.qualities.find(q => q.title === e.target.value);
-                                            if (quality && quality.serverList && quality.serverList.length > 0) {
-                                                setSelectedQuality(quality);
-                                                handleServerSelect(quality.serverList[0]);
-                                            }
-                                        }}
-                                        className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                    >
-                                        {episodeData.server.qualities
-                                            .filter(quality => quality.serverList && quality.serverList.length > 0)
-                                            .map((quality: Quality) => (
-                                                <option key={quality.title} value={quality.title}>
-                                                    {quality.title}
-                                                </option>
-                                            ))}
                                     </select>
                                 </div>
                             </div>

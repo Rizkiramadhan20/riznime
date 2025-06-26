@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 import Link from 'next/link'
 
-import { GenreManga } from '@/types/manga'
+import { GenreManga } from '@/interface/manga'
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
