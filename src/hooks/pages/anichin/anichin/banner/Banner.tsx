@@ -72,7 +72,7 @@ export default function Banner({ anichinData }: AnimeContentProps) {
     const isImageError = imageError[currentAnime.anichinId];
 
     return (
-        <section className='pt-10 md:pt-14 bg-gray-50 dark:bg-gray-900'>
+        <section className='pt-10 bg-gray-50 dark:bg-gray-900'>
             <LoadingOverlay
                 isLoading={!!loadingId || loadingProgress > 0}
                 message="Loading is progress"

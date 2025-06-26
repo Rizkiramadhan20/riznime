@@ -30,8 +30,9 @@ export const useManagementCompletedAnichin = ({
   const handlePageChange = useCallback(
     async (page: number) => {
       try {
-        setLoadingProgress(0);
+        setLoadingProgress(1);
         router.push(`/donghua/completed?page=${page}`, { scroll: false });
+        window.scrollTo(0, 0);
 
         const data = await fetchDonghuaCompletedData(page);
 
