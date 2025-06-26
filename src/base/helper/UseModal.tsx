@@ -33,10 +33,7 @@ export default function Modal({ isOpen, onClose, children, className = '' }: Mod
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{
-                    duration: 0.3,
-                    exit: { duration: 0.4 }
-                }}
+                transition={{ duration: 0.3 }}
                 className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 max-w-7xl w-full rounded-lg shadow-xl transform transition-all duration-300 ease-in-out ${className}`}
                 onClick={(e) => e.stopPropagation()}
             >

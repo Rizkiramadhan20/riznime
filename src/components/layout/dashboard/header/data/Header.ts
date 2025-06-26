@@ -35,15 +35,10 @@ export const menuItems = [
     label: "Bookmarks",
     href: "/dashboard/bookmarks",
   },
-
   {
     icon: UserCog,
     label: "Accounts",
-    href: "/dashboard/accounts",
-    subItems: [
-      { label: "Admins", href: "/dashboard/accounts/admins" },
-      { label: "User", href: "/dashboard/accounts/user" },
-    ],
+    href: "/dashboard/user",
   },
 
   {

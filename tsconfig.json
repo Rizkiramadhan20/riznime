@@ -20,14 +20,17 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "outDir": "dist"
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "postcss.config.mjs"
+    "postcss.config.mjs",
+    "electron.ts",
+    "preload.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -48,10 +48,15 @@
     "@types/react-dom": "^19",
     "@types/three": "^0.177.0",
     "autoprefixer": "^10.4.17",
+    "concurrently": "^9.2.0",
+    "cross-env": "^7.0.3",
+    "electron": "^37.1.0",
+    "electron-builder": "^26.0.12",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wait-on": "^8.0.3"
   }
 }
