@@ -24,17 +24,6 @@ export interface Quality {
   serverList: Server[];
 }
 
-export interface DownloadUrl {
-  title: string;
-  url: string;
-}
-
-export interface DownloadQuality {
-  title: string;
-  size: string;
-  urls: DownloadUrl[];
-}
-
 export interface SynopsisData {
   paragraphs: string[];
   connections: unknown[];
@@ -87,9 +76,6 @@ export interface EpisodeData {
   recommendedAnimeList: RecommendedAnime[];
   server: {
     qualities: Quality[];
-  };
-  downloadUrl: {
-    qualities: DownloadQuality[];
   };
   popularSeries?: PopularSeries;
   releaseTime?: string;

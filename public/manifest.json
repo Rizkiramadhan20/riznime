@@ -23,7 +23,7 @@
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "prefer_related_applications": false,
-  "categories": ["anime", "anime indo"],
+  "categories": ["anime", "donghua", "manga", "Rizki Ramadhan"],
   "screenshots": [
     {
       "src": "/desktop.png",
@@ -31,5 +31,16 @@
       "type": "image/png"
     }
   ],
-  "description": "Your favorite anime streaming platform"
+  "description": "Tonton anime,manga dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga dan donghua berkualitas tinggi dengan streaming gratis!",
+  "id": "/",
+  "dir": "ltr",
+  "lang": "en",
+  "orientation": "any",
+  "scope": "/",
+  "scope_extensions": [],
+  "launch_handler": {
+    "client_mode": "auto"
+  },
+  "iarc_rating_id": "",
+  "related_applications": []
 }

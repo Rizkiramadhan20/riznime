@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import Link from 'next/link'
 
 import Image from 'next/image'
 
-import { Search } from 'lucide-react'
+import { Search, Bookmark, Bookmark as BookmarkFilled } from 'lucide-react'
 
 import { useRouter } from 'next/navigation'
 
@@ -16,11 +16,30 @@ import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
 import { formatSlug } from "@/base/helper/FormatSlug"
 
+import { useAuth } from '@/utils/context/AuthContext'
+
 export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentProps) {
     const router = useRouter();
     const [search, setSearch] = useState('');
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
+    const { user, getBookmarkByAnimeId, toggleBookmark } = useAuth();
+    const [bookmarkLoading, setBookmarkLoading] = useState(false);
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
+    useEffect(() => {
+        let mounted = true;
+        const checkBookmark = async () => {
+            if (user) {
+                const bookmark = await getBookmarkByAnimeId(animeData.title); // or use a unique id if available
+                if (mounted) setIsBookmarked(!!bookmark);
+            } else {
+                setIsBookmarked(false);
+            }
+        };
+        checkBookmark();
+        return () => { mounted = false; };
+    }, [user, animeData.title, getBookmarkByAnimeId]);
 
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         e.preventDefault();
@@ -38,6 +57,26 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                 router.push(href);
             }
         }, 100);
+    };
+
+    const handleBookmark = async () => {
+        if (!user) {
+            // Optionally, show a toast or redirect to login
+            return;
+        }
+        setBookmarkLoading(true);
+        try {
+            await toggleBookmark({
+                animeId: animeData.title, // or another unique id if available
+                title: animeData.title,
+                poster: animeData.poster,
+                href: `/anime/${formatSlug(animeData.title)}`,
+            });
+            // Toggle local state after action
+            setIsBookmarked((prev) => !prev);
+        } finally {
+            setBookmarkLoading(false);
+        }
     };
 
     const filteredEpisodes = (animeData.episodeList ?? []).filter((ep) => {
@@ -77,8 +116,17 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                         <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{animeData.title}</h1>
                         <div className="flex items-center gap-3">
                             <button className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 md:px-6 py-2 rounded-full font-semibold shadow hover:from-blue-700 hover:to-blue-500 transition text-sm md:text-base">Play all episodes</button>
-                            <button className="bg-gray-800/60 p-2 rounded-full text-white hover:bg-gray-700/80 transition">
-                                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                            <button
+                                className={`bg-gray-800/60 p-2 rounded-full text-white hover:bg-gray-700/80 transition flex items-center justify-center disabled:opacity-50 ${isBookmarked ? 'font-bold' : ''}`}
+                                onClick={handleBookmark}
+                                disabled={bookmarkLoading}
+                                aria-label="Bookmark"
+                            >
+                                {isBookmarked ? (
+                                    <BookmarkFilled className="w-4 h-4 md:w-5 md:h-5 text-blue-500" fill="currentColor" />
+                                ) : (
+                                    <Bookmark className="w-4 h-4 md:w-5 md:h-5" />
+                                )}
                             </button>
                         </div>
                     </div>

@@ -24,6 +24,14 @@ export interface HistoryItem {
   watchedAt: string; // ISO string
 }
 
+export interface BookmarkItem {
+  animeId: string;
+  title: string;
+  poster: string;
+  href: string;
+  addedAt: string; // ISO string
+}
+
 export interface AuthContextType {
   user: UserAccount | null;
   loading: boolean;
@@ -43,6 +51,9 @@ export interface AuthContextType {
   removeFromBookmarks: (bookmarkId: string) => Promise<boolean>;
   signInWithProvider: (providerName: "google" | "github") => Promise<void>;
   addToHistory: (item: Omit<HistoryItem, "watchedAt">) => Promise<void>;
+  addToBookmarks: (item: Omit<BookmarkItem, "addedAt">) => Promise<void>;
+  getBookmarkByAnimeId: (animeId: string) => Promise<BookmarkItem | null>;
+  toggleBookmark: (item: Omit<BookmarkItem, "addedAt">) => Promise<void>;
 }
 
 export interface FirebaseUser {

@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 import { useRouter } from 'next/navigation';
 
-import { Role, UserAccount, AuthContextType, HistoryItem } from '@/utils/context/types/Auth';
+import { Role, UserAccount, AuthContextType, HistoryItem, BookmarkItem } from '@/utils/context/types/Auth';
 
 import { auth, db, database } from '@/utils/firebase/firebase';
 
@@ -20,7 +20,7 @@ import {
 } from 'firebase/auth';
 
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { ref, set } from 'firebase/database';
+import { ref, set, remove, get } from 'firebase/database';
 
 import toast from 'react-hot-toast';
 
@@ -316,6 +316,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const addToBookmarks = async (item: Omit<BookmarkItem, 'addedAt'>) => {
+        if (!user) return;
+        try {
+            const bookmarkItem: BookmarkItem = {
+                ...item,
+                addedAt: new Date().toISOString(),
+            };
+            await set(ref(database, `bookmarks/${user.uid}/${item.animeId}`), bookmarkItem);
+            toast.success('Berhasil menambahkan ke bookmark!');
+        } catch (error) {
+            console.error('Failed to add to bookmarks:', error);
+            toast.error('Gagal menambahkan ke bookmark!');
+        }
+    };
+
+    const getBookmarkByAnimeId = async (animeId: string): Promise<BookmarkItem | null> => {
+        if (!user) return null;
+        try {
+            const snapshot = await get(ref(database, `bookmarks/${user.uid}/${animeId}`));
+            if (snapshot.exists()) {
+                return snapshot.val() as BookmarkItem;
+            }
+            return null;
+        } catch {
+            return null;
+        }
+    };
+
+    const toggleBookmark = async (item: Omit<BookmarkItem, 'addedAt'>) => {
+        if (!user) return;
+        const existing = await getBookmarkByAnimeId(item.animeId);
+        if (existing) {
+            // Remove
+            await remove(ref(database, `bookmarks/${user.uid}/${item.animeId}`));
+            toast.success('Bookmark dihapus!');
+        } else {
+            // Add
+            await addToBookmarks(item);
+        }
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
@@ -348,7 +389,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setShowInactiveModal,
         removeFromBookmarks,
         signInWithProvider,
-        addToHistory
+        addToHistory,
+        addToBookmarks,
+        getBookmarkByAnimeId,
+        toggleBookmark,
     };
 
     return (

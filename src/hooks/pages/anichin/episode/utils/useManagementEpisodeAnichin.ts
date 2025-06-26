@@ -65,13 +65,13 @@ export const useManagementEpisodeAnichin = ({
 
   const handleServerSelect = async (server: Server) => {
     try {
-      const response = await fetchServerUrl(server.href);
+      const response = await fetchServerUrl(server.serverId);
       if (response.ok) {
         setSelectedServer(server);
         setCurrentStreamingUrl(response.data.url);
       }
-    } catch (error) {
-      console.error("Failed to fetch server URL:", error);
+    } catch {
+      //
     }
   };
 

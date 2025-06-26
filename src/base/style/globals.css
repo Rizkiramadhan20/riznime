@@ -76,6 +76,7 @@
   --card-bg: #ffffff;
   --card-border: #e5e7eb;
   --card-shadow: rgba(0, 0, 0, 0.05);
+  --foreground-rgb: 0, 0, 0;
 }
 
 .dark {
@@ -157,4 +158,18 @@ html {
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--text-secondary) var(--hover-bg);
+}
+
+@keyframes marquee-y {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-marquee-y {
+  animation: marquee-y 60s linear infinite;
 }

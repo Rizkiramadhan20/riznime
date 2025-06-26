@@ -12,6 +12,8 @@ import ScheduleContent from '@/components/ui/schedule/ScheduleContent';
 
 import AnimeContentSkeleton from '@/components/ui/anime/AnimeContentSkeleton';
 
+import Download from "@/components/ui/download/Download"
+
 export default async function Page() {
   try {
     const animeData = await fetchAnimeData();
@@ -28,6 +30,7 @@ export default async function Page() {
       <AnimeContent animeData={animeData} />
       <GenresContent genresData={genresData} />
       <ScheduleContent animeData={response} />
+      <Download />
     </Fragment>;
   } catch (error) {
     console.error('Error fetching home data:', error);

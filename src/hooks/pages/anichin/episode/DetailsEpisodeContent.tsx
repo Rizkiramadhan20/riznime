@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 import { Search, Play } from 'lucide-react'
 
-import { DetailsEpisodeContentProps, Episode, Genre, Server, PopularSeriesItem } from "@/hooks/pages/anichin/episode/types/EpisodeDetails"
+import { DetailsEpisodeContentProps, Episode, Genre, Server, PopularSeriesItem, Quality } from "@/hooks/pages/anichin/episode/types/EpisodeDetails"
 
 import LoadingOverlay from '@/base/helper/LoadingOverlay'
 
@@ -21,6 +21,7 @@ export default function DetailsEpisodeContent({ episodeData, slug }: DetailsEpis
         search,
         setSearch,
         selectedQuality,
+        setSelectedQuality,
         selectedServer,
         currentStreamingUrl,
         isEpisodeLoading,
@@ -135,6 +136,29 @@ export default function DetailsEpisodeContent({ episodeData, slug }: DetailsEpis
                                                 {server.title}
                                             </option>
                                         ))}
+                                    </select>
+                                </div>
+
+                                <div className="flex flex-wrap gap-3">
+                                    <select
+                                        value={selectedQuality.title}
+                                        onChange={(e) => {
+                                            e.preventDefault();
+                                            const quality = episodeData.server.qualities.find(q => q.title === e.target.value);
+                                            if (quality && quality.serverList && quality.serverList.length > 0) {
+                                                setSelectedQuality(quality);
+                                                handleServerSelect(quality.serverList[0]);
+                                            }
+                                        }}
+                                        className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    >
+                                        {episodeData.server.qualities
+                                            .filter(quality => quality.serverList && quality.serverList.length > 0)
+                                            .map((quality: Quality) => (
+                                                <option key={quality.title} value={quality.title}>
+                                                    {quality.title}
+                                                </option>
+                                            ))}
                                     </select>
                                 </div>
                             </div>
