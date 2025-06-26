@@ -72,7 +72,7 @@
     }
   ],
   "handle_links": {
-    "urls": ["https://spacedigitalia.my.id/*", "https://rizkiramadhan.web.id/*"]
+    "urls": ["https://riznime.vercel.app/*", "https://riznime.vercel.app/*"]
   },
   "protocol_handlers": [
     {
