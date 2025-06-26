@@ -41,7 +41,7 @@
   "launch_handler": {
     "client_mode": "auto"
   },
-  "iarc_rating_id": "",
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "related_applications": [],
   "display_override": ["window-controls-overlay", "standalone", "browser"],
   "window_controls_overlay": {
@@ -79,6 +79,72 @@
       "protocol": "web+anime",
       "url": "/?anime=%s",
       "name": "Open anime link"
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "shortcuts": [
+    {
+      "name": "Latest Anime",
+      "short_name": "Latest",
+      "description": "View latest anime releases",
+      "url": "/anime",
+      "icons": [
+        {
+          "src": "/logo.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Latest Manga",
+      "short_name": "Manga",
+      "description": "View latest manga releases",
+      "url": "/manga",
+      "icons": [
+        {
+          "src": "/logo.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Donghua",
+      "short_name": "Donghua",
+      "description": "Browse donghua content",
+      "url": "/donghua",
+      "icons": [
+        {
+          "src": "/logo.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "name": "Riznime Widget",
+      "short_name": "Riznime",
+      "description": "Quick access to latest anime and manga",
+      "icons": [
+        {
+          "src": "/logo.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "auth": false,
+      "ms_ac_template": "widgets/anime-widget.html"
     }
   ]
 }
