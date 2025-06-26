@@ -4,9 +4,9 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 import { useRouter } from 'next/navigation';
 
-import { Role, UserAccount, AuthContextType } from '@/utils/context/types/Auth';
+import { Role, UserAccount, AuthContextType, HistoryItem } from '@/utils/context/types/Auth';
 
-import { auth, db } from '@/utils/firebase/firebase';
+import { auth, db, database } from '@/utils/firebase/firebase';
 
 import {
     signInWithEmailAndPassword,
@@ -14,9 +14,13 @@ import {
     onAuthStateChanged,
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
+    GoogleAuthProvider,
+    GithubAuthProvider,
+    signInWithPopup
 } from 'firebase/auth';
 
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { ref, set } from 'firebase/database';
 
 import toast from 'react-hot-toast';
 
@@ -57,6 +61,71 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // For other roles, redirect to their dashboard
         const dashboardUrl = getDashboardUrl(userData.role);
         router.push(dashboardUrl);
+    };
+
+    const signInWithProvider = async (providerName: 'google' | 'github') => {
+        const provider = providerName === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const firebaseUser = result.user;
+
+            const userDocRef = doc(db, process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS as string, firebaseUser.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            let userData: UserAccount;
+
+            if (userDoc.exists()) {
+                // User exists, get their data
+                userData = userDoc.data() as UserAccount;
+
+                if (!userData.isActive) {
+                    setShowInactiveModal(true);
+                    await signOut(auth);
+                    return;
+                }
+            } else {
+                // New user, create a new document
+                userData = {
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email || '',
+                    displayName: firebaseUser.displayName || '',
+                    role: Role.USER,
+                    photoURL: firebaseUser.photoURL || '',
+                    phoneNumber: firebaseUser.phoneNumber || '',
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    isActive: true,
+                };
+                await setDoc(userDocRef, userData);
+            }
+
+            setUser(userData);
+            const welcomeMessage = getWelcomeMessage(userData);
+            toast.success(welcomeMessage);
+            handleRedirect(userData);
+
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(`Login dengan ${providerName} gagal: ${error.message}`);
+            } else {
+                toast.error(`Terjadi kesalahan saat login dengan ${providerName}`);
+            }
+            throw error;
+        }
+    };
+
+    const addToHistory = async (item: Omit<HistoryItem, 'watchedAt'>) => {
+        if (!user) return;
+
+        try {
+            const historyItem: HistoryItem = {
+                ...item,
+                watchedAt: new Date().toISOString(),
+            };
+            await set(ref(database, `history/${user.uid}/${item.episodeId}`), historyItem);
+        } catch (error) {
+            console.error("Failed to add to history:", error);
+        }
     };
 
     const login = async (email: string, password: string): Promise<UserAccount> => {
@@ -178,7 +247,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 email: emailString,
                 displayName: displayName,
                 role: Role.USER,
-                photoURL: undefined,
+                photoURL: '',
                 phoneNumber: '',
                 createdAt: new Date(),
                 updatedAt: new Date(),
@@ -277,7 +346,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         forgotPassword,
         showInactiveModal,
         setShowInactiveModal,
-        removeFromBookmarks
+        removeFromBookmarks,
+        signInWithProvider,
+        addToHistory
     };
 
     return (

@@ -1,16 +1,26 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Search, Play, Download } from 'lucide-react'
-import { usePathname, useRouter } from 'next/navigation'
-import { DetailsEpisodeContentProps, Episode, Genre, Quality, Server, DownloadQuality, DownloadUrl } from "@/hooks/pages/anime/episode/types/EpisodeDetails"
-import { fetchServerUrl } from '@/lib/FetchAnime'
-import LoadingOverlay from '@/base/helper/LoadingOverlay'
-import { formatSlug } from '@/base/helper/FormatSlug'
 
-export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeContentProps) {
+import Link from 'next/link'
+
+import Image from 'next/image'
+
+import { Search, Play, Download } from 'lucide-react'
+
+import { usePathname, useRouter } from 'next/navigation'
+
+import { DetailsEpisodeContentProps, Episode, Genre, Quality, Server, DownloadQuality, DownloadUrl } from "@/hooks/pages/anime/episode/types/EpisodeDetails"
+
+import { fetchServerUrl } from '@/lib/FetchAnime'
+
+import LoadingOverlay from '@/base/helper/LoadingOverlay'
+
+import { formatSlug } from '@/base/helper/FormatSlug'
+import { useAuth } from '@/utils/context/AuthContext'
+
+export default function DetailsEpisodeContent({ episodeData, slug }: DetailsEpisodeContentProps) {
+    const { user, addToHistory, loading } = useAuth();
     const pathname = usePathname();
     const router = useRouter();
     const [search, setSearch] = useState('');
@@ -42,6 +52,26 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
         handleServerSelect(selectedServer);
         // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        if (loading || !user || !slug) {
+            return;
+        }
+
+        const historySavedKey = `history-saved-${user.uid}-${slug}`;
+        const isAlreadySaved = localStorage.getItem(historySavedKey);
+
+        if (!isAlreadySaved) {
+            addToHistory({
+                animeId: episodeData.animeId,
+                episodeId: slug,
+                title: episodeData.title,
+                poster: episodeData.poster,
+                href: pathname,
+            });
+            localStorage.setItem(historySavedKey, 'true');
+        }
+    }, [user, loading, slug, episodeData, addToHistory, pathname]);
 
     const handleServerSelect = async (server: Server) => {
         try {

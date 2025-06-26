@@ -28,6 +28,6 @@ export default async function DetailsEpisode({ params }: DetailsEpisodeProps) {
     const episodeData = episodeResponse.data;
 
     return (
-        <DetailsEpisodeContent episodeData={episodeData} />
+        <DetailsEpisodeContent episodeData={episodeData} slug={slug} />
     )
 } 

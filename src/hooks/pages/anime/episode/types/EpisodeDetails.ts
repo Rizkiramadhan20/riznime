@@ -81,6 +81,7 @@ export interface DetailsEpisodeProps {
 
 export interface DetailsEpisodeContentProps {
   episodeData: EpisodeData;
+  slug: string;
 }
 
 //

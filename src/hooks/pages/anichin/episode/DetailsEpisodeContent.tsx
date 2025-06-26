@@ -16,7 +16,7 @@ import { formatSlug } from '@/base/helper/FormatSlug'
 
 import { useManagementEpisodeAnichin } from '@/hooks/pages/anichin/episode/utils/useManagementEpisodeAnichin'
 
-export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeContentProps) {
+export default function DetailsEpisodeContent({ episodeData, slug }: DetailsEpisodeContentProps) {
     const {
         search,
         setSearch,
@@ -33,7 +33,7 @@ export default function DetailsEpisodeContent({ episodeData }: DetailsEpisodeCon
         handleRecommendedClick,
         filteredEpisodes,
         getFilteredPopular,
-    } = useManagementEpisodeAnichin({ episodeData });
+    } = useManagementEpisodeAnichin({ episodeData, slug });
 
     return (
         <section className='py-8 md:py-12'>

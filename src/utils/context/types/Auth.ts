@@ -15,6 +15,15 @@ export interface UserAccount {
   phoneNumber: string;
 }
 
+export interface HistoryItem {
+  animeId: string;
+  episodeId: string;
+  title: string;
+  poster: string;
+  href: string;
+  watchedAt: string; // ISO string
+}
+
 export interface AuthContextType {
   user: UserAccount | null;
   loading: boolean;
@@ -32,6 +41,8 @@ export interface AuthContextType {
   showInactiveModal: boolean;
   setShowInactiveModal: (show: boolean) => void;
   removeFromBookmarks: (bookmarkId: string) => Promise<boolean>;
+  signInWithProvider: (providerName: "google" | "github") => Promise<void>;
+  addToHistory: (item: Omit<HistoryItem, "watchedAt">) => Promise<void>;
 }
 
 export interface FirebaseUser {

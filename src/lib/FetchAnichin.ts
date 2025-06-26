@@ -215,36 +215,6 @@ export async function fetchAnichinGenresId(genreId: string, page: number = 1) {
   }
 }
 
-// ✅ Ambil hanya data untuk Search Anichin Data
-export async function searchDonghua(query: string) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/anichin/search?q=${encodeURIComponent(
-        query
-      )}`,
-      {
-        next: { revalidate: 5 }, // Revalidate every 5 seconds
-      }
-    );
-
-    if (!res.ok) throw new Error("Failed to fetch search results");
-
-    const data = await res.json();
-
-    // Transform data using formatSlug
-    const transformedData = JSON.parse(JSON.stringify(data), (key, value) => {
-      if (key === "href" && typeof value === "string") {
-        return formatSlug(value);
-      }
-      return value;
-    });
-
-    return transformedData.data;
-  } catch (error) {
-    console.error("Error searching donghua:", error);
-    throw error;
-  }
-}
 // ✅ Ambil hanya data untuk Anichin By Slug Data
 export async function fetchDonghuaBySlug(slug: string) {
   const cleanSlug = formatSlug(slug);

@@ -12,11 +12,9 @@ import Image from 'next/image';
 
 import { AnimeResult } from '@/interface/anime';
 import { MangaResult } from '@/interface/manga';
-import { DonghuaResult } from '@/interface/anichin';
 
 import { searchAnime } from '@/lib/FetchAnime';
 import { searchManga } from '@/lib/FetchManga';
-import { searchDonghua } from '@/lib/FetchAnichin';
 
 const menuItems = [
     { href: '/', label: 'Anime', icon: House },
@@ -24,7 +22,7 @@ const menuItems = [
     { href: '/manga', label: 'Manga', icon: BookOpen },
 ];
 
-type SearchCategory = 'anime' | 'manga' | 'donghua';
+type SearchCategory = 'anime' | 'manga';
 
 export default function Sidebar() {
     const pathname = usePathname();
@@ -33,7 +31,7 @@ export default function Sidebar() {
 
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<(AnimeResult | MangaResult | DonghuaResult)[]>([]);
+    const [searchResults, setSearchResults] = useState<(AnimeResult | MangaResult)[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const [searchCategory, setSearchCategory] = useState<SearchCategory | null>(null);
@@ -63,9 +61,6 @@ export default function Sidebar() {
                 } else if (searchCategory === 'manga') {
                     data = await searchManga(searchQuery);
                     setSearchResults(data.komikuList || []);
-                } else if (searchCategory === 'donghua') {
-                    data = await searchDonghua(searchQuery);
-                    setSearchResults(data.donghuaList || []);
                 }
             } catch {
                 setSearchResults([]);
@@ -122,32 +117,26 @@ export default function Sidebar() {
     const searchCategoryTitles: Record<SearchCategory, string> = {
         anime: 'Search Anime',
         manga: 'Search Manga',
-        donghua: 'Search Donghua'
     }
 
     const searchCategoryPlaceholders: Record<SearchCategory, string> = {
         anime: 'Search anime...',
         manga: 'Search manga...',
-        donghua: 'Search donghua...'
     }
 
-    const getResultLink = (result: AnimeResult | MangaResult | DonghuaResult) => {
+    const getResultLink = (result: AnimeResult | MangaResult) => {
         if (searchCategory === 'anime') {
             return `/anime/${result.href}`;
         }
         if (searchCategory === 'manga') {
             return `/manga/${result.href}`;
         }
-        if (searchCategory === 'donghua') {
-            return `/donghua/seri/${result.href}`;
-        }
         return '/';
     }
 
     // Type guards
-    const isAnimeResult = (result: AnimeResult | MangaResult | DonghuaResult): result is AnimeResult => searchCategory === 'anime';
-    const isMangaResult = (result: AnimeResult | MangaResult | DonghuaResult): result is MangaResult => searchCategory === 'manga';
-    const isDonghuaResult = (result: AnimeResult | MangaResult | DonghuaResult): result is DonghuaResult => searchCategory === 'donghua';
+    const isAnimeResult = (result: AnimeResult | MangaResult): result is AnimeResult => searchCategory === 'anime';
+    const isMangaResult = (result: AnimeResult | MangaResult): result is MangaResult => searchCategory === 'manga';
 
     return (
         <>
@@ -210,14 +199,10 @@ export default function Sidebar() {
                                             <X className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--text)]" />
                                         </button>
                                     </div>
-                                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
                                         <button onClick={() => setSearchCategory('anime')} className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-[var(--hover-bg)] hover:bg-primary/20 transition-all duration-300">
                                             <House className="w-8 h-8 text-primary" />
                                             <span className="font-medium text-sm text-[var(--text)]">Anime</span>
-                                        </button>
-                                        <button onClick={() => setSearchCategory('donghua')} className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-[var(--hover-bg)] hover:bg-primary/20 transition-all duration-300">
-                                            <PlayCircle className="w-8 h-8 text-primary" />
-                                            <span className="font-medium text-sm text-[var(--text)]">Donghua</span>
                                         </button>
                                         <button onClick={() => setSearchCategory('manga')} className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-[var(--hover-bg)] hover:bg-primary/20 transition-all duration-300">
                                             <BookOpen className="w-8 h-8 text-primary" />
@@ -318,19 +303,9 @@ export default function Sidebar() {
                                                                             )}
                                                                         </>
                                                                     )}
-                                                                    {isDonghuaResult(result) && (
-                                                                        <>
-                                                                            <span className="text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 bg-primary/10 text-primary rounded">
-                                                                                {result.type}
-                                                                            </span>
-                                                                            <span className="text-[10px] sm:text-xs text-[var(--text-secondary)]">
-                                                                                Score: {result.score}
-                                                                            </span>
-                                                                        </>
-                                                                    )}
                                                                 </div>
                                                                 <div className="flex flex-wrap gap-1 mt-0.5 sm:mt-1">
-                                                                    {(isAnimeResult(result) || isDonghuaResult(result)) && result.genreList && result.genreList.slice(0, 3).map((genre, idx) => (
+                                                                    {isAnimeResult(result) && result.genreList && result.genreList.slice(0, 3).map((genre, idx) => (
                                                                         <span
                                                                             key={idx}
                                                                             className="text-[10px] sm:text-xs text-[var(--text-secondary)] px-1 sm:px-1.5 py-0.5 bg-[var(--hover-bg)] rounded"
@@ -338,7 +313,7 @@ export default function Sidebar() {
                                                                             {genre.title}
                                                                         </span>
                                                                     ))}
-                                                                    {(isAnimeResult(result) || isDonghuaResult(result)) && result.genreList && result.genreList.length > 3 && (
+                                                                    {isAnimeResult(result) && result.genreList && result.genreList.length > 3 && (
                                                                         <span className="text-[10px] sm:text-xs text-[var(--text-secondary)]">
                                                                             +{result.genreList.length - 3}
                                                                         </span>

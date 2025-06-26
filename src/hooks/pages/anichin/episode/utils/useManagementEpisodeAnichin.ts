@@ -16,9 +16,13 @@ import { fetchServerUrl } from "@/lib/FetchAnichin";
 
 import { formatSlug } from "@/base/helper/FormatSlug";
 
+import { useAuth } from "@/utils/context/AuthContext";
+
 export const useManagementEpisodeAnichin = ({
   episodeData,
+  slug,
 }: DetailsEpisodeContentProps) => {
+  const { user, loading, addToHistory } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -61,7 +65,7 @@ export const useManagementEpisodeAnichin = ({
 
   const handleServerSelect = async (server: Server) => {
     try {
-      const response = await fetchServerUrl(server.serverId);
+      const response = await fetchServerUrl(server.href);
       if (response.ok) {
         setSelectedServer(server);
         setCurrentStreamingUrl(response.data.url);
@@ -75,6 +79,26 @@ export const useManagementEpisodeAnichin = ({
     handleServerSelect(selectedServer);
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (loading || !user || !slug) {
+      return;
+    }
+
+    const historySavedKey = `history-saved-${user.uid}-${slug}`;
+    const isAlreadySaved = localStorage.getItem(historySavedKey);
+
+    if (!isAlreadySaved) {
+      addToHistory({
+        animeId: episodeData.anichinId,
+        episodeId: slug,
+        title: episodeData.title,
+        poster: episodeData.poster,
+        href: pathname,
+      });
+      localStorage.setItem(historySavedKey, "true");
+    }
+  }, [user, loading, slug, episodeData, addToHistory, pathname]);
 
   const handleEpisodeClick = (href: string) => {
     if (!href) return;
