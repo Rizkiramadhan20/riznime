@@ -89,7 +89,7 @@ export default function CategoryContent({ anichinData }: CategoryContentProps) {
     };
 
     return (
-        <section className='mb-10 md:mb-20'>
+        <section className='mb-2'>
             <LoadingOverlay isLoading={isLoading} message="Loading Genre..." />
 
             <div className='container px-4 flex flex-col gap-6 md:gap-8'>

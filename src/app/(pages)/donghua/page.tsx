@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { fetchAnichinData, fetchAnichinGenreData, fetchAnichinScheduleData } from '@/lib/FetchAnichin';
+import { fetchAnichinData, fetchAnichinGenreData, fetchAnichinScheduleData, fetchDonghuaCompletedData } from '@/lib/FetchAnichin';
 
 import Banner from "@/hooks/pages/anichin/anichin/banner/Banner"
 
@@ -13,11 +13,14 @@ import AnichinSkeleton from '@/hooks/pages/anichin/anichin/AnichinSkeleton';
 import GenreContent from '@/hooks/pages/anichin/anichin/genres/GenresContent';
 
 import ScheduleContent from '@/hooks/pages/anichin/anichin/schedule/ScheduleContent';
+
+import CompletedContent from '@/hooks/pages/anichin/anichin/completed/CompletedContent';
 export default async function Page() {
     try {
         const anichinData = await fetchAnichinData();
         const genreAnichinData = await fetchAnichinGenreData();
         const scheduleAnichinData = await fetchAnichinScheduleData();
+        const completedAnichinData = await fetchDonghuaCompletedData();
 
         return <Fragment>
             <Banner anichinData={anichinData} />
@@ -25,6 +28,7 @@ export default async function Page() {
             <Ongoing anichinData={anichinData} />
             <GenreContent anichinData={genreAnichinData} />
             <ScheduleContent scheduleAnichinData={scheduleAnichinData} />
+            <CompletedContent completedAnichinData={completedAnichinData} />
         </Fragment>;
     } catch (error) {
         console.error('Error fetching donghua data:', error);
