@@ -4,7 +4,6 @@ import {
   History,
   FileText,
   Settings,
-  Image,
   UserCog,
 } from "lucide-react";
 
@@ -35,12 +34,6 @@ export const menuItems = [
     icon: Bookmark,
     label: "Bookmarks",
     href: "/dashboard/bookmarks",
-  },
-
-  {
-    icon: Image,
-    label: "Banner",
-    href: "/dashboard/banner",
   },
 
   {

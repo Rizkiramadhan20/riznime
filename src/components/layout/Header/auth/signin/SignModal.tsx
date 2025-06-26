@@ -255,6 +255,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                     Forgot password?
                                 </Button>
                             </div>
+
                             {errors.rememberMe && (
                                 <span className="text-error text-sm mt-1">{errors.rememberMe.message}</span>
                             )}
@@ -286,7 +287,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                             </Button>
                         </form>
 
-                        <div className="divider my-4 text-sm">Or continue with</div>
+                        <div className="divider my-4 text-sm text-center">Or continue with</div>
 
                         <div className="flex flex-col gap-3">
                             <Button
