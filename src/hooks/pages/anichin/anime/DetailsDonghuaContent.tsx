@@ -162,9 +162,9 @@ export default function DetailsAnimeContent({ animeData }: DetailsAnimeContentPr
                                 {animeData.genreList.map((genre, index) => (
                                     <Link
                                         key={index}
-                                        href={`/donghua/genres/${genre.href}`}
+                                        href={`/donghua/genre/${genre.href}`}
                                         className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/70 transition-colors text-sm"
-                                        onClick={(e) => handleClick(e, `/anime/genres/${genre.href}`)}
+                                        onClick={(e) => handleClick(e, `/donghua/genre/${genre.href}`)}
                                     >
                                         {genre.title}
                                     </Link>
