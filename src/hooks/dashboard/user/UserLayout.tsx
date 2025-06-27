@@ -1,19 +1,49 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { LayoutDashboard, Users, Info, Eye, Trash2, Loader2 } from "lucide-react"
+
+import { motion } from "framer-motion"
+
+import { Trash2, Loader2 } from "lucide-react"
+
 import { collection, getDocs, query, where } from 'firebase/firestore'
-import { db } from '@/utils/firebase/firebase'
+
+import { db, auth } from '@/utils/firebase/firebase'
+
 import { Role, UserAccount } from '@/utils/context/types/Auth'
-import { useAuth } from "@/utils/context/AuthContext"
-import { auth } from "@/utils/firebase/firebase"
+
 import { format, isValid } from "date-fns"
+
+import toast from 'react-hot-toast'
+
+import Image from 'next/image'
+
+import { useAuth } from "@/utils/context/AuthContext"
+
+function UsersSkeleton() {
+    return (
+        <div className="w-full">
+            <div className="animate-pulse flex space-x-4">
+                <div className="rounded-full bg-gray-300 h-12 w-12"></div>
+                <div className="flex-1 space-y-4 py-1">
+                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                    <div className="space-y-2">
+                        <div className="h-4 bg-gray-300 rounded"></div>
+                        <div className="h-4 bg-gray-300 rounded w-5/6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
 
 export default function UsersLayout() {
     const [users, setUsers] = useState<UserAccount[]>([])
     const [loading, setLoading] = useState(true)
+    const [updating, setUpdating] = useState<string | null>(null)
     const [deleting, setDeleting] = useState<string | null>(null)
     const { user: currentUser } = useAuth()
+    const [showDeleteModal, setShowDeleteModal] = useState<UserAccount | null>(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -25,9 +55,11 @@ export default function UsersLayout() {
                 const querySnapshot = await getDocs(q)
                 const userData = querySnapshot.docs.map(doc => {
                     const data = doc.data()
+                    // Convert Firestore Timestamp to Date if needed
                     const createdAt = data.createdAt instanceof Date
                         ? data.createdAt
                         : data.createdAt?.toDate?.() || new Date()
+
                     return {
                         ...data,
                         uid: doc.id,
@@ -37,10 +69,12 @@ export default function UsersLayout() {
                 setUsers(userData)
             } catch (error) {
                 console.error("Error fetching users:", error)
+                toast.error("Error fetching users")
             } finally {
                 setLoading(false)
             }
         }
+
         fetchUsers()
     }, [])
 
@@ -56,163 +90,236 @@ export default function UsersLayout() {
         }
     }
 
-    const handleDelete = async (userId: string) => {
+    const handleStatusChange = async (userId: string, newStatus: boolean) => {
         if (!currentUser) {
-            window.alert("You must be logged in to perform this action")
+            toast.error("You must be logged in to perform this action")
             return
         }
+
         try {
-            setDeleting(userId)
+            setUpdating(userId)
+
+            // Get the current user's ID token
             const idToken = await auth.currentUser?.getIdToken()
             if (!idToken) {
                 throw new Error("Failed to get authentication token")
             }
+
+            const response = await fetch(`/api/admins/users/${userId}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: JSON.stringify({
+                    isActive: newStatus
+                })
+            })
+
+            if (!response.ok) {
+                const data = await response.json()
+                throw new Error(data.error || 'Failed to update user status')
+            }
+
+            // Update local state
+            setUsers(prevUsers =>
+                prevUsers.map(user =>
+                    user.uid === userId
+                        ? { ...user, isActive: newStatus }
+                        : user
+                )
+            )
+
+            toast.success(`User status updated successfully`)
+        } catch (error) {
+            console.error("Error updating user status:", error)
+            toast.error(error instanceof Error ? error.message : "Failed to update user status")
+        } finally {
+            setUpdating(null)
+        }
+    }
+
+    const handleDelete = async (userId: string) => {
+        if (!currentUser) {
+            toast.error("You must be logged in to perform this action")
+            return
+        }
+
+        try {
+            setDeleting(userId)
+
+            // Get the current user's ID token
+            const idToken = await auth.currentUser?.getIdToken()
+            if (!idToken) {
+                throw new Error("Failed to get authentication token")
+            }
+
             const response = await fetch(`/api/admins/users/${userId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${idToken}`
                 }
             })
+
             if (!response.ok) {
                 const data = await response.json()
                 throw new Error(data.error || 'Failed to delete user')
             }
+
+            // Update local state
             setUsers(prevUsers => prevUsers.filter(user => user.uid !== userId))
-            window.alert("User deleted successfully")
+            toast.success("User deleted successfully")
         } catch (error) {
             console.error("Error deleting user:", error)
-            window.alert(error instanceof Error ? error.message : "Failed to delete user")
+            toast.error(error instanceof Error ? error.message : "Failed to delete user")
         } finally {
             setDeleting(null)
+            setShowDeleteModal(null)
         }
     }
 
     return (
         <section>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between border border-gray-100 p-4 rounded-2xl gap-4">
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2 pb-4">
-                        <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="text-primary sm:w-8 sm:h-8"
-                        >
-                            <path
-                                d="M21 7L12 16L3 7"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                            <path
-                                d="M3 17L12 8L21 17"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </svg>
-                        <h1 className="text-3xl font-bold tracking-tight">Users</h1>
-                    </div>
-                    <nav className="flex items-center text-sm text-gray-500 gap-2">
-                        <a href="/dashboard" className="flex items-center gap-1 capitalize hover:underline">
-                            <LayoutDashboard className="h-4 w-4" /> dashboard
-                        </a>
-                        <span>/</span>
-                        <a href="/dashboard/users" className="flex items-center gap-1 capitalize hover:underline">
-                            <Users className="h-4 w-4" /> Users
-                        </a>
-                        <span>/</span>
-                        <span className="flex items-center gap-1 capitalize">
-                            <Info className="h-4 w-4" /> Users List
-                        </span>
-                    </nav>
-                </div>
-            </div>
+            <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="bg-[var(--card-bg)] rounded-2xl shadow-md border border-[var(--border-color)] p-4 sm:p-6 mb-6 sm:mb-8"
+            >
+                <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="space-y-1"
+                >
+                    <motion.h1
+                        initial={{ y: -10, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.3 }}
+                        className="text-xl sm:text-2xl md:text-3xl font-bold"
+                    >
+                        Management Accounts
+                    </motion.h1>
+                    <motion.p
+                        initial={{ y: 10, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.4 }}
+                        className="text-sm sm:text-base"
+                    >
+                        Dafar Accounts
+                    </motion.p>
+                </motion.div>
+            </motion.div>
+
             <div className="mt-6">
-                <div className="rounded-xl shadow p-4">
-                    <h2 className="text-xl font-semibold mb-4">User Accounts</h2>
-                    {loading ? (
-                        <div className="flex justify-center items-center py-8">
-                            <svg className="animate-spin h-6 w-6 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                            </svg>
-                            <span>Loading users...</span>
-                        </div>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full rounded-xl overflow-hidden shadow-md border border-[var(--border-color)] bg-[var(--card-bg)]">
-                                <thead className="bg-[var(--primary)]">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">User</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Email</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Phone</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Joined Date</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-[var(--border-color)]">
-                                    {users.map((user, idx) => (
-                                        <tr key={user.uid} className={`transition-colors duration-200 ${idx % 2 === 0 ? 'bg-[var(--card-bg)]' : 'bg-[var(--card-bg)]/80'} hover:bg-[var(--hover-bg)]`}>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[var(--text)]">
-                                                <div className="flex items-center gap-3">
-                                                    {user.photoURL ? (
-                                                        <img src={user.photoURL} alt={user.displayName} className="h-10 w-10 rounded-full object-cover border-2 border-[var(--primary)]" />
-                                                    ) : (
-                                                        <div className="h-10 w-10 rounded-full bg-[var(--primary)] flex items-center justify-center text-white font-bold text-lg border-2 border-[var(--primary)]">
-                                                            {user.displayName?.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                                                        </div>
-                                                    )}
-                                                    <span className="font-semibold">{user.displayName}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[var(--text-secondary)]">{user.email}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[var(--text-secondary)]">{user.phoneNumber || '-'}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${user.isActive ? 'bg-[var(--success)] text-white' : 'bg-[var(--error)] text-white'}`}>
-                                                    {user.isActive ? 'Active' : 'Inactive'}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[var(--text-secondary)]">{formatDate(user.createdAt)}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center gap-2">
-                                                    <button
-                                                        className="p-2 rounded-full hover:bg-[var(--hover-bg)] text-[var(--primary)] transition-colors duration-150 cursor-not-allowed"
-                                                        title="View Address"
-                                                        disabled
-                                                    >
-                                                        <Eye className="h-5 w-5" />
-                                                    </button>
-                                                    <button
-                                                        className={`p-2 rounded-full transition-colors duration-150 ${deleting === user.uid ? 'cursor-not-allowed opacity-60' : 'hover:bg-[var(--error)] hover:text-white text-[var(--error)]'}`}
-                                                        onClick={() => {
-                                                            if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-                                                                handleDelete(user.uid)
-                                                            }
-                                                        }}
-                                                        disabled={deleting === user.uid}
-                                                    >
-                                                        {deleting === user.uid ? (
-                                                            <Loader2 className="h-5 w-5 animate-spin" />
-                                                        ) : (
-                                                            <Trash2 className="h-5 w-5" />
-                                                        )}
-                                                    </button>
-                                                </div>
-                                            </td>
+                <div className="bg-card-bg border border-card-border rounded-lg shadow-sm">
+                    <div className="p-6">
+                        <h3 className="text-lg font-medium leading-6 text-text">User Accounts</h3>
+                    </div>
+                    <div className="border-t border-card-border">
+                        {loading ? (
+                            <div className="p-6">
+                                <UsersSkeleton />
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-border">
+                                    <thead className="bg-hover">
+                                        <tr>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">User</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Email</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Phone</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Status</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Joined Date</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                                    </thead>
+                                    <tbody className="bg-card-bg divide-y divide-border">
+                                        {users.map((user) => (
+                                            <tr key={user.uid}>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="h-8 w-8 rounded-full bg-hover flex items-center justify-center overflow-hidden">
+                                                            <Image width={1080} height={1080} className="h-8 w-8 object-cover" src={user.photoURL as string} alt={user.displayName} />
+                                                        </div>
+                                                        <span>{user.displayName}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap">{user.phoneNumber || '-'}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <select
+                                                        value={user.isActive ? "true" : "false"}
+                                                        onChange={(e) => handleStatusChange(user.uid, e.target.value === "true")}
+                                                        disabled={updating === user.uid}
+                                                        className="w-[110px] bg-background text-text border-border rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+                                                    >
+                                                        <option value="true">Active</option>
+                                                        <option value="false">Inactive</option>
+                                                    </select>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    {formatDate(user.createdAt)}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <div className="flex items-center gap-2">
+                                                        <button
+                                                            onClick={() => setShowDeleteModal(user)}
+                                                            disabled={deleting === user.uid}
+                                                            className="p-2 hover:bg-hover rounded-full disabled:opacity-50"
+                                                        >
+                                                            {deleting === user.uid ? (
+                                                                <Loader2 className="h-4 w-4 animate-spin text-error" />
+                                                            ) : (
+                                                                <Trash2 className="h-4 w-4 text-error" />
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
+
+            {showDeleteModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+                    <div className="bg-card-bg rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h2 className="text-lg font-semibold text-text">Are you sure?</h2>
+                        <p className="mt-2 text-sm text-text-secondary">
+                            This action cannot be undone. This will permanently delete the user account
+                            and remove their data from our servers.
+                        </p>
+                        <div className="mt-6 flex justify-end gap-3">
+                            <button
+                                onClick={() => setShowDeleteModal(null)}
+                                disabled={deleting === showDeleteModal.uid}
+                                className="px-4 py-2 text-sm font-medium text-text bg-card-bg border border-border rounded-md shadow-sm hover:bg-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => showDeleteModal && handleDelete(showDeleteModal.uid)}
+                                disabled={deleting === showDeleteModal.uid}
+                                className="px-4 py-2 text-sm font-medium text-white bg-error border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+                            >
+                                {deleting === showDeleteModal.uid ? (
+                                    <div className="flex items-center gap-2">
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                        Deleting...
+                                    </div>
+                                ) : (
+                                    "Delete"
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     )
 }

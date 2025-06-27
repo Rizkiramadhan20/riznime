@@ -32,6 +32,7 @@ export default function Header() {
     const handleHistoryClick = () => {
         setIsHistoryMenuOpen(!isHistoryMenuOpen);
         setIsBookmarksMenuOpen(false);
+
         setIsProfileMenuOpen(false);
     };
 
@@ -47,9 +48,7 @@ export default function Header() {
         setIsBookmarksMenuOpen(false);
     };
 
-    if (loading) {
-        return null; // atau bisa diganti dengan spinner/loading indicator
-    }
+    if (loading) return null;
 
     return (
         <>

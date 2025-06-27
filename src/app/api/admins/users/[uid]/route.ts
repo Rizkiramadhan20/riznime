@@ -43,7 +43,7 @@ export async function DELETE(
 
     const targetUserData = targetUserDoc.data();
 
-    // Prevent deletion of other ADMINSs
+    // Prevent deletion of other admins
     if (targetUserData && targetUserData.role === Role.ADMINS) {
       return NextResponse.json(
         { error: "Cannot delete admin accounts" },

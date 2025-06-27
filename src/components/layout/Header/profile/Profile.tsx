@@ -8,6 +8,8 @@ import { User } from 'lucide-react'
 
 import { useAuth } from "@/utils/context/AuthContext"
 
+import { Role } from '@/utils/context/types/Auth';
+
 interface ProfileMenuProps {
     isOpen: boolean;
     onClose: () => void;
@@ -18,6 +20,23 @@ export default function ProfileMenu({ isOpen, onClose, isMobile = false }: Profi
     const { user, logout, getDashboardUrl } = useAuth();
 
     if (!user) return null;
+
+    const menuItems = [
+        {
+            label: 'Profile',
+            href: '/profile',
+            icon: '👤',
+            roles: [Role.USER]
+        },
+        {
+            label: 'Dashboard',
+            href: getDashboardUrl(user.role),
+            icon: '📊',
+            roles: [Role.ADMINS]
+        }
+    ];
+
+    const availableMenuItems = menuItems.filter(item => item.roles.includes(user.role));
 
     return (
         <AnimatePresence>
@@ -77,19 +96,22 @@ export default function ProfileMenu({ isOpen, onClose, isMobile = false }: Profi
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.4 }}
                     >
-                        <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <Link
-                                href={getDashboardUrl(user.role)}
-                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text)] hover:bg-[var(--hover-bg)] transition-colors duration-200 group"
-                                onClick={onClose}
+                        {availableMenuItems.map((item, index) => (
+                            <motion.div
+                                key={index}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                             >
-                                <span className="w-6 h-6 flex items-center justify-center rounded-lg bg-[var(--hover-bg)] group-hover:bg-primary group-hover:text-white transition-colors duration-200">📊</span>
-                                <span className="text-xs group-hover:text-primary transition-colors duration-200">Dashboard</span>
-                            </Link>
-                        </motion.div>
+                                <Link
+                                    href={item.href}
+                                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text)] hover:bg-[var(--hover-bg)] transition-colors duration-200 group"
+                                    onClick={onClose}
+                                >
+                                    <span className="w-6 h-6 flex items-center justify-center rounded-lg bg-[var(--hover-bg)] group-hover:bg-primary group-hover:text-white transition-colors duration-200">{item.icon}</span>
+                                    <span className="text-xs group-hover:text-primary transition-colors duration-200">{item.label}</span>
+                                </Link>
+                            </motion.div>
+                        ))}
                         <motion.div
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}

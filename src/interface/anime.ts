@@ -55,7 +55,6 @@ export interface RecommendedAnime {
   href: string;
   otakudesuUrl: string;
 }
-
 export interface AnimeData {
   title: string;
   poster: string;
@@ -96,7 +95,6 @@ export interface AnimeResult {
   samehadakuUrl: string;
   genreList: AnimeGenre[];
 }
-
 export interface SearchResponse {
   statusCode: number;
   statusMessage: string;

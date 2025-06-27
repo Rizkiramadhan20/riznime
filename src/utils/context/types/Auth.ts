@@ -55,6 +55,10 @@ export interface AuthContextType {
   getBookmarkByAnimeId: (animeId: string) => Promise<BookmarkItem | null>;
   toggleBookmark: (item: Omit<BookmarkItem, "addedAt">) => Promise<void>;
   changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
+  currentRole: Role | null;
+  setCurrentRole: (role: Role | null) => void;
+  isAuthorized: boolean;
+  setIsAuthorized: (auth: boolean) => void;
 }
 
 export interface FirebaseUser {

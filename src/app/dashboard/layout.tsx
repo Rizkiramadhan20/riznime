@@ -19,7 +19,7 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const { hasRole, user } = useAuth();
+    const { currentRole, isAuthorized, loading } = useAuth();
     const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
         // Check if window exists (client-side) and set initial state based on screen width
         if (typeof window !== 'undefined') {
@@ -27,42 +27,6 @@ export default function DashboardLayout({
         }
         return false; // Default to closed on server-side
     });
-    const [isAuthorized, setIsAuthorized] = useState(false);
-    const [currentRole, setCurrentRole] = useState<Role | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        if (!user) {
-            window.location.href = '/';
-            return;
-        }
-
-        // Get current path
-        const currentPath = window.location.pathname;
-
-        // Check role priority and validate access
-        if (currentPath.startsWith('/dashboard')) {
-            if (!hasRole(Role.ADMINS)) {
-                setIsAuthorized(false);
-                setLoading(false);
-                return;
-            }
-            setCurrentRole(Role.ADMINS);
-        } else if (currentPath.startsWith('/')) {
-            if (!hasRole(Role.USER)) {
-                setIsAuthorized(false);
-                setLoading(false);
-                return;
-            }
-            setCurrentRole(Role.USER);
-        } else {
-            window.location.href = '/';
-            return;
-        }
-
-        setIsAuthorized(true);
-        setLoading(false);
-    }, [hasRole, user]);
 
     // Add resize listener to handle responsive behavior
     useEffect(() => {

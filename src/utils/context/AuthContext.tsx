@@ -23,9 +23,12 @@ import {
 } from 'firebase/auth';
 
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+
 import { ref, set, remove, get } from 'firebase/database';
 
 import toast from 'react-hot-toast';
+
+import Cookies from 'js-cookie';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -33,6 +36,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<UserAccount | null>(null);
     const [loading, setLoading] = useState(true);
     const [showInactiveModal, setShowInactiveModal] = useState(false);
+    const [currentRole, setCurrentRole] = useState<Role | null>(null);
+    const [isAuthorized, setIsAuthorized] = useState(false);
     const router = useRouter();
 
     const getDashboardUrl = (userRole: string) => {
@@ -103,6 +108,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
 
             setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
+            Cookies.set('role', userData.role, { expires: 7 });
             const welcomeMessage = getWelcomeMessage(userData);
             toast.success(welcomeMessage);
             handleRedirect(userData);
@@ -155,6 +162,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
 
             setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
+            Cookies.set('role', userData.role, { expires: 7 });
             const welcomeMessage = getWelcomeMessage(userData);
             toast.success(welcomeMessage);
             handleRedirect(userData);
@@ -179,12 +188,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             await signOut(auth);
             setUser(null);
+            localStorage.removeItem('user');
             // Hapus semua cookies
-            document.cookie.split(";").forEach((c) => {
+            document.cookie.split(';').forEach((c) => {
                 document.cookie = c
-                    .replace(/^ +/, "")
-                    .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                    .replace(/^ +/, '')
+                    .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
             });
+            // Hapus role dari cookies
+            Cookies.remove('role');
             toast.success('Anda berhasil logout');
         } catch {
             toast.error('Terjadi kesalahan saat logout');
@@ -383,6 +395,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     useEffect(() => {
+        // Cek user dari localStorage lebih dulu
+        const userFromStorage = localStorage.getItem('user');
+        if (userFromStorage) {
+            const parsedUser = JSON.parse(userFromStorage);
+            setUser(parsedUser);
+            setCurrentRole(parsedUser.role);
+            setIsAuthorized(true);
+            setLoading(false);
+            return;
+        }
+        // Cek role dari cookies jika tidak ada user
+        const roleFromCookie = Cookies.get('role');
+        if (roleFromCookie) {
+            setCurrentRole(roleFromCookie as Role);
+            setIsAuthorized(true);
+            setLoading(false);
+            return;
+        }
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
                 const userDoc = await getDoc(doc(db, process.env.NEXT_PUBLIC_COLLECTIONS_ACCOUNTS as string, firebaseUser.uid));
@@ -390,15 +420,64 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
                 if (userData) {
                     setUser(userData);
+                    localStorage.setItem('user', JSON.stringify(userData));
                 }
             } else {
                 setUser(null);
+                localStorage.removeItem('user');
             }
             setLoading(false);
         });
 
         return () => unsubscribe();
     }, []);
+
+    // Logic otorisasi terpusat (bisa dipanggil dari layout)
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        // Jika sudah dapat dari cookies, tidak perlu cek ulang
+        const roleFromCookie = Cookies.get('role');
+        if (roleFromCookie) {
+            setCurrentRole(roleFromCookie as Role);
+            setIsAuthorized(true);
+            setLoading(false);
+            return;
+        }
+        if (!user) {
+            setIsAuthorized(false);
+            setCurrentRole(null);
+            setLoading(false);
+            return;
+        }
+        // Get current path
+        const currentPath = window.location.pathname;
+        // Check role priority and validate access
+        if (currentPath.startsWith('/dashboard')) {
+            if (user.role !== Role.ADMINS) {
+                setIsAuthorized(false);
+                setCurrentRole(null);
+                setLoading(false);
+                return;
+            }
+            setCurrentRole(Role.ADMINS);
+            setIsAuthorized(true);
+        } else if (currentPath.startsWith('/')) {
+            if (user.role !== Role.USER && user.role !== Role.ADMINS) {
+                setIsAuthorized(false);
+                setCurrentRole(null);
+                setLoading(false);
+                return;
+            }
+            setCurrentRole(user.role);
+            setIsAuthorized(true);
+        } else {
+            setIsAuthorized(false);
+            setCurrentRole(null);
+            setLoading(false);
+            return;
+        }
+        setLoading(false);
+    }, [user]);
 
     const value = {
         user,
@@ -419,6 +498,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         getBookmarkByAnimeId,
         toggleBookmark,
         changePassword,
+        currentRole,
+        setCurrentRole,
+        isAuthorized,
+        setIsAuthorized,
     };
 
     return (
