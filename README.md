@@ -3,7 +3,7 @@
 <h1 align="center">Riznime</h1>
 <p align="center">
   <b>Modern Streaming Platform for Anime, Manga, and Donghua</b><br/>
-  <img src="public/desktop.png" alt="Riznime Preview" width="600"/>
+  <img src="public/desktop.jpg" alt="Riznime Preview" width="600"/>
 </p>
 
 <p align="center">
@@ -36,12 +36,6 @@
 - <b>Firebase</b> (Authentication & Database)
 - <b>ImageKit</b> (CDN & Image Optimization)
 - <b>Flowbite</b> (UI Components)
-
----
-
-## 📸 Preview
-
-<img src="public/desktop.jpg" alt="Preview" width="600"/>
 
 ---
 
