@@ -1,9 +1,9 @@
 ![Riznime Preview](public/desktop.jpg)
 
 <h1 align="center">Riznime</h1>
+
 <p align="center">
   <b>Modern Streaming Platform for Anime, Manga, and Donghua</b><br/>
-  <img src="public/desktop.jpg" alt="Riznime Preview" width="600"/>
 </p>
 
 <p align="center">
