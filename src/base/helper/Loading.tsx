@@ -13,9 +13,9 @@ const TYPE_COLORS: Record<string, string> = {
 }
 
 const LABEL_SEQUENCE = [
-    'Loading Anime',
-    'Loading Manga',
-    'Loading Donghua',
+    'Anime',
+    'Manga',
+    'Donghua',
     'Selamat Menonton',
 ]
 
