@@ -9,21 +9,24 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "RizNime - Pusatnya Anime",
+  title: "Riznime - Pusatnya Anime",
   description:
-    "Tonton anime,manga dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga dan donghua berkualitas tinggi dengan streaming gratis!",
+    "Tonton anime, manga, dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga, dan donghua berkualitas tinggi dengan streaming gratis di Riznime!",
 
   authors: [{ name: "Rizki Ramadhan" }],
 
   keywords: [
     "Anime",
-    "RizNime",
+    "Riznime",
     "Anime Terbaru",
-    "Anime Terpopuler",
-    "Anime Terlengkap",
-    "Anime Terbaik",
-    "Streaming Anime",
+    "Anime Populer",
+    "Anime Lengkap",
+    "Anime Streaming",
+    "Manga",
+    "Donghua",
+    "Streaming Anime Indonesia",
     "Anime Subtitle Indonesia",
+    "Nonton Anime Gratis",
   ],
 
   icons: {
@@ -41,8 +44,8 @@ export const metadata = {
 
   tags: [
     {
-      name: "RizNime",
-      content: "Streaming Anime",
+      name: "Riznime",
+      content: "Streaming Anime, Manga, Donghua Indonesia",
     },
   ],
 
@@ -61,30 +64,30 @@ export const metadata = {
 
   openGraph: {
     type: "website",
-    title: "RizNime - Pusatnya Anime",
+    title: "Riznime - Pusatnya Anime",
     description:
-      "Tonton anime terbaru dan terlengkap dengan subtitle Indonesia. Nikmati ribuan judul anime berkualitas tinggi dengan streaming gratis!",
+      "Tonton anime, manga, dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga, dan donghua berkualitas tinggi dengan streaming gratis di Riznime!",
     url: BASE_URL,
-    siteName: "RizNime",
+    siteName: "Riznime",
     locale: "id_ID",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/desktop.jpg",
         width: 1200,
         height: 630,
-        alt: "RizNime - Pusatnya Anime",
+        alt: "Riznime - Pusatnya Anime",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "RizNime - Pusatnya Anime",
+    title: "Riznime - Pusatnya Anime",
     description:
-      "Tonton anime terbaru dan terlengkap dengan subtitle Indonesia. Nikmati ribuan judul anime berkualitas tinggi dengan streaming gratis!",
+      "Tonton anime, manga, dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga, dan donghua berkualitas tinggi dengan streaming gratis di Riznime!",
     creator: "@rizki_ramadhan",
     site: "@rizki_ramadhan",
-    images: ["/og-image.jpg"],
+    images: ["/desktop.jpg"],
   },
 
   verification: {

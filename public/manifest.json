@@ -19,7 +19,7 @@
     }
   ],
   "start_url": "/",
-  "display": "standalone",
+  "display": "fullscreen",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "prefer_related_applications": false,
@@ -43,7 +43,7 @@
   },
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "related_applications": [],
-  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "display_override": ["fullscreen", "standalone", "browser"],
   "window_controls_overlay": {
     "titlebar_color": "#ffffff",
     "border_color": "#e5e7eb",
