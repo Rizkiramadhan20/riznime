@@ -368,8 +368,7 @@ export const fetchServerUrl = async (
 export async function searchAnime(query: string) {
   try {
     const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_API_SEARCH
+      `${process.env.NEXT_PUBLIC_API_SEARCH
       }/otakudesu/search?q=${encodeURIComponent(query)}`,
       {
         next: { revalidate: 5 }, // Revalidate every 5 seconds
