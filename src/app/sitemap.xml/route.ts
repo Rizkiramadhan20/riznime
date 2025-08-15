@@ -1,9 +1,12 @@
 import { fetchOngoinData as fetchAnimeOngoinData } from "@/lib/FetchAnime";
+
 import { fetchMangaData, fetchMangaOngoingData, fetchMangaCompletedData, fetchMangaPopularData, fetchMangaRecentData } from "@/lib/FetchManga";
+
 import { fetchAnichinData, fetchAnichinGenreData, fetchOngoinData as fetchAnichinOngoinData, fetchDonghuaCompletedData } from "@/lib/FetchAnichin";
 
 // Import existing interfaces from the project
 import { Anime } from "@/interface/anime";
+
 import { DonghuaGenre, AnimeItem as DonghuaItem } from "@/interface/anichin";
 
 // Define interface for ongoing anime data structure
@@ -15,7 +18,7 @@ interface OngoingAnimeData {
     };
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 async function getAnimeSlugs(): Promise<Array<{ slug: string; updatedAt: Date }>> {
     try {

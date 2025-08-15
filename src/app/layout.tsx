@@ -10,6 +10,8 @@ import Pathname from "@/base/router/Pathname";
 
 import Providers from "@/base/router/Provider";
 
+import { GoogleTagManager, GoogleTagManagerNoScript } from '@/base/analytics/GoogleTagManager'
+
 import { metadata } from "@/base/meta/Metadata";
 
 export { metadata };
@@ -31,8 +33,10 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <head>
         <ThemeModeScript />
+        <GoogleTagManager />
       </head>
       <body className={poppins.variable}>
+        <GoogleTagManagerNoScript />
         <ThemeProvider>
           <Providers>
             <Pathname>
