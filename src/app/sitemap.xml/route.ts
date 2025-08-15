@@ -18,7 +18,7 @@ interface OngoingAnimeData {
     };
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_URL;
 
 async function getAnimeSlugs(): Promise<Array<{ slug: string; updatedAt: Date }>> {
     try {
