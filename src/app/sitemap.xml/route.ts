@@ -281,37 +281,6 @@ async function generateSitemap() {
         ];
     }
 
-    // Ensure we always have some data
-    if (animeSlugs.length === 0) {
-        animeSlugs = [
-            { slug: "naruto", updatedAt: new Date() },
-            { slug: "one-piece", updatedAt: new Date() },
-            { slug: "dragon-ball", updatedAt: new Date() },
-            { slug: "attack-on-titan", updatedAt: new Date() },
-            { slug: "demon-slayer", updatedAt: new Date() }
-        ];
-    }
-
-    if (mangaSlugs.length === 0) {
-        mangaSlugs = [
-            { slug: "one-piece-manga", updatedAt: new Date() },
-            { slug: "naruto-manga", updatedAt: new Date() },
-            { slug: "bleach-manga", updatedAt: new Date() },
-            { slug: "dragon-ball-manga", updatedAt: new Date() },
-            { slug: "attack-on-titan-manga", updatedAt: new Date() }
-        ];
-    }
-
-    if (donghuaSlugs.length === 0) {
-        donghuaSlugs = [
-            { slug: "mo-dao-zu-shi", updatedAt: new Date() },
-            { slug: "tian-guan-ci-fu", updatedAt: new Date() },
-            { slug: "shaonian-ge-xing", updatedAt: new Date() },
-            { slug: "xie-wang-zhui-qi", updatedAt: new Date() },
-            { slug: "doupo-cangqiong", updatedAt: new Date() }
-        ];
-    }
-
     const staticUrls = [
         { url: "/", lastmod: new Date().toISOString() },
         { url: "/anime", lastmod: new Date().toISOString() },
