@@ -34,6 +34,11 @@ export default function RootLayout({
       <head>
         <ThemeModeScript />
         <GoogleTagManager />
+        <script
+          async
+          src={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={poppins.variable}>
         <GoogleTagManagerNoScript />
