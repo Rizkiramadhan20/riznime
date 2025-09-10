@@ -29,6 +29,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const BASE_URL = process.env.NEXT_PUBLIC_URL as string;
+  const searchUrl = `${BASE_URL}/search?q={search_term_string}`;
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: BASE_URL,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: searchUrl,
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
@@ -38,6 +51,10 @@ export default function RootLayout({
           async
           src={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}
           crossOrigin="anonymous"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
       <body className={poppins.variable}>

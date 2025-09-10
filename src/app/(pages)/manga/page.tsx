@@ -16,12 +16,9 @@ import ManhwaContent from '@/hooks/pages/manga/manga/manhwa/ManhwaContent';
 
 import CompletedContent from '@/hooks/pages/manga/manga/completed/CompletedContent';
 
-import { Metadata } from 'next';
+import { metadata } from "@/hooks/pages/manga/meta/Metadata";
 
-export const metadata: Metadata = {
-    title: 'Riznime | Manga',
-    description: 'Halaman Manga',
-}
+export { metadata };
 
 export default async function Manga() {
     try {
