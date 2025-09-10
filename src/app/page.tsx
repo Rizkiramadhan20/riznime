@@ -14,6 +14,8 @@ import AnimeContentSkeleton from '@/components/ui/anime/AnimeContentSkeleton';
 
 import Download from "@/components/ui/download/Download"
 
+import HorizontalAd from '@/components/ads/HorizontalAd'
+
 export default async function Page() {
   try {
     const animeData = await fetchAnimeData();
@@ -27,6 +29,7 @@ export default async function Page() {
 
     return <Fragment>
       <BannerContent bannerData={bannerData} />
+      <HorizontalAd />
       <AnimeContent animeData={animeData} />
       <GenresContent genresData={genresData} />
       <ScheduleContent animeData={response} />
