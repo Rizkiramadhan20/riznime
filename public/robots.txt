@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://nizamcellularleuwiliang.my.id
-
-# Sitemaps
-Sitemap: https://nizamcellularleuwiliang.my.id/sitemap.xml
