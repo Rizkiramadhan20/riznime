@@ -72,6 +72,12 @@ export const metadata = {
     locale: "id_ID",
     images: [
       {
+        url: `${BASE_URL}/api/og?title=${encodeURIComponent("Riznime - Pusatnya Anime")}&description=${encodeURIComponent("Tonton anime, manga, dan donghua terbaru dengan subtitle Indonesia")}&type=page`,
+        width: 1200,
+        height: 630,
+        alt: "Riznime - Pusatnya Anime",
+      },
+      {
         url: "/desktop.jpg",
         width: 1200,
         height: 630,
@@ -87,7 +93,10 @@ export const metadata = {
       "Tonton anime, manga, dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga, dan donghua berkualitas tinggi dengan streaming gratis di Riznime!",
     creator: "@rizki_ramadhan",
     site: "@rizki_ramadhan",
-    images: ["/desktop.jpg"],
+    images: [
+      `${BASE_URL}/api/og?title=${encodeURIComponent("Riznime - Pusatnya Anime")}&description=${encodeURIComponent("Tonton anime, manga, dan donghua terbaru dengan subtitle Indonesia")}&type=page`,
+      "/desktop.jpg"
+    ],
   },
 
   verification: {

@@ -16,6 +16,10 @@ import Download from "@/components/ui/download/Download"
 
 import HorizontalAd from '@/components/ads/HorizontalAd'
 
+import { metadata } from "@/base/meta/Metadata";
+
+export { metadata };
+
 export default async function Page() {
   try {
     const animeData = await fetchAnimeData();
@@ -35,8 +39,7 @@ export default async function Page() {
       <ScheduleContent animeData={response} />
       <Download />
     </Fragment>;
-  } catch (error) {
-    console.error('Error fetching home data:', error);
+  } catch {
     return (
       <AnimeContentSkeleton />
     );

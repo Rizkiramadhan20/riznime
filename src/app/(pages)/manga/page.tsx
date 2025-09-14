@@ -16,9 +16,13 @@ import ManhwaContent from '@/hooks/pages/manga/manga/manhwa/ManhwaContent';
 
 import CompletedContent from '@/hooks/pages/manga/manga/completed/CompletedContent';
 
+import StructuredData from '@/components/seo/StructuredData';
+
 import { metadata } from "@/hooks/pages/manga/meta/Metadata";
 
 export { metadata };
+
+const BASE_URL = process.env.NEXT_PUBLIC_URL as string;
 
 export default async function Manga() {
     try {
@@ -29,6 +33,23 @@ export default async function Manga() {
 
         return (
             <Fragment>
+                <StructuredData
+                    type="website"
+                    data={{
+                        name: 'Riznime',
+                        description: 'Tonton anime, manga, dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga, dan donghua berkualitas tinggi dengan streaming gratis di Riznime!',
+                        url: BASE_URL,
+                    }}
+                />
+                <StructuredData
+                    type="breadcrumb"
+                    data={{
+                        items: [
+                            { name: 'Beranda', url: BASE_URL },
+                            { name: 'Manga', url: `${BASE_URL}/manga` },
+                        ],
+                    }}
+                />
                 <MangaContent mangaData={mangaData} />
                 <GenreContent mangaData={genreMangaData} />
                 <OngoingContent mangaData={ongoingMangaData} />

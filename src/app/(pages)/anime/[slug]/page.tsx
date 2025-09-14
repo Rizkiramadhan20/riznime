@@ -2,9 +2,13 @@ import React from 'react'
 
 import DetailsAnime from "@/hooks/pages/anime/DetailsAnime"
 
-import { Metadata, ResolvingMetadata } from "next"
+import { Metadata } from "next"
 
 import { fetchAnimeBySlug } from "@/lib/FetchAnime"
+
+import { generateAnimeMetadata } from "@/hooks/pages/anime/meta/Metadata"
+
+import StructuredData from "@/components/seo/StructuredData"
 
 type Props = {
     params: Promise<{ slug: string }>
@@ -22,8 +26,7 @@ async function getAnimeData(slug: string) {
 }
 
 export async function generateMetadata(
-    { params }: Props,
-    parent: ResolvingMetadata
+    { params }: Props
 ): Promise<Metadata> {
     // read route params
     const { slug } = await params;
@@ -34,34 +37,46 @@ export async function generateMetadata(
 
     if (!anime) {
         return {
-            title: "Anime Not Found",
+            title: "Anime Not Found - Riznime",
             description: "The requested anime could not be found.",
         };
     }
 
-    // optionally access and extend parent metadata
-    const previousImages = (await parent).openGraph?.images || [];
+    const title = anime.title || anime.japan || 'Anime';
+    const description = anime.synopsis?.paragraphs?.[0] || `Tonton ${title} online dengan subtitle Indonesia. Streaming anime berkualitas tinggi secara gratis di Riznime.`;
+    const image = anime.poster || '/desktop.jpg';
 
-    return {
-        title: `${anime.title || anime.japan || 'Anime'} | RizNime`,
-        description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.title || anime.japan || 'this anime'} online.`,
-        openGraph: {
-            title: `${anime.title || anime.japan || 'Anime'} | RizNime`,
-            description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.title || anime.japan || 'this anime'} online.`,
-            images: [anime.poster, ...previousImages],
-        },
-        twitter: {
-            card: 'summary_large_image',
-            title: `${anime.title || anime.japan || 'Anime'} | RizNime`,
-            description: anime.synopsis?.paragraphs?.[0] || `Watch ${anime.title || anime.japan || 'this anime'} online.`,
-            images: [anime.poster],
-        },
-    };
+    return generateAnimeMetadata(title, description, image);
 }
 
 export default async function Page({ params }: Props) {
     const { slug } = await params;
+    const animeData = await getAnimeData(slug);
+    const anime = animeData?.data;
+
     return (
-        <DetailsAnime params={{ slug }} />
+        <>
+            {anime && (
+                <StructuredData
+                    type="anime"
+                    data={{
+                        title: anime.title || anime.japan || 'Anime',
+                        description: anime.synopsis?.paragraphs?.[0] || `Tonton ${anime.title || anime.japan || 'this anime'} online dengan subtitle Indonesia.`,
+                        image: anime.poster || '/desktop.jpg',
+                        url: `${process.env.NEXT_PUBLIC_URL}/anime/${slug}`,
+                        genres: anime.genres || [],
+                        releaseDate: anime.releaseDate,
+                        updatedAt: new Date().toISOString(),
+                        rating: anime.rating,
+                        ratingCount: anime.ratingCount,
+                        seasons: anime.seasons,
+                        episodes: anime.episodes,
+                        voiceActors: anime.voiceActors,
+                        director: anime.director,
+                    }}
+                />
+            )}
+            <DetailsAnime params={{ slug }} />
+        </>
     )
 } 

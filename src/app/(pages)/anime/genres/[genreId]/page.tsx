@@ -2,9 +2,13 @@ import React from 'react'
 
 import DetailsGenres from "@/hooks/pages/anime/genres/DetailsGenres"
 
+import StructuredData from '@/components/seo/StructuredData';
+
 import { Metadata, ResolvingMetadata } from "next"
 
 import { fetchAnimeGenresId } from "@/lib/FetchAnime"
+
+const BASE_URL = process.env.NEXT_PUBLIC_URL as string;
 
 type Props = {
     params: Promise<{ genreId: string }>;
@@ -63,17 +67,58 @@ export async function generateMetadata(
     const previousImages = (await parent).openGraph?.images || [];
 
     return {
-        title: `${genreTitle} | Riznime`,
-        description: `Watch ${genreTitle} anime online. Browse our collection of ${genreTitle} anime series and movies.`,
+        title: `Genre ${genreTitle} Anime | Riznime`,
+        description: `Jelajahi koleksi lengkap anime genre ${genreTitle} di Riznime. Temukan berbagai judul anime ${genreTitle} terbaru dengan kualitas terbaik dan subtitle Indonesia.`,
+        keywords: [
+            `Anime ${genreTitle}`,
+            `Genre ${genreTitle}`,
+            'Anime',
+            'Streaming',
+            'Riznime',
+            'Subtitle Indonesia',
+            'Nonton Gratis',
+            'Anime Terbaru'
+        ],
         openGraph: {
-            title: `${genreTitle} | Riznime`,
-            description: `Watch ${genreTitle} anime online. Browse our collection of ${genreTitle} anime series and movies.`,
-            images: [...previousImages],
+            type: 'website',
+            title: `Genre ${genreTitle} Anime | Riznime`,
+            description: `Jelajahi koleksi lengkap anime genre ${genreTitle} di Riznime. Temukan berbagai judul anime ${genreTitle} terbaru dengan kualitas terbaik dan subtitle Indonesia.`,
+            url: `${BASE_URL}/anime/genres/${genreId}`,
+            siteName: 'Riznime',
+            locale: 'id_ID',
+            images: [
+                {
+                    url: `${BASE_URL}/api/og?title=${encodeURIComponent(`Genre ${genreTitle} Anime`)}&description=${encodeURIComponent(`Jelajahi koleksi lengkap anime genre ${genreTitle} di Riznime`)}&type=anime`,
+                    width: 1200,
+                    height: 630,
+                    alt: `Genre ${genreTitle} Anime - Riznime`,
+                },
+                ...previousImages,
+            ],
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${genreTitle} Anime | Riznime`,
-            description: `Watch ${genreTitle} anime online. Browse our collection of ${genreTitle} anime series and movies.`,
+            title: `Genre ${genreTitle} Anime | Riznime`,
+            description: `Jelajahi koleksi lengkap anime genre ${genreTitle} di Riznime. Temukan berbagai judul anime ${genreTitle} terbaru dengan kualitas terbaik dan subtitle Indonesia.`,
+            creator: '@rizki_ramadhan',
+            site: '@rizki_ramadhan',
+            images: [
+                `${BASE_URL}/api/og?title=${encodeURIComponent(`Genre ${genreTitle} Anime`)}&description=${encodeURIComponent(`Jelajahi koleksi lengkap anime genre ${genreTitle} di Riznime`)}&type=anime`,
+            ],
+        },
+        alternates: {
+            canonical: `${BASE_URL}/anime/genres/${genreId}`,
+        },
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-video-preview': -1,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
         },
     };
 }
@@ -81,5 +126,32 @@ export async function generateMetadata(
 export default async function GenrePage({ params, searchParams }: Props) {
     const { genreId } = await params;
     const resolvedSearchParams = await searchParams;
-    return <DetailsGenres genreId={genreId} searchParams={resolvedSearchParams} />;
+    const animeData = await getAnimeData(genreId, 1);
+    const animeList = animeData?.data?.animeList;
+    const genreTitle = animeList?.[0]?.genreList?.find((genre: Genre) => genre.genreId === genreId)?.title || genreId;
+
+    return (
+        <>
+            <StructuredData
+                type="website"
+                data={{
+                    name: 'Riznime',
+                    description: 'Tonton anime, manga, dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga, dan donghua berkualitas tinggi dengan streaming gratis di Riznime!',
+                    url: BASE_URL,
+                }}
+            />
+            <StructuredData
+                type="breadcrumb"
+                data={{
+                    items: [
+                        { name: 'Beranda', url: BASE_URL },
+                        { name: 'Anime', url: `${BASE_URL}/anime` },
+                        { name: 'Genre', url: `${BASE_URL}/anime/genres` },
+                        { name: genreTitle, url: `${BASE_URL}/anime/genres/${genreId}` },
+                    ],
+                }}
+            />
+            <DetailsGenres genreId={genreId} searchParams={resolvedSearchParams} />
+        </>
+    );
 } 

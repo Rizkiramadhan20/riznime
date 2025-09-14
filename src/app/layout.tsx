@@ -34,10 +34,25 @@ export default function RootLayout({
   const websiteJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    name: 'Riznime',
+    description: 'Tonton anime, manga, dan donghua terbaru dengan subtitle Indonesia. Nikmati ribuan judul anime, manga, dan donghua berkualitas tinggi dengan streaming gratis di Riznime!',
     url: BASE_URL,
+    inLanguage: 'id',
+    publisher: {
+      '@type': 'Organization',
+      name: 'Riznime',
+      url: BASE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${BASE_URL}/logo.png`,
+      },
+    },
     potentialAction: {
       '@type': 'SearchAction',
-      target: searchUrl,
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: searchUrl,
+      },
       'query-input': 'required name=search_term_string',
     },
   };
