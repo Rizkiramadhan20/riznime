@@ -2,7 +2,6 @@ import { Poppins } from "next/font/google";
 
 import "@/base/style/globals.css";
 
-import { ThemeModeScript } from 'flowbite-react';
 
 import { ThemeProvider } from "@/base/theme/ThemeProvider";
 
@@ -60,11 +59,10 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
-        <ThemeModeScript />
         <GoogleTagManager />
         <script
           async
-          src={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4016803466870090"
           crossOrigin="anonymous"
         />
         <script

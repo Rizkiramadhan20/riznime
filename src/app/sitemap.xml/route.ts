@@ -198,8 +198,7 @@ async function generateSitemap() {
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${urls
       .map((item) => {
-        return `
-  <url>
+        return `  <url>
     <loc>${escapeXml(BASE_URL)}${escapeXml(item.url)}</loc>
     <lastmod>${item.lastmod}</lastmod>
     <changefreq>${item.changefreq}</changefreq>
@@ -216,7 +215,7 @@ ${urls
     </image:image>
   </url>`;
       })
-      .join("")}
+      .join("\n")}
 </urlset>`;
 
   return sitemapXml;
@@ -227,7 +226,7 @@ export async function GET() {
     const body = await generateSitemap();
     return new Response(body, {
       headers: {
-        "Content-Type": "application/xml",
+        "Content-Type": "application/xml; charset=utf-8",
         "Cache-Control":
           "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
       },

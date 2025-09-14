@@ -10,13 +10,23 @@ declare global {
 
 export default function AutoRelaxedAd() {
     useEffect(() => {
-        try {
-            if (typeof window !== "undefined") {
-                (window.adsbygoogle = window.adsbygoogle || []).push({});
+        const loadAd = () => {
+            try {
+                if (typeof window !== "undefined" && window.adsbygoogle) {
+                    (window.adsbygoogle = window.adsbygoogle || []).push({});
+                }
+            } catch (error) {
+                console.log("AdSense error:", error);
             }
-        } catch {
-            // Ignore ad blocker errors
-        }
+        };
+
+        // Load ad immediately if script is already loaded
+        loadAd();
+
+        // Also try after a short delay in case script is still loading
+        const timeout = setTimeout(loadAd, 1000);
+
+        return () => clearTimeout(timeout);
     }, []);
 
     return (
