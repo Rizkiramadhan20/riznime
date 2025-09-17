@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 
 import { usePathname } from "next/navigation";
 
@@ -16,7 +16,17 @@ import ModalPopup from "@/base/helper/ModalPopup"
 
 const Pathname = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+
+    // Timer untuk menampilkan modal setelah 1 menit
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowModal(true);
+        }, 60000); // 60000ms = 1 menit
+
+        // Cleanup timer jika komponen di-unmount
+        return () => clearTimeout(timer);
+    }, []);
 
     const isAdminRoute =
         pathname?.includes("/profile")

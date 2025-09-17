@@ -25,8 +25,7 @@ export default async function DaftarAnimeLayout() {
             <GenreContent genresData={genresData} />
             <DaftarAnimeContent animeData={animeData} />
         </Fragment>;
-    } catch (error) {
-        console.error('Error fetching banner data:', error);
+    } catch {
         return (
             <DaftarAnimeSkeleton />
         );

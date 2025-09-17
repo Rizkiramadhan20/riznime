@@ -12,10 +12,6 @@ import ScheduleContent from '@/components/ui/schedule/ScheduleContent';
 
 import AnimeContentSkeleton from '@/components/ui/anime/AnimeContentSkeleton';
 
-import Download from "@/components/ui/download/Download"
-
-import HorizontalAd from '@/components/ads/HorizontalAd'
-
 import { metadata } from "@/base/meta/Metadata";
 
 export { metadata };
@@ -33,11 +29,9 @@ export default async function Page() {
 
     return <Fragment>
       <BannerContent bannerData={bannerData} />
-      <HorizontalAd />
       <AnimeContent animeData={animeData} />
       <GenresContent genresData={genresData} />
       <ScheduleContent animeData={response} />
-      <Download />
     </Fragment>;
   } catch {
     return (

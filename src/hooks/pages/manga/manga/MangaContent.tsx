@@ -15,8 +15,6 @@ import { Card } from 'flowbite-react'
 
 import { BookOpen } from 'lucide-react'
 
-import AutoRelaxedAd from '@/components/ads/AutoRelaxedAd'
-
 interface MangaData {
     recent: {
         komikuList: Array<{
@@ -128,8 +126,6 @@ export default function MangaContent({ mangaData }: { mangaData: MangaData }) {
                         <div className="absolute inset-0 bg-gradient-to-l from-header-bg/90 to-transparent md:hidden" />
                     </div>
                 </div>
-
-                <AutoRelaxedAd />
 
                 <div className='flex flex-col md:flex-row gap-6 md:gap-10'>
                     {/* Main Content */}

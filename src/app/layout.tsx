@@ -2,12 +2,13 @@ import { Poppins } from "next/font/google";
 
 import "@/base/style/globals.css";
 
-
 import { ThemeProvider } from "@/base/theme/ThemeProvider";
 
 import Pathname from "@/base/router/Pathname";
 
 import Providers from "@/base/router/Provider";
+
+import Script from "next/script";
 
 import { GoogleTagManager, GoogleTagManagerNoScript } from '@/base/analytics/GoogleTagManager'
 
@@ -60,14 +61,43 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <head>
         <GoogleTagManager />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4016803466870090"
-          crossOrigin="anonymous"
-        />
-        <script
+        <Script
+          id="website-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+
+        <Script src={`https://fiscaltechnique.com/m2wq9sg6?key=${process.env.NEXT_PUBLIC_ADS_TERRA}`} async></Script>
+
+        <Script
+          id="breadcrumb-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Anime",
+                  "item": "https://nizamcellularleuwiliang.my.id"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Donghua",
+                  "item": "https://nizamcellularleuwiliang.my.id/donghua"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Manga",
+                  "item": "https://nizamcellularleuwiliang.my.id/manga"
+                },
+              ]
+            }),
+          }}
         />
       </head>
       <body className={poppins.variable}>
